@@ -21,4 +21,14 @@
         android:name="com.example.videoeditingline.ui.HomeScrFragment"
         android:label="home_src_fragment"
         tools:layout="@layout/home_src_fragment" />
+    <fragment
+        android:id="@+id/progressFragment"
+        android:name="com.example.videoeditingline.ui.ProgressFragment"
+        android:label="progress_fragment_layout"
+        tools:layout="@layout/progress_fragment_layout" />
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="com.example.videoeditingline.ui.VideoFragment"
+        android:label="video_fragment_layout"
+        tools:layout="@layout/video_fragment_layout" />
 </navigation>
