@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.videoeditingline.R
-import com.example.videoeditingline.databinding.VideoFragmentLayoutBinding
+import com.example.videoeditingline.databinding.DownloadFragmentLayoutBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class VideoFragment : Fragment(R.layout.video_fragment_layout) {
-    private lateinit var binding: VideoFragmentLayoutBinding
+class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
+    private lateinit var binding: DownloadFragmentLayoutBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = VideoFragmentLayoutBinding.bind(view)
+        binding = DownloadFragmentLayoutBinding.bind(view)
     }
 }

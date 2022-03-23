@@ -15,4 +15,11 @@
     <color name="Casablanca_color">#FBAD50</color>
     <color name="Alizarin_Crimson_color">#E11818</color>
     <color name="Crimson_color">#EB1E43</color>
+
+
+    <!--Bottom App Bar Color -->
+    <color name="Mine_Shaft_color">#2E2E2E</color>
+    <color name="Surfie_Green_color">#128C7E</color>
+
+
 </resources>

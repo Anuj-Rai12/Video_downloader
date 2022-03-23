@@ -27,8 +27,8 @@
         android:label="progress_fragment_layout"
         tools:layout="@layout/progress_fragment_layout" />
     <fragment
-        android:id="@+id/videoFragment"
-        android:name="com.example.videoeditingline.ui.VideoFragment"
-        android:label="video_fragment_layout"
-        tools:layout="@layout/video_fragment_layout" />
+        android:id="@+id/downloadFragment"
+        android:name="com.example.videoeditingline.ui.DownloadFragment"
+        android:label="download_fragment_layout"
+        tools:layout="@layout/download_fragment_layout" />
 </navigation>

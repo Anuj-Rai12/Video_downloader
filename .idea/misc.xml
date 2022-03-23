@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_download.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_homebtn.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_loading.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_loding.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_main_loding.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_viedoapplogo.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_yearlogo.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/splash_src_gradient_bg.xml" value="0.212" />
@@ -11,6 +16,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/progress_fragment_layout.xml" value="0.10822401614530777" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/splash_screen_fragment.xml" value="0.10822401614530777" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/video_fragment_layout.xml" value="0.10822401614530777" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu-v26/main_menu.xml" value="0.2234375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/main_menu.xml" value="0.17407407407407408" />
       </map>
     </option>
