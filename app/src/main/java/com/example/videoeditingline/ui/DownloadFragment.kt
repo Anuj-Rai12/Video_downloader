@@ -5,9 +5,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.videoeditingline.R
 import com.example.videoeditingline.databinding.DownloadFragmentLayoutBinding
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+
 class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
     private lateinit var binding: DownloadFragmentLayoutBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

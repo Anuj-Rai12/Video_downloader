@@ -6,6 +6,7 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.videoeditingline.R
 
@@ -39,7 +40,7 @@ fun Activity.hideFullSrc() {
 }
 
 
-fun View.hideStatusBar() {
+fun View.hide() {
     this.isVisible = false
 }
 
@@ -47,14 +48,14 @@ fun View.show() {
     this.isVisible = true
 }
 
-/*
-fun AppCompatActivity.hideStatusBar() {
+fun AppCompatActivity.hideActionBar() {
     this.supportActionBar!!.hide()
 }
-fun AppCompatActivity.showStatusBar() {
+
+fun AppCompatActivity.showActionBar() {
     this.supportActionBar!!.show()
 }
-*/
+
 @RequiresApi(Build.VERSION_CODES.M)
 fun Activity.changeStatusBarColor(color: Int = R.color.black) {
     this.window?.statusBarColor = resources.getColor(color, null)

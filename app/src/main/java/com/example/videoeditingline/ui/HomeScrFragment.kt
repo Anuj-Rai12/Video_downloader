@@ -9,10 +9,8 @@ import com.example.videoeditingline.R
 import com.example.videoeditingline.databinding.HomeSrcFragmentBinding
 import com.example.videoeditingline.utils.changeStatusBarColor
 import com.example.videoeditingline.utils.hideFullSrc
-import dagger.hilt.android.AndroidEntryPoint
 
 
-@AndroidEntryPoint
 class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
     private lateinit var binding: HomeSrcFragmentBinding
 

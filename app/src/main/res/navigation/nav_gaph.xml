@@ -3,19 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_gaph"
-    app:startDestination="@id/splashSrcFragment">
+    app:startDestination="@id/homeScrFragment">
 
-    <fragment
-        android:id="@+id/splashSrcFragment"
-        android:name="com.example.videoeditingline.ui.SplashSrcFragment"
-        android:label="splash_screen_fragment"
-        tools:layout="@layout/splash_screen_fragment" >
-        <action
-            android:id="@+id/action_splashSrcFragment_to_homeScrFragment"
-            app:destination="@id/homeScrFragment"
-            app:popUpTo="@id/splashSrcFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
     <fragment
         android:id="@+id/homeScrFragment"
         android:name="com.example.videoeditingline.ui.HomeScrFragment"
