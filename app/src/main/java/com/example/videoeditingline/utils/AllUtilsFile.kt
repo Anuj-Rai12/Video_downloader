@@ -20,10 +20,7 @@ fun Activity.showFullSrc() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
     }
-    /*window.setFlags(
-        WindowManager.LayoutParams.FLAG_FULLSCREEN,
-        WindowManager.LayoutParams.FLAG_FULLSCREEN
-    )*/
+
 }
 
 
@@ -35,8 +32,7 @@ fun Activity.hideFullSrc() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
     }
-    /*window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-    window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)*/
+
 }
 
 
@@ -57,6 +53,6 @@ fun AppCompatActivity.showActionBar() {
 }
 
 @RequiresApi(Build.VERSION_CODES.M)
-fun Activity.changeStatusBarColor(color: Int = R.color.black) {
+fun Activity.changeStatusBarColor(color: Int = R.color.Cod_Gray_color) {
     this.window?.statusBarColor = resources.getColor(color, null)
 }

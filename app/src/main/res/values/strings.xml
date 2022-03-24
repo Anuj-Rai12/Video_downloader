@@ -8,5 +8,7 @@
     <string name="content_description_more">downloads</string>
     <!-- Tool bar Menu -->
     <string name="menu_btn">Tab menu</string>
+    <string name="src_txt_btn">\t\tSearch or type URL</string>
+    <string name="num_of_tab">%s</string>
 
 </resources>
