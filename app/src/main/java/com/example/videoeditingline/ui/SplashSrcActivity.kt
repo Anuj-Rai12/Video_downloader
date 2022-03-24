@@ -25,6 +25,7 @@ class SplashSrcActivity : AppCompatActivity() {
             val intent = Intent(this@SplashSrcActivity, MainActivity::class.java)
             startActivity(intent)
             this.cancel()
+            finish()
         }
 
     }

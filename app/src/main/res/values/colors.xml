@@ -20,6 +20,10 @@
     <!--Bottom App Bar Color -->
     <color name="Mine_Shaft_color">#2E2E2E</color>
     <color name="Surfie_Green_color">#128C7E</color>
+    <!-- Tool bar Color-->
+    <color name="Emperor_color">#515151</color>
+    <color name="Oxford_Blue_color">#2D3748</color>
+    <color name="Silver_Chalice_color">#B1ACAC</color>
 
 
 </resources>

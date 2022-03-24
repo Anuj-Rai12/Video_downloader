@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tool_bar_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/Emperor_color"
+    android:elevation="5dp"
+    app:layout_scrollFlags="scroll|enterAlways">
+
+    <ImageButton
+        android:id="@+id/toolbar_home_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/app_name"
+        android:drawablePadding="5dp"
+        android:src="@drawable/ic_home" />
+
+
+    <ImageButton
+        android:id="@+id/three_bot_mnu_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="10dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/menu_btn"
+        android:src="@drawable/ic_three_dot_mnu" />
+
+    <TextView
+        android:id="@+id/total_public_op"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/check_box_shape"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="5"
+        android:textColor="@color/Oxford_Blue_color"
+        android:textSize="11sp" />
+
+
+</androidx.appcompat.widget.Toolbar>

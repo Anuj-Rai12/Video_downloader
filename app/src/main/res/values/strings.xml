@@ -6,5 +6,7 @@
     <!-- Bottom nav mnu recourse-->
     <string name="content_description_search">Progress</string>
     <string name="content_description_more">downloads</string>
+    <!-- Tool bar Menu -->
+    <string name="menu_btn">Tab menu</string>
 
 </resources>
