@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/homeScrFragment"
-        android:name="com.example.videoeditingline.ui.HomeScrFragment"
+        android:name="com.example.videodownloadingline.ui.HomeScrFragment"
         android:label="home_src_fragment"
         tools:layout="@layout/home_src_fragment" />
     <fragment
         android:id="@+id/progressFragment"
-        android:name="com.example.videoeditingline.ui.ProgressFragment"
+        android:name="com.example.videodownloadingline.ui.ProgressFragment"
         android:label="progress_fragment_layout"
         tools:layout="@layout/progress_fragment_layout" />
     <fragment
         android:id="@+id/downloadFragment"
-        android:name="com.example.videoeditingline.ui.DownloadFragment"
+        android:name="com.example.videodownloadingline.ui.DownloadFragment"
         android:label="download_fragment_layout"
         tools:layout="@layout/download_fragment_layout" />
 </navigation>

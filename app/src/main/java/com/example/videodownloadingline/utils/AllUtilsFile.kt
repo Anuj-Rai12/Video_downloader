@@ -1,4 +1,4 @@
-package com.example.videoeditingline.utils
+package com.example.videodownloadingline.utils
 
 import android.app.Activity
 import android.os.Build
@@ -8,7 +8,7 @@ import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.example.videoeditingline.R
+import com.example.videodownloadingline.R
 
 fun Activity.showFullSrc() {
     @Suppress("DEPRECATION")

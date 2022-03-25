@@ -1,9 +1,9 @@
-package com.example.videoeditingline
+package com.example.videodownloadingline
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.videoeditingline.databinding.ActivityMainBinding
-import com.example.videoeditingline.utils.hideActionBar
+import com.example.videodownloadingline.databinding.ActivityMainBinding
+import com.example.videodownloadingline.utils.hideActionBar
 
 
 class MainActivity : AppCompatActivity() {

@@ -1,10 +1,10 @@
-package com.example.videoeditingline.ui
+package com.example.videodownloadingline.ui
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.example.videoeditingline.R
-import com.example.videoeditingline.databinding.ProgressFragmentLayoutBinding
+import com.example.videodownloadingline.R
+import com.example.videodownloadingline.databinding.ProgressFragmentLayoutBinding
 
 
 
