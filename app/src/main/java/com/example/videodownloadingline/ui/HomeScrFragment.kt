@@ -13,10 +13,12 @@ import com.example.videodownloadingline.adaptor.iconadaptor.HomeSrcAdaptor
 import com.example.videodownloadingline.databinding.HomeSrcFragmentBinding
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
 import com.example.videodownloadingline.utils.changeStatusBarColor
+import com.example.videodownloadingline.utils.hide
 import com.example.videodownloadingline.utils.hideFullSrc
 
 
-class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
+class HomeScrFragment(private val searchClicked: () -> Unit) :
+    Fragment(R.layout.home_src_fragment) {
     private lateinit var binding: HomeSrcFragmentBinding
     private lateinit var homeSrcAdaptor: HomeSrcAdaptor
 
@@ -27,6 +29,10 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
         initial()
         recycleAdaptor()
         setData()
+        binding.srcTv.setOnClickListener {
+            it.hide()
+            searchClicked()
+        }
     }
 
     private fun recycleAdaptor() {
