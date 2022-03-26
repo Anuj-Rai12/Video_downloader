@@ -56,3 +56,10 @@ fun AppCompatActivity.showActionBar() {
 fun Activity.changeStatusBarColor(color: Int = R.color.Cod_Gray_color) {
     this.window?.statusBarColor = resources.getColor(color, null)
 }
+
+fun getIconBgLis() = listOf(
+    R.color.Dodger_Blue_color,
+    R.color.Malachite_color,
+    R.color.Cornflower_Blue_color,
+    R.color.Chambray_color
+)
