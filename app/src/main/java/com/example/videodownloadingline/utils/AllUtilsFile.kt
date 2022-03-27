@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.videodownloadingline.R
 
+const val TAG="VIDEO_DOWNLOADER"
+
 fun Activity.showFullSrc() {
     @Suppress("DEPRECATION")
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -56,6 +58,9 @@ fun AppCompatActivity.showActionBar() {
 fun Activity.changeStatusBarColor(color: Int = R.color.Cod_Gray_color) {
     this.window?.statusBarColor = resources.getColor(color, null)
 }
+
+fun checkInputField(string: String) = string.isNullOrEmpty() || string.isBlank()
+
 
 fun getIconBgLis() = listOf(
     R.color.Dodger_Blue_color,
