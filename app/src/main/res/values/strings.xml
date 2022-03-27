@@ -10,5 +10,11 @@
     <string name="menu_btn">Tab menu</string>
     <string name="src_txt_btn">\t\tSearch or type URL</string>
     <string name="num_of_tab">%s</string>
+    <!-- Dialog Box -->
+    <string name="add_to_home_src">Add to homescreen</string>
+    <string name="url_hint">URL</string>
+    <string name="nme_hint">Name</string>
+    <string name="ok_txt">Ok</string>
+    <string name="cancel_txt">Cancel</string>
 
 </resources>

@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/bottom_border_for_edit_text_layout.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/check_box_shape.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/cursor_line_layout.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/dialog_box_shape.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_add.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_check_it.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_checkmark.xml" value="0.144" />
@@ -21,6 +24,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/splash_src_gradient_bg.xml" value="0.212" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/src_box_shape.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/add_icon_to_home_src_dialog_layout.xml" value="0.4" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/home_src_fragment.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/home_src_icons_layout.xml" value="0.6" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/progress_fragment_layout.xml" value="0.10822401614530777" />

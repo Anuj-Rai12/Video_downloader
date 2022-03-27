@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_box_shape"
+    android:padding="15dp">
+
+
+    <TextView
+        android:id="@+id/text_box_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_medium"
+        android:text="@string/add_to_home_src"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/url_ed_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="@string/url_hint"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/Surfie_Green_color"
+        app:layout_constraintLeft_toLeftOf="@id/text_box_title"
+        app:layout_constraintTop_toBottomOf="@id/text_box_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/url_ed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_border_for_edit_text_layout"
+            android:inputType="textUri"
+            android:textCursorDrawable="@drawable/cursor_line_layout"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nme_ed_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:hint="@string/nme_hint"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/Surfie_Green_color"
+        app:layout_constraintLeft_toLeftOf="@id/url_ed_layout"
+        app:layout_constraintTop_toBottomOf="@id/url_ed_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/nme_ed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_border_for_edit_text_layout"
+            android:fontFamily="@font/inter_medium"
+            android:inputType="textUri"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@drawable/cursor_line_layout"
+            android:textSize="14sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/ok_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/inter_medium"
+        android:text="@string/ok_txt"
+        android:textAllCaps="false"
+        android:textColor="@color/Surfie_Green_color"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="@id/nme_ed_layout"
+        app:layout_constraintTop_toBottomOf="@id/nme_ed_layout" />
+
+
+    <Button
+        android:id="@+id/cancel_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/inter_medium"
+        android:text="@string/cancel_txt"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/ok_btn"
+        app:layout_constraintTop_toTopOf="@id/ok_btn" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

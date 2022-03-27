@@ -25,22 +25,26 @@ class MainActivity : AppCompatActivity() {
 
         binding.viewPager.adapter = adaptor
         binding.viewPager.isUserInputEnabled = false
+        setCurrTab()
+        // Testing Code
 
+        binding.toolBarMainActivity.threeBotMnuBtn.setOnClickListener {
+            binding.viewPager.currentItem = 1
+            setCurrTab()
+        }
+        binding.toolBarMainActivity.toolbarHomeBtn.setOnClickListener {
+            binding.viewPager.currentItem = 2
+            setCurrTab()
+        }
+    }
+
+    @SuppressLint("StringFormatMatches")
+    private fun setCurrTab() {
         binding.toolBarMainActivity.totalTabOp.apply {
             text = getString(
                 R.string.num_of_tab,
                 binding.viewPager.currentItem + 1
             )
-        }
-
-
-        // Testing Code
-
-        binding.toolBarMainActivity.threeBotMnuBtn.setOnClickListener {
-            binding.viewPager.currentItem = 1
-        }
-        binding.toolBarMainActivity.toolbarHomeBtn.setOnClickListener {
-            binding.viewPager.currentItem = 2
         }
     }
 
