@@ -17,6 +17,9 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_loding.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_main_loding.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_more_horizontal.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newdownload.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newhome.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newloading.xml" value="0.212" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_search.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_viedoapplogo.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_yearlogo.xml" value="0.144" />
@@ -33,7 +36,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/toolbar_layout.xml" value="0.536" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/video_fragment_layout.xml" value="0.10822401614530777" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu-v26/main_menu.xml" value="0.2234375" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/main_menu.xml" value="0.17407407407407408" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/main_menu.xml" value="0.5631067961165048" />
       </map>
     </option>
   </component>

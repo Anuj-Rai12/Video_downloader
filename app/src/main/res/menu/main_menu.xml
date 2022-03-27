@@ -2,14 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/progressFragment"
-        android:contentDescription="@string/content_description_search"
-        android:icon="@drawable/ic_loading"
-        android:title="" />
+        android:contentDescription="@string/content_description_pro"
+        android:enabled="true"
+        android:icon="@drawable/ic_newloading"
+        android:title="@string/content_description_pro" />
+
+    <item
+        android:id="@+id/homeScrFragment"
+        android:contentDescription="@string/home_description_more"
+        android:enabled="true"
+        android:icon="@drawable/ic_newhome"
+        android:title="@string/home_description_more" />
 
     <item
         android:id="@+id/downloadFragment"
-        android:contentDescription="@string/content_description_more"
-        android:icon="@drawable/ic_download"
-        android:title="" />
+        android:contentDescription="@string/content_description_down"
+        android:enabled="true"
+        android:icon="@drawable/ic_newdownload"
+        android:title="@string/content_description_down" />
 
 </menu>

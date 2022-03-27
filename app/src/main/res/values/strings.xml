@@ -4,8 +4,9 @@
     <string name="year_name">Year 2022</string>
 
     <!-- Bottom nav mnu recourse-->
-    <string name="content_description_search">Progress</string>
-    <string name="content_description_more">downloads</string>
+    <string name="content_description_pro">Progress</string>
+    <string name="content_description_down">Downloads</string>
+    <string name="home_description_more">Home</string>
     <!-- Tool bar Menu -->
     <string name="menu_btn">Tab menu</string>
     <string name="src_txt_btn">\t\tSearch or type URL</string>

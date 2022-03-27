@@ -11,7 +11,7 @@ class ViewPagerAdaptor(
     fm: FragmentActivity,
     private val item: () -> Unit
 ) : FragmentStateAdapter(fm) {
-    val getTotalFragment: MutableList<Fragment> = mutableListOf()
+//    val getTotalFragment: MutableList<Fragment> = mutableListOf()
 
     override fun getItemCount(): Int {
         return 3
@@ -20,10 +20,10 @@ class ViewPagerAdaptor(
     override fun createFragment(position: Int): Fragment {
         //return getTotalFragment[position]
         return when (position) {
-            0 -> HomeScrFragment {
+            1 -> HomeScrFragment {
                 item()
             }
-            1 -> ProgressFragment()
+            0 -> ProgressFragment()
             2 -> DownloadFragment()
             else -> throw  IllegalArgumentException("There is Not Fragment At $position")
         }
