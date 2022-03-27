@@ -48,6 +48,7 @@
         android:paddingBottom="1dp"
         android:singleLine="true"
         android:textColorHint="@color/Oxford_Blue_color"
+        android:textCursorDrawable="@drawable/cursor_line_layout"
         android:textSize="12sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

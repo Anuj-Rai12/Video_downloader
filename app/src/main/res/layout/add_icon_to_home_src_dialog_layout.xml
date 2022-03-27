@@ -62,7 +62,6 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bottom_border_for_edit_text_layout"
             android:fontFamily="@font/inter_medium"
-            android:inputType="textUri"
             android:singleLine="true"
             android:textColor="@color/white"
             android:textCursorDrawable="@drawable/cursor_line_layout"
