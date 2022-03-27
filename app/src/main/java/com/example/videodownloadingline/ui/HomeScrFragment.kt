@@ -69,7 +69,8 @@ class HomeScrFragment(private val searchClicked: () -> Unit) :
             layoutManager = GridLayoutManager(requireActivity(), 4)
             homeSrcAdaptor = HomeSrcAdaptor { data: HomeSrcIcon, isAddIcon: Boolean ->
                 Log.i(TAG, "recycleAdaptor: $isAddIcon with $data")
-                showDialogBox()
+                if (isAddIcon)
+                    showDialogBox()
             }
             adapter = homeSrcAdaptor
         }
