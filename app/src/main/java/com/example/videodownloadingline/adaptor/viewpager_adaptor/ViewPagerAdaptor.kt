@@ -7,10 +7,7 @@ import com.example.videodownloadingline.ui.DownloadFragment
 import com.example.videodownloadingline.ui.HomeScrFragment
 import com.example.videodownloadingline.ui.ProgressFragment
 
-class ViewPagerAdaptor(
-    fm: FragmentActivity,
-    private val item: () -> Unit
-) : FragmentStateAdapter(fm) {
+class ViewPagerAdaptor(fm: FragmentActivity) : FragmentStateAdapter(fm) {
 //    val getTotalFragment: MutableList<Fragment> = mutableListOf()
 
     override fun getItemCount(): Int {
@@ -20,9 +17,7 @@ class ViewPagerAdaptor(
     override fun createFragment(position: Int): Fragment {
         //return getTotalFragment[position]
         return when (position) {
-            0 -> HomeScrFragment {
-                item()
-            }
+            0 -> HomeScrFragment()
             1 -> ProgressFragment()
             2 -> DownloadFragment()
             else -> throw  IllegalArgumentException("There is Not Fragment At $position")

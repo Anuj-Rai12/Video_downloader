@@ -1,6 +1,7 @@
 package com.example.videodownloadingline.ui
 
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.iconadaptor.HomeSrcAdaptor
 import com.example.videodownloadingline.databinding.HomeSrcFragmentBinding
@@ -17,8 +19,7 @@ import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
 import com.example.videodownloadingline.utils.*
 
 
-class HomeScrFragment(private val searchClicked: () -> Unit) :
-    Fragment(R.layout.home_src_fragment) {
+class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
     private lateinit var binding: HomeSrcFragmentBinding
     private lateinit var homeSrcAdaptor: HomeSrcAdaptor
     private var iconsDialogBox: AddIconsDialogBox? = null
@@ -29,17 +30,19 @@ class HomeScrFragment(private val searchClicked: () -> Unit) :
         super.onViewCreated(view, savedInstanceState)
         binding = HomeSrcFragmentBinding.bind(view)
         initial()
+
         savedInstanceState?.let {
             isDialogBoxIsVisible = it.getBoolean(getString(R.string.add_to_home_src))
         }
         if (isDialogBoxIsVisible) {
             showDialogBox()
         }
+        setTab(1)
         recycleAdaptor()
         setData()
         binding.srcTv.setOnClickListener {
             it.hide()
-            searchClicked()
+            binding.toolBarMainActivity.searchBoxEd.show()
         }
     }
 
@@ -109,12 +112,28 @@ class HomeScrFragment(private val searchClicked: () -> Unit) :
         homeSrcAdaptor.submitList(list)
     }
 
+    @SuppressLint("StringFormatMatches")
     @RequiresApi(Build.VERSION_CODES.M)
     private fun initial() {
         activity?.hideFullSrc()
         (activity as AppCompatActivity?)?.hideActionBar()
         activity?.changeStatusBarColor()
+        binding.toolBarMainActivity.toolbarHomeBtn.setOnClickListener {
+            MainActivity.viewPager2?.currentItem = 0
+            setTab(MainActivity.viewPager2?.currentItem ?: 0)
+        }
     }
+
+    @SuppressLint("StringFormatMatches")
+    private fun setTab(value: Int) {
+        binding.toolBarMainActivity.totalTabOp.apply {
+            text = getString(
+                R.string.num_of_tab,
+                MainActivity.viewPager2?.currentItem?.plus(value) ?: 10
+            )
+        }
+    }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

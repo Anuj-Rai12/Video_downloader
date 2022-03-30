@@ -6,26 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-    <include
-        android:id="@+id/tool_bar_main_activity"
-        layout="@layout/toolbar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:overScrollMode="never"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        app:layout_constraintLeft_toLeftOf="@id/tool_bar_main_activity"
-        app:layout_constraintRight_toRightOf="@id/tool_bar_main_activity"
-        app:layout_constraintTop_toBottomOf="@id/tool_bar_main_activity" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

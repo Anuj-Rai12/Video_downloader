@@ -1,15 +1,15 @@
 package com.example.videodownloadingline.ui
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.progress_adaptor.ProgressAdaptor
 import com.example.videodownloadingline.databinding.ProgressFragmentLayoutBinding
 import com.example.videodownloadingline.model.progress.ProgressData
 import com.example.videodownloadingline.model.progress.Vid
-import com.example.videodownloadingline.utils.showActionBar
+import com.example.videodownloadingline.utils.hide
 
 
 class ProgressFragment : Fragment(R.layout.progress_fragment_layout) {
@@ -18,10 +18,18 @@ class ProgressFragment : Fragment(R.layout.progress_fragment_layout) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ProgressFragmentLayoutBinding.bind(view)
-        (activity as AppCompatActivity?)?.showActionBar()
-        activity?.actionBar?.title = "Progress"
+        initial()
         setRecycle()
         setData()
+    }
+
+    private fun initial() {
+        binding.toolBarMainActivity.totalTabOp.hide()
+        binding.toolBarMainActivity.toolbarHomeBtn.hide()
+        binding.toolBarMainActivity.threeBotMnuBtn.hide()
+        binding.toolBarMainActivity.searchBoxEd.hide()
+        binding.toolBarMainActivity.toolBarLayout.title = "Progress"
+        binding.toolBarMainActivity.toolBarLayout.setTitleTextColor(Color.WHITE)
     }
 
     private fun setData() {
