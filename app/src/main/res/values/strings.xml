@@ -17,5 +17,12 @@
     <string name="nme_hint">Name</string>
     <string name="ok_txt">Ok</string>
     <string name="cancel_txt">Cancel</string>
+    <!-- Video Sample File -->
+    <string name="sample_txt">Lorem ipsum dolor sit amet, consectetur ad</string>
+    <string name="value_sample_txt">%s MB/%s MB</string>
+    <string name="pause_txt">Pause</string>
+    <string name="vid_file">Video File</string>
+    <string name="close_file">Close</string>
+    <string name="speed_txt">Speed</string>
 
 </resources>

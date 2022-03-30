@@ -20,10 +20,10 @@ class ViewPagerAdaptor(
     override fun createFragment(position: Int): Fragment {
         //return getTotalFragment[position]
         return when (position) {
-            1 -> HomeScrFragment {
+            0 -> HomeScrFragment {
                 item()
             }
-            0 -> ProgressFragment()
+            1 -> ProgressFragment()
             2 -> DownloadFragment()
             else -> throw  IllegalArgumentException("There is Not Fragment At $position")
         }

@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/progressFragment"
-        android:contentDescription="@string/content_description_pro"
-        android:enabled="true"
-        android:icon="@drawable/ic_newloading"
-        android:title="@string/content_description_pro" />
+
 
     <item
         android:id="@+id/homeScrFragment"
@@ -13,6 +8,14 @@
         android:enabled="true"
         android:icon="@drawable/ic_newhome"
         android:title="@string/home_description_more" />
+
+    <item
+        android:id="@+id/progressFragment"
+        android:contentDescription="@string/content_description_pro"
+        android:enabled="true"
+        android:icon="@drawable/ic_newloading"
+        android:title="@string/content_description_pro" />
+
 
     <item
         android:id="@+id/downloadFragment"

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.videodownloadingline.R
@@ -13,10 +14,7 @@ import com.example.videodownloadingline.adaptor.iconadaptor.HomeSrcAdaptor
 import com.example.videodownloadingline.databinding.HomeSrcFragmentBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
-import com.example.videodownloadingline.utils.TAG
-import com.example.videodownloadingline.utils.changeStatusBarColor
-import com.example.videodownloadingline.utils.hide
-import com.example.videodownloadingline.utils.hideFullSrc
+import com.example.videodownloadingline.utils.*
 
 
 class HomeScrFragment(private val searchClicked: () -> Unit) :
@@ -81,27 +79,27 @@ class HomeScrFragment(private val searchClicked: () -> Unit) :
             HomeSrcIcon(
                 id = 0,
                 name = "FaceBook",
-                url = "https:www.google.com"
+                url = "https://www.google.com/"
             ), HomeSrcIcon(
                 id = 1,
                 name = "Instagram",
-                url = "https:www.google.com"
+                url = "https://www.google.com/"
             ), HomeSrcIcon(
                 id = 2,
                 name = "WhatsApp",
-                url = "https:www.google.com"
+                url = "https://www.google.com/"
             ), HomeSrcIcon(
                 id = 3,
                 name = "Twitter",
-                url = "https:www.google.com"
+                url = "https://www.google.com/"
             ), HomeSrcIcon(
                 id = 4,
                 name = "DailyMotion",
-                url = "https:www.google.com"
+                url = "https://www.google.com/"
             ), HomeSrcIcon(
                 id = 5,
                 name = "Vimeo",
-                url = "https:www.google.com"
+                url = "https://www.google.com/"
             ), HomeSrcIcon(
                 id = 6,
                 name = null,
@@ -114,6 +112,7 @@ class HomeScrFragment(private val searchClicked: () -> Unit) :
     @RequiresApi(Build.VERSION_CODES.M)
     private fun initial() {
         activity?.hideFullSrc()
+        (activity as AppCompatActivity?)?.hideActionBar()
         activity?.changeStatusBarColor()
     }
 
