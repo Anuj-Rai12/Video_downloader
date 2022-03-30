@@ -12,4 +12,10 @@
     <string name="src_txt_btn">\t\tSearch or type URL</string>
     <string name="num_of_tab">%s</string>
 
+    <!-- Testing Download -->
+    <string name="added_test_tab">File For Download</string>
+    <string name="size_test_tab">3 MB/5 MB</string>
+    <string name="speed_txt">Speed</string>
+    <string name="texting_txt">Hey i its for Added the Following File</string>
+
 </resources>
