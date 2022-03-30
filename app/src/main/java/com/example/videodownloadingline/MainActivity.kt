@@ -32,12 +32,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.viewPager.adapter = adaptor
         binding.viewPager.isUserInputEnabled = false
-        setCurrTab()
+        setCurrTab(1)
+        binding.bottomNavigation.selectedItemId = R.id.homeScrFragment
         bottomNav()
-        /*binding.toolBarMainActivity.toolbarHomeBtn.setOnClickListener {
-            setCurrTab(0)
-            binding.bottomNavigation.selectedItemId = R.id.homeScrFragment
-        }*/
     }
 
     private fun bottomNav() {
@@ -49,19 +46,16 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.homeScrFragment -> {
-                    //binding.toolBarMainActivity.root.show()
-                    setCurrTab(0)
+                    setCurrTab(1)
                 }
                 R.id.progressFragment -> {
-                    //binding.toolBarMainActivity.root.hide()
                     binding.bottomNavigation.getOrCreateBadge(item.itemId).apply {
                         clearNumber()
                         isVisible = false
                     }
-                    setCurrTab(1)
+                    setCurrTab(0)
                 }
                 R.id.downloadFragment -> {
-                    //binding.toolBarMainActivity.root.show()
                     setCurrTab(2)
                 }
             }
@@ -72,12 +66,6 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("StringFormatMatches")
     private fun setCurrTab(tab: Int? = null) {
         tab?.let { binding.viewPager.currentItem = it }
-        /*binding.toolBarMainActivity.totalTabOp.apply {
-            text = getString(
-                R.string.num_of_tab,
-                binding.viewPager.currentItem + 1
-            )
-        }*/
     }
 
     override fun onPause() {

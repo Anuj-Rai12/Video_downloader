@@ -17,8 +17,8 @@ class ViewPagerAdaptor(fm: FragmentActivity) : FragmentStateAdapter(fm) {
     override fun createFragment(position: Int): Fragment {
         //return getTotalFragment[position]
         return when (position) {
-            0 -> HomeScrFragment()
-            1 -> ProgressFragment()
+            0 -> ProgressFragment()
+            1 -> HomeScrFragment()
             2 -> DownloadFragment()
             else -> throw  IllegalArgumentException("There is Not Fragment At $position")
         }
