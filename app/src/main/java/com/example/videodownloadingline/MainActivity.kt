@@ -3,14 +3,14 @@ package com.example.videodownloadingline
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.videodownloadingline.adaptor.viewpager_adaptor.ViewPagerAdaptor
 import com.example.videodownloadingline.databinding.ActivityMainBinding
 import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.utils.hideActionBar
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import np.com.susanthapa.curved_bottom_navigation.CbnMenuItem
+import np.com.susanthapa.curved_bottom_navigation.CurvedBottomNavigationView
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private var currentScr: Int = 1
 
     companion object {
-        var bottomNavigation: BottomNavigationView? = null
+        var bottomNavigation: CurvedBottomNavigationView? = null//BottomNavigationView? = null
         var viewPager2: ViewPager2? = null
     }
 
@@ -32,41 +32,28 @@ class MainActivity : AppCompatActivity() {
             currentScr = it.getInt(getString(R.string.num_of_tab))
             Log.i(TAG, "onCreate: Main Activity $currentScr")
         }
+        setUpBottomNav()
         val adaptor = ViewPagerAdaptor(this)
         viewPager2 = binding.viewPager
-        bottomNavigation = binding.bottomNavigation
+        bottomNavigation = binding.curBottomNav
 
         binding.viewPager.adapter = adaptor
         binding.viewPager.isUserInputEnabled = false
         setCurrTab(currentScr)
-        binding.bottomNavigation.selectedItemId = R.id.homeScrFragment
-        bottomNav()
     }
 
-    private fun bottomNav() {
-        binding.bottomNavigation.selectedItemId = R.id.homeScrFragment
-        binding.bottomNavigation.getOrCreateBadge(R.id.progressFragment).apply {
-            isVisible = true
-            number = 12
+    private fun setUpBottomNav() {
+        val menuItem = arrayOf(
+            CbnMenuItem(R.drawable.ic_newloading, R.drawable.avd_loading),
+            CbnMenuItem(R.drawable.ic_homebtn, R.drawable.avd_anim),
+            CbnMenuItem(R.drawable.ic_newdownload, R.drawable.avd_downloading)
+        )
+        binding.curBottomNav.setMenuItems(menuItem, 1)
+
+        binding.curBottomNav.setOnMenuItemClickListener { _, index ->
+            binding.viewPager.currentItem = index
         }
-        binding.bottomNavigation.setOnItemSelectedListener { item: MenuItem ->
-            when (item.itemId) {
-                R.id.homeScrFragment -> {
-                    setCurrTab(1)
-                }
-                R.id.progressFragment -> {
-                    binding.bottomNavigation.getOrCreateBadge(item.itemId).apply {
-                        clearNumber()
-                        isVisible = false
-                    }
-                    setCurrTab(0)
-                }
-                R.id.downloadFragment -> {
-                    setCurrTab(2)
-                }
-            }
-            return@setOnItemSelectedListener true
-        }
+
     }
 
     @SuppressLint("StringFormatMatches")

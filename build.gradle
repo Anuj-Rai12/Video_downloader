@@ -5,10 +5,12 @@ buildscript {
     ext.arch_version = "2.1.0"
     ext.kotlin_cor = "1.6.0"
     ext.nav_version = "2.4.1"
-    ext.dagger_hilt="2.40.5"
+    //ext.dagger_hilt = "2.40.5"
+    ext.multidex_version = "2.0.1"
+    ext.bottom_nav = "0.6.5"
     //ext.jetpack_data_store = "1.0.0"
     dependencies {
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$dagger_hilt"
+        //classpath "com.google.dagger:hilt-android-gradle-plugin:$dagger_hilt"
         //nav Path
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version")
     }

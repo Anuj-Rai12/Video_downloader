@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id("androidx.navigation.safeargs")
-    id 'dagger.hilt.android.plugin'
+    //id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
 }
 
@@ -58,8 +58,8 @@ dependencies {
     implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
 
     //Dagger Hilt
-    implementation "com.google.dagger:hilt-android:$dagger_hilt"
-    kapt "com.google.dagger:hilt-compiler:$dagger_hilt"
+    /*implementation "com.google.dagger:hilt-android:$dagger_hilt"
+    kapt "com.google.dagger:hilt-compiler:$dagger_hilt"*/
 
     // Kotlin Coroutine
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_cor")
@@ -70,8 +70,9 @@ dependencies {
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-    def multidex_version = "2.0.1"
     //MultiDex
     implementation "androidx.multidex:multidex:$multidex_version"
+    //Bottom Navigation
+    implementation 'np.com.susanthapa:curved_bottom_navigation:0.6.5'
 
 }
