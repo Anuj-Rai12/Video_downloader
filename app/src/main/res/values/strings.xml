@@ -9,13 +9,14 @@
     <!-- Tool bar Menu -->
     <string name="menu_btn">Tab menu</string>
     <string name="testing_url">https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4</string>
+    <string name="testing_urL2">https://download.samplelib.com/mp4/sample-30s.mp4</string>
     <string name="src_txt_btn">\t\tSearch or type URL</string>
     <string name="num_of_tab">%s</string>
 
     <!-- Testing Download -->
     <string name="added_test_tab">File For Download</string>
-    <string name="size_test_tab">3 MB/5 MB</string>
+    <string name="size_test_tab">%d MB/%d MB</string>
     <string name="speed_txt">Speed</string>
-    <string name="texting_txt">Hey i its for Added the Following File</string>
+    <string name="texting_txt">Hey My Name is Anuj Rai</string>
 
 </resources>

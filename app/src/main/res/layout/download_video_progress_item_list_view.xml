@@ -14,6 +14,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="32dp"
         android:contentDescription="@string/added_test_tab"
+        android:src="@drawable/ic_viedoapplogo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -45,7 +46,7 @@
         app:layout_constraintTop_toTopOf="@id/title_download" />
 
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
+    <!--<com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,7 +59,20 @@
         app:layout_constraintRight_toRightOf="@id/btn_cancel"
         app:layout_constraintTop_toBottomOf="@id/title_download"
         app:trackColor="@color/Surfie_Green_color"
-        app:trackCornerRadius="2dp" />
+        app:trackCornerRadius="2dp" />-->
+
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"
+        android:max="100"
+        app:layout_constraintLeft_toLeftOf="@id/title_download"
+        app:layout_constraintRight_toRightOf="@id/btn_cancel"
+        app:layout_constraintTop_toBottomOf="@id/title_download"
+        tools:progress="60" />
 
 
     <TextView
@@ -67,7 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/inter_medium"
-        android:text="@string/size_test_tab"
+        tools:text="@string/size_test_tab"
         android:textColor="@color/white"
         android:textSize="9sp"
         app:layout_constraintLeft_toLeftOf="@id/progress_bar"

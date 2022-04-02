@@ -7,10 +7,16 @@
     android:background="@color/Mine_Shaft_color"
     tools:context="com.example.videodownloadingline.ui.HomeScrFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/main_rec"
+    <include
+        android:id="@+id/download_layout"
+        layout="@layout/download_video_progress_item_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/download_video_progress_item_list_view" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
