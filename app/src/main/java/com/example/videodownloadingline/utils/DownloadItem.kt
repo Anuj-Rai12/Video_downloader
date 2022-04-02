@@ -39,13 +39,18 @@ class DownloadProgressLiveData(private val application: Application, private val
                 val cursor = downloadManager.query(query)
                 if (cursor.moveToFirst()) {
                     val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                    val stat =getStatus(status)
+                    val stat = getStatus(status)
                     //Log.i(TAG, "onActive: status is => $status")
                     when (status) {
                         DownloadManager.STATUS_SUCCESSFUL,
                         DownloadManager.STATUS_PENDING,
                         DownloadManager.STATUS_FAILED,
-                        DownloadManager.STATUS_PAUSED -> postValue(DownloadItem(status = status, stat = stat))
+                        DownloadManager.STATUS_PAUSED -> postValue(
+                            DownloadItem(
+                                status = status,
+                                stat = stat
+                            )
+                        )
                         else -> {
                             val bytesDownloadedSoFar =
                                 cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
@@ -64,7 +69,12 @@ class DownloadProgressLiveData(private val application: Application, private val
                     if (status == DownloadManager.STATUS_SUCCESSFUL || status == DownloadManager.STATUS_FAILED)
                         cancel()
                 } else {
-                    postValue(DownloadItem(status = DownloadManager.STATUS_FAILED, stat = "STATUS FAILED"))
+                    postValue(
+                        DownloadItem(
+                            status = DownloadManager.STATUS_FAILED,
+                            stat = "STATUS FAILED"
+                        )
+                    )
                     cancel()
                 }
                 cursor.close()
@@ -73,13 +83,15 @@ class DownloadProgressLiveData(private val application: Application, private val
         }
     }
 
-    private fun getStatus(status: Int): String {
-        return when(status){
-            DownloadManager.STATUS_SUCCESSFUL->"success"
-            DownloadManager.STATUS_PENDING->"Pending"
-            DownloadManager.STATUS_FAILED->"Failed"
-            DownloadManager.STATUS_PAUSED->"Passed"
-            else -> ""
+    companion object {
+        fun getStatus(status: Int): String {
+            return when (status) {
+                DownloadManager.STATUS_SUCCESSFUL -> "success"
+                DownloadManager.STATUS_PENDING -> "Pending"
+                DownloadManager.STATUS_FAILED -> "Failed"
+                DownloadManager.STATUS_PAUSED -> "Passed"
+                else -> ""
+            }
         }
     }
 

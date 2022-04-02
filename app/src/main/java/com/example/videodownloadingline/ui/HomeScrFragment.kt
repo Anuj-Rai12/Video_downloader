@@ -111,12 +111,11 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
 
     }
 
-    private fun getMb(bytesDownloadedSoFar: Long): Int {
-        return round((bytesDownloadedSoFar / 1048576).toDouble()).toInt()
+    companion object {
+        fun getMb(bytesDownloadedSoFar: Long): Int {
+            return round((bytesDownloadedSoFar / 1048576).toDouble()).toInt()
+        }
     }
-
-
-
 
 
     private fun setBroadcastReceiver(TrueId: Long, manage: DownloadManager) {
