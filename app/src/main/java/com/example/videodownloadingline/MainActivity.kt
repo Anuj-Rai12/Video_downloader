@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUpBottomNav() {
         val menuItem = arrayOf(
             CbnMenuItem(R.drawable.ic_newloading, R.drawable.avd_loading),
-            CbnMenuItem(R.drawable.ic_homebtn, R.drawable.avd_anim),
+            CbnMenuItem(R.drawable.ic_homebtn, R.drawable.avd_home_anim),
             CbnMenuItem(R.drawable.ic_newdownload, R.drawable.avd_downloading)
         )
         binding.curBottomNav.setMenuItems(menuItem, 1)
