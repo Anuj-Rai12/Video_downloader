@@ -7,10 +7,11 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import com.example.videodownloadingline.R
 
-const val TAG="VIDEO_DOWNLOADER"
+const val TAG = "VIDEO_DOWNLOADER"
 
 fun Activity.showFullSrc() {
     @Suppress("DEPRECATION")
@@ -60,6 +61,26 @@ fun Activity.changeStatusBarColor(color: Int = R.color.Cod_Gray_color) {
 }
 
 fun checkInputField(string: String) = string.isNullOrEmpty() || string.isBlank()
+
+@RequiresApi(Build.VERSION_CODES.M)
+fun Activity.getColorInt(color: Int): Int {
+    return resources.getColor(color, null)
+}
+
+
+inline fun SearchView.onQueasyListenerChanged(crossinline Listener: (String) -> Unit) {
+    this.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            return true
+        }
+
+        override fun onQueryTextChange(newText: String?): Boolean {
+            Listener(newText.orEmpty())
+            return true
+        }
+
+    })
+}
 
 
 fun getIconBgLis() = listOf(

@@ -28,7 +28,7 @@ class ProgressFragment : Fragment(R.layout.progress_fragment_layout) {
         binding.toolBarMainActivity.toolbarHomeBtn.hide()
         binding.toolBarMainActivity.threeBotMnuBtn.hide()
         binding.toolBarMainActivity.searchBoxEd.hide()
-        binding.toolBarMainActivity.toolBarLayout.title = "Progress"
+        binding.toolBarMainActivity.toolBarLayout.title = getString(R.string.content_description_pro)
         binding.toolBarMainActivity.toolBarLayout.setTitleTextColor(Color.WHITE)
     }
 

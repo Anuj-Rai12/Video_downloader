@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
 
     <item
-        android:id="@+id/progressFragment"
+        android:id="@+id/my_search_view"
+        android:enabled="true"
+        android:icon="@drawable/ic_search"
+        android:title="@string/src_ic"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always|collapseActionView"
+        tools:targetApi="o" />
+
+
+    <item
+        android:id="@+id/menu_box"
+        android:enabled="true"
+        android:icon="@drawable/ic_list"
+        android:title="@string/src_ic"
+        app:showAsAction="ifRoom" />
+
+
+    <!--<item
+        android:id="@+id/search_box"
         android:contentDescription="@string/content_description_pro"
         android:enabled="true"
         android:icon="@drawable/ic_newloading"
@@ -14,14 +35,14 @@
         android:contentDescription="@string/home_description_more"
         android:enabled="true"
         android:icon="@drawable/ic_newhome"
-        android:title="@string/home_description_more" />
+        android:title="@string/home_description_more" />-->
 
 
-    <item
+    <!--<item
         android:id="@+id/downloadFragment"
         android:contentDescription="@string/content_description_down"
         android:enabled="true"
         android:icon="@drawable/ic_newdownload"
-        android:title="@string/content_description_down" />
+        android:title="@string/content_description_down" />-->
 
 </menu>

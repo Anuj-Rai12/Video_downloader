@@ -24,5 +24,6 @@
     <string name="vid_file">Video File</string>
     <string name="close_file">Close</string>
     <string name="speed_txt">Speed</string>
-
+    <!-- Download Fragments -->
+    <string name="src_ic">Search Downloads</string>
 </resources>

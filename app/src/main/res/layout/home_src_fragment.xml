@@ -23,6 +23,7 @@
         android:layout_margin="15dp"
         android:background="@drawable/search_box_dash_board_shape"
         android:drawableEnd="@drawable/ic_search"
+        android:drawableTint="@color/Oxford_Blue_color"
         android:hint="@string/src_txt_btn"
         android:padding="15dp"
         android:textColorHint="@color/Oxford_Blue_color"
