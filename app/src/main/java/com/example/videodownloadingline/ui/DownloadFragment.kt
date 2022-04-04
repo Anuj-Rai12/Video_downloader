@@ -1,28 +1,26 @@
 package com.example.videodownloadingline.ui
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.widget.SearchView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.DownloadFragmentLayoutBinding
-import com.example.videodownloadingline.utils.*
+import com.example.videodownloadingline.utils.TAG
+import com.example.videodownloadingline.utils.hide
+import com.example.videodownloadingline.utils.show
 
 
 class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
     private lateinit var binding: DownloadFragmentLayoutBinding
-    private var searchRes: SearchView? = null
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -101,20 +99,5 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
         binding.toolBarMainActivity.toolBarLayout.setTitleTextColor(Color.WHITE)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun setUpSearch(searchViews: MenuItem) {
-        searchRes?.queryHint = "search video..."
-        searchViews.expandActionView()
-        searchRes?.maxWidth = Integer.MAX_VALUE
-        searchRes?.setIconifiedByDefault(false)
-        searchRes?.isIconified = false
-        binding.toolBarMainActivity.toolBarLayout.let {
-            it.setTitleTextColor(requireActivity().getColorInt(R.color.Silver_color))
-            it.setBackgroundColor(requireActivity().getColorInt(R.color.Emperor_color))
-        }
-        searchRes?.setBackgroundColor(requireActivity().getColorInt(R.color.white))
-        searchViews.actionView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
-            .setImageResource(R.drawable.ic_clear_btn)
-    }
 
 }
