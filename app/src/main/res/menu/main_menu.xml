@@ -17,32 +17,8 @@
     <item
         android:id="@+id/menu_box"
         android:enabled="true"
-        android:icon="@drawable/ic_list"
+        android:icon="@drawable/ic_new_list_vew"
         android:title="@string/src_ic"
         app:showAsAction="ifRoom" />
-
-
-    <!--<item
-        android:id="@+id/search_box"
-        android:contentDescription="@string/content_description_pro"
-        android:enabled="true"
-        android:icon="@drawable/ic_newloading"
-        android:title="@string/content_description_pro" />
-
-
-    <item
-        android:id="@+id/homeScrFragment"
-        android:contentDescription="@string/home_description_more"
-        android:enabled="true"
-        android:icon="@drawable/ic_newhome"
-        android:title="@string/home_description_more" />-->
-
-
-    <!--<item
-        android:id="@+id/downloadFragment"
-        android:contentDescription="@string/content_description_down"
-        android:enabled="true"
-        android:icon="@drawable/ic_newdownload"
-        android:title="@string/content_description_down" />-->
 
 </menu>

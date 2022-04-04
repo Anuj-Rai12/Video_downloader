@@ -44,9 +44,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpBottomNav() {
         val menuItem = arrayOf(
-            CbnMenuItem(R.drawable.ic_newloading, R.drawable.avd_loading),
+            CbnMenuItem(R.drawable.ic_loading, R.drawable.avd_anim_loading),
             CbnMenuItem(R.drawable.ic_homebtn, R.drawable.avd_home_anim),
-            CbnMenuItem(R.drawable.ic_newdownload, R.drawable.avd_downloading)
+            CbnMenuItem(R.drawable.ic_download, R.drawable.avd_anim_downloads)
         )
         binding.curBottomNav.setMenuItems(menuItem, 1)
 
@@ -67,8 +67,14 @@ class MainActivity : AppCompatActivity() {
         binding.viewPager.adapter = null
     }
 
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        binding.viewPager.currentItem =
+            savedInstanceState.getInt(getString(R.string.num_of_tab))
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(getString(R.string.num_of_tab), currentScr)
+        outState.putInt(getString(R.string.num_of_tab), binding.viewPager.currentItem)
     }
 }
