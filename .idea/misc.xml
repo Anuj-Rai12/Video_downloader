@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/avd_anim.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/avd_anim_downloads.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/avd_anim_loading.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/avd_downloading.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/avd_home_anim.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/avd_loading.xml" value="0.144" />
@@ -20,6 +21,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_download.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_home.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_homebtn.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_launcher_background.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_list.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_loading.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_loding.xml" value="0.144" />
@@ -29,7 +31,10 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newdownload.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newhome.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newloading.xml" value="0.212" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_pause.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_play.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_search.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_three_dot_mnu.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_viedoapplogo.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_yearlogo.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/search_box_dash_board_shape.xml" value="0.144" />

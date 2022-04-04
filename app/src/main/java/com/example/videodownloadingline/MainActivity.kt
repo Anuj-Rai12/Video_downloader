@@ -30,16 +30,31 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         savedInstanceState?.let {
             currentScr = it.getInt(getString(R.string.num_of_tab))
-            Log.i(TAG, "onCreate: Main Activity $currentScr")
+            viewPagerImpl()
+            binding.viewPager.currentItem = currentScr
+            Log.i(
+                TAG, "onCreate: OnSaveInstance $currentScr \n" +
+                        "And ViewPager is =>${binding.viewPager.currentItem}"
+            )
         }
         setUpBottomNav()
+        if (currentScr == 1) {
+            viewPagerImpl()
+            setCurrTab(currentScr)
+        }
+        Log.i(
+            TAG,
+            "onCreate: Main Activity  With out Save Instance $currentScr \nAnd ViewPager is =>${binding.viewPager.currentItem}"
+        )
+    }
+
+    private fun viewPagerImpl() {
         val adaptor = ViewPagerAdaptor(this)
         viewPager2 = binding.viewPager
         bottomNavigation = binding.curBottomNav
 
         binding.viewPager.adapter = adaptor
         binding.viewPager.isUserInputEnabled = false
-        setCurrTab(currentScr)
     }
 
     private fun setUpBottomNav() {
@@ -48,10 +63,11 @@ class MainActivity : AppCompatActivity() {
             CbnMenuItem(R.drawable.ic_homebtn, R.drawable.avd_home_anim),
             CbnMenuItem(R.drawable.ic_download, R.drawable.avd_anim_downloads)
         )
-        binding.curBottomNav.setMenuItems(menuItem, 1)
+        binding.curBottomNav.setMenuItems(menuItem, currentScr)
 
         binding.curBottomNav.setOnMenuItemClickListener { _, index ->
             binding.viewPager.currentItem = index
+            currentScr = index
         }
 
     }
@@ -68,13 +84,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
+        viewPagerImpl()
         binding.viewPager.currentItem =
             savedInstanceState.getInt(getString(R.string.num_of_tab))
+        Log.i(TAG, "onRestoreInstanceState: ViewPager is => ${binding.viewPager.currentItem}")
+        super.onRestoreInstanceState(savedInstanceState)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(getString(R.string.num_of_tab), currentScr)
         super.onSaveInstanceState(outState)
-        outState.putInt(getString(R.string.num_of_tab), binding.viewPager.currentItem)
     }
 }
