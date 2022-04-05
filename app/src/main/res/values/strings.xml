@@ -26,4 +26,8 @@
     <string name="speed_txt">Speed</string>
     <!-- Download Fragments -->
     <string name="src_ic">Search Downloads</string>
+    <string name="total_vid">%d videos</string>
+    <string name="total_vid_view">%s</string>
+    <string name="grid_download_info">%s\n%dMB\t%s</string>
+    <string name="linear_download_info">%dMB\t\t\t%s</string>
 </resources>

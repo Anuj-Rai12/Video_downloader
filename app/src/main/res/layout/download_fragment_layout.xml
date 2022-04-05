@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/Mine_Shaft_color"
     tools:context="com.example.videodownloadingline.ui.DownloadFragment">
 
 
@@ -17,12 +18,78 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/option_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello Video!"
+        android:layout_margin="25dp"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="@id/tool_bar_main_activity"
+        app:layout_constraintRight_toRightOf="@id/tool_bar_main_activity"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar_main_activity">
+
+        <TextView
+            android:id="@+id/total_vid_txt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/inter_medium"
+            android:gravity="center|start"
+            android:text="@string/total_vid"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/view_txt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter_medium"
+                android:gravity="center"
+                android:text="@string/total_vid_view"
+                android:textColor="@color/white"
+                android:textSize="11sp" />
+
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_for_grid_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.3"
+                android:background="@android:color/transparent"
+                android:tint="@color/Surfie_Green_color"
+                app:srcCompat="@drawable/ic_grid_outline" />
+
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_for_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.3"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/ic_download_list" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="2dp"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/option_layout" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

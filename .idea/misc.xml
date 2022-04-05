@@ -20,6 +20,8 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_clear_btn.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_close.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_download.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_download_list.xml" value="0.1375" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_grid_outline.xml" value="0.1375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_home.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_homebtn.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_launcher_background.xml" value="0.144" />
@@ -44,6 +46,8 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/vd_vector.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/add_icon_to_home_src_dialog_layout.xml" value="0.4" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_file_item_grid_layout.xml" value="0.4" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_file_item_linear_layout.xml" value="0.4" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_fragment_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_video_progress_item_list_view.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/home_src_fragment.xml" value="0.264" />

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/file_thumb_nail"
+        android:layout_width="168dp"
+        android:layout_height="147dp"
+        android:background="@color/light_Silver_color"
+        android:padding="6dp"
+        android:src="@drawable/ic_viedoapplogo"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/Grey_color"
+        android:orientation="horizontal"
+        android:paddingStart="15dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="7dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/file_thumb_nail">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/inter_medium"
+            android:gravity="center"
+            android:text="@string/grid_download_info"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/menu_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="4"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_three_dot_mnu"
+            android:tint="@color/white" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
