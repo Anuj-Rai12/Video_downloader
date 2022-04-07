@@ -19,6 +19,7 @@ import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadItemGridAdaptor
 import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadItemLinearAdaptor
 import com.example.videodownloadingline.databinding.DownloadFragmentLayoutBinding
+import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.downloaditem.SampleDownloadItem
 import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.utils.hide
@@ -29,6 +30,8 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
     private lateinit var binding: DownloadFragmentLayoutBinding
     private var gridAdaptor: DownloadItemGridAdaptor? = null
     private var linearAdaptor: DownloadItemLinearAdaptor? = null
+    private var newFolderDialogBox: AddIconsDialogBox? = null
+    private var isDialogBoxIsVisible: Boolean = false
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +45,27 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
         setUpRecycleView(GridLayoutManager(requireActivity(), 2))
         setUpData()
         changeLayoutView()
+        binding.addNewFolderBtn.setOnClickListener {
+            showDialogBox()
+        }
     }
+
+    override fun onPause() {
+        super.onPause()
+        newFolderDialogBox?.dismiss()
+    }
+    private fun showDialogBox() {
+        newFolderDialogBox = AddIconsDialogBox()
+        newFolderDialogBox?.createNewFolder(context = requireActivity(), listenerForDismiss = {
+            newFolderDialogBox?.dismiss()
+            isDialogBoxIsVisible = false
+        }, listenerForNewFolder = {
+            Log.i(TAG, "showDialogBox: $it")
+            newFolderDialogBox?.dismiss()
+        })
+        isDialogBoxIsVisible = true
+    }
+
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setUpData() {

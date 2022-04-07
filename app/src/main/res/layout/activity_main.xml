@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         app:cbn_bg="@color/Mine_Shaft_color"
         app:cbn_fabBg="@color/Surfie_Green_color"
-        app:cbn_selectedColor="@color/Mine_Shaft_color"
+        app:cbn_selectedColor="@color/Turquoise_Blue_color"
         app:cbn_unSelectedColor="@color/Silver_Chalice_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
