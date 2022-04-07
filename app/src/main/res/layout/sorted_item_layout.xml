@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:background="@color/Cod_Gray_color">
+
+
+    <TextView
+        android:id="@+id/txt_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_medium"
+        android:textAlignment="textStart"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/btn_click_check"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text=" helo gkfl klgjkl gjfkdlgjkl hjdklhkld hjklfdhjkl hjdklhldk hdjklhkl hjdfl gkld; hkgl;hkl; khl;ghkl; hkgl;hkgl; hkglhkl;fghkl;gh;flghlg;hkf" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_click_check"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintBottom_toBottomOf="@id/txt_info"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/txt_info"
+        tools:src="@drawable/ic_check" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

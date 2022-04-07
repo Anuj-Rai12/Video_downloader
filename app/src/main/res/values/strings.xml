@@ -33,4 +33,11 @@
     <string name="Untitled_folder_name">Untitled Folder</string>
     <string name="new_folder_name">New Folder</string>
     <string name="create_folder_name">Create</string>
+    <string name="sorting_name">Sorting</string>
+    <string-array name="sorting_item">
+        <item>Sort by date</item>
+        <item>Sort by size</item>
+        <item>Sort by type</item>
+        <item>Sort by name</item>
+    </string-array>
 </resources>

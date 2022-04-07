@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import com.example.videodownloadingline.R
+import com.example.videodownloadingline.adaptor.sort_adptor.SortRecyclerAdaptor
 import com.example.videodownloadingline.databinding.AddIconToHomeSrcDialogLayoutBinding
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
 import com.example.videodownloadingline.utils.checkInputField
@@ -76,7 +77,7 @@ class AddIconsDialogBox {
         binding.okBtn.apply {
             updateLayoutParams<ConstraintLayout.LayoutParams> {
                 topToBottom = binding.folderNameLayout.id
-                rightToRight=binding.folderNameLayout.id
+                rightToRight = binding.folderNameLayout.id
             }
             text = con.getText(R.string.create_folder_name)
             setOnClickListener {
@@ -95,6 +96,38 @@ class AddIconsDialogBox {
         binding.cancelBtn.setOnClickListener {
             listenerForDismiss()
         }
+        this.alertDialog = alertDialog.create()
+        this.alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        this.alertDialog?.show()
+    }
+
+
+    fun displaySortingViewRecycle(
+        context: Context,
+        data: Array<String>,
+        flag: Boolean = true,
+        listenerForNewFolder: ListenNewFolder
+    ) {
+        val con = (context as Activity)
+        val alertDialog = AlertDialog.Builder(con)
+        val inflater = (con).layoutInflater
+        val binding = AddIconToHomeSrcDialogLayoutBinding.inflate(inflater)
+        val adaptor = SortRecyclerAdaptor {
+            listenerForNewFolder(it)
+        }
+        alertDialog.setView(binding.root)
+        alertDialog.setCancelable(flag)
+        binding.urlEdLayout.hide()
+        binding.nmeEdLayout.hide()
+        binding.folderNameLayout.hide()
+        binding.okBtn.hide()
+        binding.cancelBtn.hide()
+        binding.mainRecycleView.show()
+        binding.textBoxTitle.text = con.getString(R.string.sorting_name)
+        binding.mainRecycleView.apply {
+            adapter = adaptor
+        }
+        adaptor.submitList(data.toList())
         this.alertDialog = alertDialog.create()
         this.alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         this.alertDialog?.show()

@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -32,6 +31,9 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
     private var linearAdaptor: DownloadItemLinearAdaptor? = null
     private var newFolderDialogBox: AddIconsDialogBox? = null
     private var isDialogBoxIsVisible: Boolean = false
+    private val getStringArray by lazy {
+        resources.getStringArray(R.array.sorting_item)
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,7 +48,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
         setUpData()
         changeLayoutView()
         binding.addNewFolderBtn.setOnClickListener {
-            showDialogBox()
+            createFolderDialog()
         }
     }
 
@@ -54,7 +56,8 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
         super.onPause()
         newFolderDialogBox?.dismiss()
     }
-    private fun showDialogBox() {
+
+    private fun createFolderDialog() {
         newFolderDialogBox = AddIconsDialogBox()
         newFolderDialogBox?.createNewFolder(context = requireActivity(), listenerForDismiss = {
             newFolderDialogBox?.dismiss()
@@ -64,6 +67,20 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
             newFolderDialogBox?.dismiss()
         })
         isDialogBoxIsVisible = true
+    }
+
+
+    private fun showSortingDialog() {
+        if (newFolderDialogBox == null)
+            newFolderDialogBox = AddIconsDialogBox()
+
+        newFolderDialogBox?.displaySortingViewRecycle(
+            context = requireActivity(),
+            getStringArray,
+            listenerForNewFolder = {
+             //   newFolderDialogBox?.dismiss()
+            }
+        )
     }
 
 
@@ -166,13 +183,8 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
         }
 
         binding.toolBarMainActivity.threeBotMnuBtn.setOnClickListener {
-            Toast.makeText(
-                activity,
-                "List icon clicked Icon Clicked",
-                Toast.LENGTH_SHORT
-            ).show()
+            showSortingDialog()
         }
-
 
     }
 
