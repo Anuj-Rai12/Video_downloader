@@ -40,4 +40,9 @@
         <item>Sort by type</item>
         <item>Sort by name</item>
     </string-array>
+
+    <string name="delete_video">Delete</string>
+    <string name="move_video">Move To</string>
+    <string name="set_pin_video">Set Pin</string>
+
 </resources>

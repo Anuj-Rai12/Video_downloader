@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foregroundTint="@android:color/transparent"
+    android:background="@drawable/bottom_sheet_bg_layout"
+    android:paddingTop="15dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title_of_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:drawableStart="@drawable/ic_video"
+        android:drawablePadding="20dp"
+        android:fontFamily="@font/inter_medium"
+        android:gravity="center|start"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@id/space"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/Untitled_folder_name" />
+
+    <View
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/Bon_Jour_color"
+        app:layout_constraintLeft_toLeftOf="@id/title_of_video"
+        app:layout_constraintRight_toRightOf="@id/title_of_video"
+        app:layout_constraintTop_toBottomOf="@id/title_of_video" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/main_recycle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/space" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/delete_of_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        android:drawableStart="@drawable/ic_trash_outline"
+        android:drawablePadding="20dp"
+        android:fontFamily="@font/inter_medium"
+        android:gravity="center|start"
+        android:text="@string/delete_video"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/space" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/move_the_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        android:drawableStart="@drawable/ic_folder_remove"
+        android:drawablePadding="20dp"
+        android:fontFamily="@font/inter_medium"
+        android:gravity="center|start"
+        android:text="@string/move_video"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/delete_of_video" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/set_video_pin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        android:drawableStart="@drawable/ic_video_pin"
+        android:drawablePadding="20dp"
+        android:fontFamily="@font/inter_medium"
+        android:gravity="center|start"
+        android:paddingBottom="17dp"
+        android:text="@string/set_pin_video"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/move_the_video" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

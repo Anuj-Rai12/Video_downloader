@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadItemGridAdaptor
 import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadItemLinearAdaptor
+import com.example.videodownloadingline.bottom_sheets.BottomSheetDialogForDownloadFrag
 import com.example.videodownloadingline.databinding.DownloadFragmentLayoutBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.downloaditem.SampleDownloadItem
@@ -31,6 +32,8 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
     private var linearAdaptor: DownloadItemLinearAdaptor? = null
     private var newFolderDialogBox: AddIconsDialogBox? = null
     private var isDialogBoxIsVisible: Boolean = false
+    private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
+
     private val getStringArray by lazy {
         resources.getStringArray(R.array.sorting_item)
     }
@@ -55,6 +58,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
     override fun onPause() {
         super.onPause()
         newFolderDialogBox?.dismiss()
+        openBottomSheetDialog?.dismiss()
     }
 
     private fun createFolderDialog() {
@@ -78,7 +82,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
             context = requireActivity(),
             getStringArray,
             listenerForNewFolder = {
-             //   newFolderDialogBox?.dismiss()
+                //   newFolderDialogBox?.dismiss()
             }
         )
     }
@@ -113,10 +117,15 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
             setHasFixedSize(true)
             this.layoutManager = layoutManager
             gridAdaptor = DownloadItemGridAdaptor {
-
+                openBottomSheet(it.name)
             }
             adapter = gridAdaptor
         }
+    }
+
+    private fun openBottomSheet(video: String) {
+        openBottomSheetDialog = BottomSheetDialogForDownloadFrag(video)
+        openBottomSheetDialog?.show(childFragmentManager, "Open Bottom Sheet")
     }
 
     private fun setUpRecycleView(layoutManager: LinearLayoutManager) {
@@ -124,7 +133,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
         binding.recycleView.apply {
             setHasFixedSize(true)
             linearAdaptor = DownloadItemLinearAdaptor {
-
+                openBottomSheet(it.name)
             }
             this.layoutManager = layoutManager
             adapter = linearAdaptor
