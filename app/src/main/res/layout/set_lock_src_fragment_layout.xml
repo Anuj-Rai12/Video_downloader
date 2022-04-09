@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Mine_Shaft_color">
+
+
+    <include
+        android:id="@+id/tool_bar_id"
+        layout="@layout/toolbar_layout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/lock_src_ic"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_video_pin"
+        android:tint="@color/Surfie_Green_color"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar_id" />
+
+
+    <TextView
+        android:id="@+id/lock_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:fontFamily="@font/inter_medium"
+        android:text="@string/lock_src_title"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lock_src_ic" />
+
+
+    <TextView
+        android:id="@+id/lock_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:fontFamily="@font/inter_medium"
+        android:text="@string/lock_src_desc"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lock_title" />
+
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/set_lock_pin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:inputType="textPassword"
+        android:minWidth="215dp"
+        android:minHeight="34dp"
+        android:textCursorDrawable="@color/Oxford_Blue_color"
+        app:backgroundTint="@color/Surfie_Green_color"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lock_desc" />
+
+
+    <TextView
+        android:id="@+id/lock_ed_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/inter_medium"
+        android:text="@string/lock_src_suggestion"
+        android:textColor="@color/Noble_color"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="@id/set_lock_pin"
+        app:layout_constraintRight_toRightOf="@id/set_lock_pin"
+        app:layout_constraintTop_toBottomOf="@id/set_lock_pin" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/next_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/round_corners_bg_6dp"
+        android:backgroundTint="@color/Emperor_color"
+        android:elevation="4dp"
+        android:fontFamily="@font/inter_medium"
+        android:text="@string/nxt_btn"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toRightOf="@id/lock_ed_desc"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lock_ed_desc" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/clr_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/inter_medium"
+        android:text="@string/clr_btn"
+        android:textColor="@color/Emperor_color"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/set_lock_pin"
+        app:layout_constraintTop_toTopOf="@id/next_btn" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

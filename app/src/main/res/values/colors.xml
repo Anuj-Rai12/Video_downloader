@@ -36,5 +36,6 @@
     <color name="Grey_color">#898989</color>
     <color name="Turquoise_Blue_color">#43F3DF</color>
     <color name="Bon_Jour_color">#F2EEEE</color>
-
+    <!-- Set Lock Screen -->
+    <color name="Noble_color">#B6B6B6</color>
 </resources>

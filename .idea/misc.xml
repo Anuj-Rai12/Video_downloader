@@ -47,6 +47,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_viedoapplogo.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_yearlogo.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/round_corners_bg_6dp.xml" value="0.133" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/round_corners_green_teal_borders.xml" value="0.133" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/round_corners_white_teal_borders.xml" value="0.133" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/search_box_dash_board_shape.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/splash_src_gradient_bg.xml" value="0.212" />
@@ -61,6 +62,8 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/home_src_fragment.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/home_src_icons_layout.xml" value="0.6" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/progress_fragment_layout.xml" value="0.264" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/set_lock_src_fragment_layout.xml" value="0.264" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/set_lock_src_layout.xml" value="0.2234375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/sorted_item_layout.xml" value="0.4" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/splash_screen_activity.xml" value="0.10822401614530777" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/splash_screen_fragment.xml" value="0.264" />
