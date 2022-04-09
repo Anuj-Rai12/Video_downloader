@@ -16,6 +16,7 @@
         android:text="@string/add_to_home_src"
         android:textColor="@color/white"
         android:textSize="14sp"
+        android:gravity="center"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -30,7 +31,8 @@
         android:textColorHint="@color/white"
         app:hintTextColor="@color/Surfie_Green_color"
         app:layout_constraintLeft_toLeftOf="@id/text_box_title"
-        app:layout_constraintTop_toBottomOf="@id/text_box_title">
+        app:layout_constraintTop_toBottomOf="@id/text_box_title"
+        tools:visibility="gone">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/url_ed"
@@ -55,7 +57,8 @@
         android:textColorHint="@color/white"
         app:hintTextColor="@color/Surfie_Green_color"
         app:layout_constraintLeft_toLeftOf="@id/url_ed_layout"
-        app:layout_constraintTop_toBottomOf="@id/url_ed_layout">
+        app:layout_constraintTop_toBottomOf="@id/url_ed_layout"
+        tools:visibility="gone">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nme_ed"
@@ -107,8 +110,7 @@
         app:layout_constraintLeft_toLeftOf="@id/text_box_title"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_box_title"
-        tools:listitem="@layout/sorted_item_layout"
-        tools:visibility="visible" />
+        tools:listitem="@layout/sorted_item_layout" />
 
 
     <Button
@@ -124,7 +126,8 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="@id/nme_ed_layout"
-        app:layout_constraintTop_toBottomOf="@id/nme_ed_layout" />
+        app:layout_constraintTop_toBottomOf="@id/nme_ed_layout"
+        tools:visibility="gone" />
 
 
     <Button
@@ -139,7 +142,52 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@id/ok_btn"
-        app:layout_constraintTop_toTopOf="@id/ok_btn" />
+        app:layout_constraintTop_toTopOf="@id/ok_btn"
+        tools:visibility="gone" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/del_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="7dp"
+        android:background="@drawable/round_corners_green_teal_borders"
+        android:fontFamily="@font/inter_medium"
+        android:textAllCaps="false"
+        android:textColor="@color/Surfie_Green_color"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/do_not_del_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_box_title"
+        tools:text="Yes"
+        tools:visibility="visible" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/do_not_del_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginBottom="21dp"
+        android:background="@drawable/round_corners_bg_6dp"
+        android:fontFamily="@font/inter_medium"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/del_btn"
+        app:layout_constraintTop_toTopOf="@id/del_btn"
+        tools:text="No"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

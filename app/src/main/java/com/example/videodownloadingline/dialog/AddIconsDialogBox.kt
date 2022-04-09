@@ -5,7 +5,11 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.util.TypedValue
+import android.view.View
+import android.widget.TableRow
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
@@ -50,9 +54,7 @@ class AddIconsDialogBox {
             }
             listenerIcon(HomeSrcIcon(id = 121, name, url))
         }
-        this.alertDialog = alertDialog.create()
-        this.alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        this.alertDialog?.show()
+        setUpDialogBox(alertDialog)
     }
 
     fun dismiss() = alertDialog?.dismiss()
@@ -96,9 +98,7 @@ class AddIconsDialogBox {
         binding.cancelBtn.setOnClickListener {
             listenerForDismiss()
         }
-        this.alertDialog = alertDialog.create()
-        this.alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        this.alertDialog?.show()
+        setUpDialogBox(alertDialog)
     }
 
 
@@ -123,15 +123,65 @@ class AddIconsDialogBox {
         binding.okBtn.hide()
         binding.cancelBtn.hide()
         binding.mainRecycleView.show()
-        binding.textBoxTitle.text = con.getString(R.string.sorting_name)
+        binding.textBoxTitle.text = binding.textBoxTitle.context.getString(R.string.sorting_name)
         binding.mainRecycleView.apply {
             adapter = adaptor
         }
         adaptor.submitList(data.toList())
-        this.alertDialog = alertDialog.create()
+        setUpDialogBox(alertDialog)
+    }
+
+
+    fun showDeleteVideoDialogBox(
+        context: Context,
+        flag: Boolean = true,
+        listenerYesBtn: ListenDismiss,
+        listenerNoBtn: ListenDismiss
+    ) {
+        val con = (context as Activity)
+        val alertDialog = AlertDialog.Builder(con)
+        val inflater = (con).layoutInflater
+        val binding = AddIconToHomeSrcDialogLayoutBinding.inflate(inflater)
+        alertDialog.setView(binding.root)
+        alertDialog.setCancelable(flag)
+        binding.urlEdLayout.hide()
+        binding.nmeEdLayout.hide()
+        binding.folderNameLayout.hide()
+        binding.okBtn.hide()
+        binding.cancelBtn.hide()
+        binding.mainRecycleView.hide()
+        binding.delBtn.show()
+        binding.doNotDelBtn.show()
+        binding.textBoxTitle.apply {
+            updateLayoutParams<ConstraintLayout.LayoutParams> {
+                rightToRight = binding.root.id
+                setMargins(0, 12, 0, 0)
+            }
+            layoutParams = TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.WRAP_CONTENT
+            )
+            textAlignment = View.TEXT_ALIGNMENT_CENTER
+            setTypeface(typeface, Typeface.NORMAL)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            text = this.context.getString(R.string.del_dialog_txt)
+        }
+        binding.delBtn.text = binding.delBtn.context.getString(R.string.total_vid_view, "Yes")
+        binding.doNotDelBtn.text =
+            binding.doNotDelBtn.context.getString(R.string.total_vid_view, "No")
+        binding.delBtn.setOnClickListener {
+            listenerYesBtn()
+        }
+        binding.doNotDelBtn.setOnClickListener {
+            listenerNoBtn()
+        }
+        setUpDialogBox(alertDialog)
+    }
+
+    private fun setUpDialogBox(alert: AlertDialog.Builder) {
+        this.alertDialog = alert.create()
         this.alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         this.alertDialog?.show()
     }
-
 
 }

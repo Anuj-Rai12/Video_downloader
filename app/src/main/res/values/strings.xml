@@ -44,5 +44,7 @@
     <string name="delete_video">Delete</string>
     <string name="move_video">Move To</string>
     <string name="set_pin_video">Set Pin</string>
+    <string name="del_dialog_txt">Are you sure you want to delete this video.</string>
+
 
 </resources>
