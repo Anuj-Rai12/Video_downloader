@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import com.example.videodownloadingline.R
+import java.util.concurrent.Executors
 
 const val TAG = "VIDEO_DOWNLOADER"
 
@@ -37,6 +38,13 @@ fun Activity.hideFullSrc() {
     }
 
 }
+
+private val IO_EXECUTOR = Executors.newSingleThreadExecutor()
+
+fun ioThread(f: () -> Unit) {
+    IO_EXECUTOR.execute(f)
+}
+
 
 
 fun View.hide() {

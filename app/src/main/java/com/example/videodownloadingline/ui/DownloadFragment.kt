@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.videodownloadingline.R
@@ -21,9 +22,11 @@ import com.example.videodownloadingline.bottom_sheets.BottomSheetDialogForDownlo
 import com.example.videodownloadingline.databinding.DownloadFragmentLayoutBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.downloaditem.SampleDownloadItem
+import com.example.videodownloadingline.utils.RemoteResponse
 import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.utils.hide
 import com.example.videodownloadingline.utils.show
+import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
 
 
 class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
@@ -33,6 +36,8 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
     private var newFolderDialogBox: AddIconsDialogBox? = null
     private var isDialogBoxIsVisible: Boolean = false
     private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
+
+    private val viewModel: DownloadFragmentViewModel by viewModels()
 
     private val getStringArray by lazy {
         resources.getStringArray(R.array.sorting_item)
@@ -90,6 +95,16 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setUpData() {
+
+        viewModel.getDownloadItem.observe(viewLifecycleOwner) {
+            when(it){
+                is RemoteResponse.Error -> Log.i(TAG, "setUpData: ${it.exception}")
+                is RemoteResponse.Loading -> Log.i(TAG, "setUpData: ${it.data}")
+                is RemoteResponse.Success -> Log.i(TAG, "setUpData: ${(it.data as List<*>).size}")
+            }
+        }
+
+
         val list = listOf(
             SampleDownloadItem(
                 1, "File 1", DEFAULT_BUFFER_SIZE

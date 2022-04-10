@@ -16,6 +16,11 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -74,5 +79,10 @@ dependencies {
     implementation "androidx.multidex:multidex:$multidex_version"
     //Bottom Navigation
     implementation 'np.com.susanthapa:curved_bottom_navigation:0.6.5'
+
+    // Room Data Base
+    implementation "androidx.room:room-ktx:2.4.2"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
 }
