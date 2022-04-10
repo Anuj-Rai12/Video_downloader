@@ -8,42 +8,43 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.DownloadFileItemGridLayoutBinding
-import com.example.videodownloadingline.model.downloaditem.SampleDownloadItem
+import com.example.videodownloadingline.model.downloaditem.DownloadItems
 
-typealias ItemClickedListener = (data: SampleDownloadItem) -> Unit
+
+typealias ItemClickedListener = (data: DownloadItems) -> Unit
 
 class DownloadItemGridAdaptor(private val itemClicked: ItemClickedListener) :
-    ListAdapter<SampleDownloadItem, DownloadItemGridAdaptor.DownloadItemGridViewHolder>(diffUtil) {
+    ListAdapter<DownloadItems, DownloadItemGridAdaptor.DownloadItemGridViewHolder>(diffUtil) {
     inner class DownloadItemGridViewHolder(private val binding: DownloadFileItemGridLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun makeData(data: SampleDownloadItem, itemClicked: ItemClickedListener) {
+        fun makeData(data: DownloadItems, itemClicked: ItemClickedListener) {
             binding.root.setOnClickListener {
                 itemClicked(data)
             }
             binding.titleTxt.apply {
                 text = this.context.getString(
                     R.string.grid_download_info,
-                    data.name,
-                    data.size,
+                    data.fileTitle,
+                    data.fileSize,
                     data.createdCurrentTimeData
                 )
             }
             binding.menuBtn.setOnClickListener {
-                Toast.makeText(it.context, "${data.name} menu Clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(it.context, "${data.fileTitle} menu Clicked", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<SampleDownloadItem>() {
+        val diffUtil = object : DiffUtil.ItemCallback<DownloadItems>() {
             override fun areItemsTheSame(
-                oldItem: SampleDownloadItem,
-                newItem: SampleDownloadItem
+                oldItem: DownloadItems,
+                newItem: DownloadItems
             ) = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
-                oldItem: SampleDownloadItem,
-                newItem: SampleDownloadItem
+                oldItem: DownloadItems,
+                newItem: DownloadItems
             ) = oldItem == newItem
         }
     }

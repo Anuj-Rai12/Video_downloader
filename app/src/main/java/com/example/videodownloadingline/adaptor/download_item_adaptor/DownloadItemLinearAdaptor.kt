@@ -8,26 +8,28 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.DownloadFileItemLinearLayoutBinding
-import com.example.videodownloadingline.model.downloaditem.SampleDownloadItem
+import com.example.videodownloadingline.model.downloaditem.DownloadItems
 
-typealias ItemForLinearLayoutListner = (data: SampleDownloadItem) -> Unit
 
-class DownloadItemLinearAdaptor(private val itemClicked: ItemForLinearLayoutListner) :
-    ListAdapter<SampleDownloadItem, DownloadItemLinearAdaptor.DownloadItemLinearViewHolder>(diffUtil) {
+typealias ItemForLinearLayoutListener = (data: DownloadItems) -> Unit
+
+class DownloadItemLinearAdaptor(private val itemClicked: ItemForLinearLayoutListener) :
+    ListAdapter<DownloadItems, DownloadItemLinearAdaptor.DownloadItemLinearViewHolder>(diffUtil) {
     inner class DownloadItemLinearViewHolder(private val binding: DownloadFileItemLinearLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun makeData(data: SampleDownloadItem, itemClicked: ItemForLinearLayoutListner) {
+        fun makeData(data: DownloadItems, itemClicked: ItemForLinearLayoutListener) {
             binding.root.setOnClickListener {
                 itemClicked(data)
             }
             binding.menuIcBtn.setOnClickListener {
-                Toast.makeText(it.context, "${data.name} Item Clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(it.context, "${data.fileTitle} Item Clicked", Toast.LENGTH_SHORT)
+                    .show()
             }
-            binding.mainTxtFile.text = data.name
+            binding.mainTxtFile.text = data.fileTitle
             binding.dataTxtInfo.apply {
                 text = context.getString(
                     R.string.linear_download_info,
-                    data.size,
+                    data.fileSize,
                     data.createdCurrentTimeData
                 )
             }
@@ -35,15 +37,15 @@ class DownloadItemLinearAdaptor(private val itemClicked: ItemForLinearLayoutList
     }
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<SampleDownloadItem>() {
+        val diffUtil = object : DiffUtil.ItemCallback<DownloadItems>() {
             override fun areItemsTheSame(
-                oldItem: SampleDownloadItem,
-                newItem: SampleDownloadItem
+                oldItem: DownloadItems,
+                newItem: DownloadItems
             ) = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
-                oldItem: SampleDownloadItem,
-                newItem: SampleDownloadItem
+                oldItem: DownloadItems,
+                newItem: DownloadItems
             ) = oldItem == newItem
         }
     }

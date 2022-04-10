@@ -29,7 +29,7 @@
     <string name="total_vid">%d videos</string>
     <string name="total_vid_view">%s</string>
     <string name="grid_download_info">%s\n\n%dMB\t%s</string>
-    <string name="linear_download_info">%dMB\t\t\t%s</string>
+    <string name="linear_download_info">%dMB\t%s</string>
     <string name="Untitled_folder_name">Untitled Folder</string>
     <string name="new_folder_name">New Folder</string>
     <string name="create_folder_name">Create</string>

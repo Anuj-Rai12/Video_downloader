@@ -21,7 +21,7 @@ import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadIt
 import com.example.videodownloadingline.bottom_sheets.BottomSheetDialogForDownloadFrag
 import com.example.videodownloadingline.databinding.DownloadFragmentLayoutBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
-import com.example.videodownloadingline.model.downloaditem.SampleDownloadItem
+import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.utils.RemoteResponse
 import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.utils.hide
@@ -97,33 +97,18 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
     private fun setUpData() {
 
         viewModel.getDownloadItem.observe(viewLifecycleOwner) {
-            when(it){
+            when (it) {
                 is RemoteResponse.Error -> Log.i(TAG, "setUpData: ${it.exception}")
                 is RemoteResponse.Loading -> Log.i(TAG, "setUpData: ${it.data}")
-                is RemoteResponse.Success -> Log.i(TAG, "setUpData: ${(it.data as List<*>).size}")
+                is RemoteResponse.Success -> {
+                    val list = it.data as List<DownloadItems>
+                    gridAdaptor?.notifyDataSetChanged()
+                    gridAdaptor?.submitList(list)
+                    linearAdaptor?.notifyDataSetChanged()
+                    linearAdaptor?.submitList(list)
+                }
             }
         }
-
-
-        val list = listOf(
-            SampleDownloadItem(
-                1, "File 1", DEFAULT_BUFFER_SIZE
-            ), SampleDownloadItem(
-                2, "File 2", DEFAULT_BUFFER_SIZE
-            ), SampleDownloadItem(
-                3, "File 3", DEFAULT_BUFFER_SIZE
-            ), SampleDownloadItem(
-                4, "File 4", DEFAULT_BUFFER_SIZE
-            ), SampleDownloadItem(
-                5, "File 5", DEFAULT_BUFFER_SIZE
-            ), SampleDownloadItem(
-                6, "File 6", DEFAULT_BUFFER_SIZE
-            )
-        )
-        gridAdaptor?.notifyDataSetChanged()
-        gridAdaptor?.submitList(list)
-        linearAdaptor?.notifyDataSetChanged()
-        linearAdaptor?.submitList(list)
     }
 
     private fun setUpRecycleView(layoutManager: GridLayoutManager) {
@@ -132,7 +117,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
             setHasFixedSize(true)
             this.layoutManager = layoutManager
             gridAdaptor = DownloadItemGridAdaptor {
-                openBottomSheet(it.name)
+                openBottomSheet(it.fileTitle)
             }
             adapter = gridAdaptor
         }
@@ -148,7 +133,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
         binding.recycleView.apply {
             setHasFixedSize(true)
             linearAdaptor = DownloadItemLinearAdaptor {
-                openBottomSheet(it.name)
+                openBottomSheet(it.fileTitle)
             }
             this.layoutManager = layoutManager
             adapter = linearAdaptor
