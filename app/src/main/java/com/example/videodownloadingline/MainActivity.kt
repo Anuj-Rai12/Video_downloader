@@ -7,6 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.videodownloadingline.adaptor.viewpager_adaptor.ViewPagerAdaptor
 import com.example.videodownloadingline.databinding.ActivityMainBinding
+import com.example.videodownloadingline.ui.DownloadFragment
+import com.example.videodownloadingline.ui.HomeScrFragment
+import com.example.videodownloadingline.ui.ProgressFragment
+import com.example.videodownloadingline.ui.SetPinLayoutFragment
 import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.utils.hideActionBar
 import np.com.susanthapa.curved_bottom_navigation.CbnMenuItem
@@ -21,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         var bottomNavigation: CurvedBottomNavigationView? = null//BottomNavigationView? = null
         var viewPager2: ViewPager2? = null
     }
+
 
     @SuppressLint("StringFormatMatches")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +55,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun viewPagerImpl() {
         val adaptor = ViewPagerAdaptor(this)
+        adaptor.setFragment(ProgressFragment())
+        adaptor.setFragment(HomeScrFragment())
+        adaptor.setFragment(DownloadFragment())
+        adaptor.setFragment(SetPinLayoutFragment())
         viewPager2 = binding.viewPager
         bottomNavigation = binding.curBottomNav
 

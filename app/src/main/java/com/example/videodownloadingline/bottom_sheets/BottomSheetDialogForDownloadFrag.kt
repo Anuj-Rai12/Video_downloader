@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.ViewBottomSheetDialogBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
+import com.example.videodownloadingline.utils.OnBottomSheetClick
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class BottomSheetDialogForDownloadFrag(private val videoTitle: String) :
@@ -14,6 +15,7 @@ class BottomSheetDialogForDownloadFrag(private val videoTitle: String) :
 
     private lateinit var binding: ViewBottomSheetDialogBinding
     private var deleteDialogBox: AddIconsDialogBox? = null
+    var onBottomIconClicked: OnBottomSheetClick? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,6 +25,25 @@ class BottomSheetDialogForDownloadFrag(private val videoTitle: String) :
         binding = ViewBottomSheetDialogBinding.inflate(inflater)
         binding.deleteOfVideo.setOnClickListener {
             openDialogBox()
+        }
+
+        binding.moveTheVideo.setOnClickListener {
+            onBottomIconClicked?.onItemClicked(
+                binding.moveTheVideo.text.toString().replace("\\s".toRegex(), "")
+            )
+        }
+
+
+        binding.setVideoPin.setOnClickListener {
+            onBottomIconClicked?.onItemClicked(
+                binding.setVideoPin.text.toString().replace("\\s".toRegex(), "")
+            )
+        }
+
+        binding.deleteOfVideo.setOnClickListener {
+            onBottomIconClicked?.onItemClicked(
+                binding.deleteOfVideo.text.toString().replace("\\s".toRegex(), "")
+            )
         }
         binding.titleOfVideo.text = videoTitle
         return binding.root

@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadItemGridAdaptor
 import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadItemLinearAdaptor
@@ -22,14 +23,11 @@ import com.example.videodownloadingline.bottom_sheets.BottomSheetDialogForDownlo
 import com.example.videodownloadingline.databinding.DownloadFragmentLayoutBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
-import com.example.videodownloadingline.utils.RemoteResponse
-import com.example.videodownloadingline.utils.TAG
-import com.example.videodownloadingline.utils.hide
-import com.example.videodownloadingline.utils.show
+import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
 
 
-class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
+class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSheetClick {
     private lateinit var binding: DownloadFragmentLayoutBinding
     private var gridAdaptor: DownloadItemGridAdaptor? = null
     private var linearAdaptor: DownloadItemLinearAdaptor? = null
@@ -106,6 +104,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
                     gridAdaptor?.submitList(list)
                     linearAdaptor?.notifyDataSetChanged()
                     linearAdaptor?.submitList(list)
+                    MainActivity.bottomNavigation?.show()
                 }
             }
         }
@@ -125,6 +124,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
 
     private fun openBottomSheet(video: String) {
         openBottomSheetDialog = BottomSheetDialogForDownloadFrag(video)
+        openBottomSheetDialog?.onBottomIconClicked = this
         openBottomSheetDialog?.show(childFragmentManager, "Open Bottom Sheet")
     }
 
@@ -200,6 +200,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun initial() {
+        MainActivity.bottomNavigation?.show()
         binding.toolBarMainActivity.totalTabOp.hide()
         binding.toolBarMainActivity.toolbarHomeBtn.hide()
         binding.toolBarMainActivity.srcBtn.show()
@@ -211,6 +212,17 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
         binding.toolBarMainActivity.toolBarLayout.title =
             getString(R.string.content_description_down)
         binding.toolBarMainActivity.toolBarLayout.setTitleTextColor(Color.WHITE)
+    }
+
+    override fun onItemClicked(type: String) {
+        when (BottomType.valueOf(type)) {
+            BottomType.Delete -> Log.i(TAG, "onItemClicked: working on it")
+            BottomType.MoveTo -> Log.i(TAG, "onItemClicked: working on it")
+            BottomType.SetPin -> {
+                MainActivity.bottomNavigation?.hide()
+                MainActivity.viewPager2?.currentItem = 3
+            }
+        }
     }
 
 

@@ -46,7 +46,6 @@ fun ioThread(f: () -> Unit) {
 }
 
 
-
 fun View.hide() {
     this.isVisible = false
 }
@@ -88,6 +87,16 @@ inline fun SearchView.onQueasyListenerChanged(crossinline Listener: (String) -> 
         }
 
     })
+}
+
+enum class BottomType {
+    Delete,
+    MoveTo,
+    SetPin,
+}
+
+interface OnBottomSheetClick {
+    fun onItemClicked(type: String)
 }
 
 
