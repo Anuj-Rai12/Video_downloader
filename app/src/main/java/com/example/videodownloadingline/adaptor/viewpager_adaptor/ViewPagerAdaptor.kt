@@ -24,4 +24,6 @@ class ViewPagerAdaptor(fm: FragmentActivity) : FragmentStateAdapter(fm) {
     fun setFragment(fragment: Fragment) {
         getTotalFragment.add(fragment)
     }
+
+    fun getSize() = getTotalFragment.size
 }

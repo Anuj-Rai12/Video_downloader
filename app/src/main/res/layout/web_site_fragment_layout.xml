@@ -22,6 +22,7 @@
         android:id="@+id/main_web_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/tool_bar_main_activity"
         app:layout_constraintRight_toRightOf="@id/tool_bar_main_activity"

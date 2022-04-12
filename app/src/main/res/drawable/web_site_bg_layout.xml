@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <gradient android:centerX="-2" android:endColor="@color/Surfie_Green_color" android:startColor="@color/Emperor_color" android:type="sweep" />
+            <gradient android:centerX="-1000" android:endColor="@color/Surfie_Green_color" android:startColor="@color/Mine_Shaft_color" android:type="sweep" />
         </shape>
     </item>
 </selector>

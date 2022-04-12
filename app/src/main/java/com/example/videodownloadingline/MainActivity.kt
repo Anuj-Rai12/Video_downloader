@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.example.videodownloadingline.adaptor.viewpager_adaptor.ViewPagerAdaptor
 import com.example.videodownloadingline.databinding.ActivityMainBinding
@@ -20,12 +21,17 @@ import np.com.susanthapa.curved_bottom_navigation.CurvedBottomNavigationView
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var currentScr: Int = 1
+    private var adaptor: ViewPagerAdaptor? = null
 
     companion object {
         var bottomNavigation: CurvedBottomNavigationView? = null//BottomNavigationView? = null
         var viewPager2: ViewPager2? = null
     }
 
+    fun setFragment(fragment: Fragment): Int? {
+        adaptor?.setFragment(fragment)
+        return adaptor?.getSize()
+    }
 
     @SuppressLint("StringFormatMatches")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,11 +60,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun viewPagerImpl() {
-        val adaptor = ViewPagerAdaptor(this)
-        adaptor.setFragment(ProgressFragment())
-        adaptor.setFragment(HomeScrFragment())
-        adaptor.setFragment(DownloadFragment())
-        adaptor.setFragment(SetPinLayoutFragment())
+        adaptor=ViewPagerAdaptor(this)
+        setFragment(ProgressFragment())
+        setFragment(HomeScrFragment())
+        setFragment(DownloadFragment())
+        setFragment(SetPinLayoutFragment())
         viewPager2 = binding.viewPager
         bottomNavigation = binding.curBottomNav
 

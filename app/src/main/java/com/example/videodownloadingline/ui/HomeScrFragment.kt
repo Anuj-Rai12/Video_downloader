@@ -7,9 +7,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.videodownloadingline.MainActivity
@@ -26,6 +26,7 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
     private lateinit var homeSrcAdaptor: HomeSrcAdaptor
     private var iconsDialogBox: AddIconsDialogBox? = null
     private var isDialogBoxIsVisible: Boolean = false
+    private var searchText: String? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,19 +43,26 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
         setTab(1)
         recycleAdaptor()
         setData()
-
+        binding.toolBarMainActivity.searchBoxEd.doOnTextChanged { text, _, _, _ ->
+            searchText = if (text.isNullOrEmpty()) {
+                null
+            } else {
+                text.toString()
+            }
+        }
         binding.toolBarMainActivity.searchBoxEd.setOnKeyListener { _, keyCode, event ->
-                if (event.action == KeyEvent.ACTION_DOWN) {
-                    when (keyCode) {
-                        KeyEvent.KEYCODE_ENTER -> {
-                            Toast.makeText(
-                                activity,
-                                "Enter Key Board Clash",
-                                Toast.LENGTH_SHORT
-                            ).show()
+            if (event.action == KeyEvent.ACTION_DOWN) {
+                when (keyCode) {
+                    KeyEvent.KEYCODE_ENTER -> {
+                        if (!searchText.isNullOrEmpty()) {
+                            (activity as MainActivity).setFragment(WebViewFragments(searchText!!))
+                                ?.let {
+                                    MainActivity.viewPager2?.currentItem = it - 1
+                                }
                         }
                     }
                 }
+            }
             true
         }
 
