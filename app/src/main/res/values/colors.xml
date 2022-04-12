@@ -38,4 +38,6 @@
     <color name="Bon_Jour_color">#F2EEEE</color>
     <!-- Set Lock Screen -->
     <color name="Noble_color">#B6B6B6</color>
+    <!-- Web View Screen -->
+    <color name="Alizarin_Crimson">#E72525</color>
 </resources>

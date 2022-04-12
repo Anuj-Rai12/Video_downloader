@@ -5,7 +5,9 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -40,6 +42,23 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
         setTab(1)
         recycleAdaptor()
         setData()
+
+        binding.toolBarMainActivity.searchBoxEd.setOnKeyListener { _, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN) {
+                    when (keyCode) {
+                        KeyEvent.KEYCODE_ENTER -> {
+                            Toast.makeText(
+                                activity,
+                                "Enter Key Board Clash",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            true
+        }
+
+
         binding.srcTv.setOnClickListener {
             it.hide()
             binding.toolBarMainActivity.searchBoxEd.show()

@@ -17,6 +17,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/edit_text_with_border_layout.xml" value="0.1375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_add.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_arrow_back.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_check.xml" value="0.133" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_check_it.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_checkmark.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_clear_btn.xml" value="0.144" />
@@ -45,6 +46,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_trash_outline.xml" value="0.1375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_video.xml" value="0.1375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_viedoapplogo.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_web_download.xml" value="0.133" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_yearlogo.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/round_corners_bg_6dp.xml" value="0.133" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/round_corners_green_teal_borders.xml" value="0.133" />
@@ -53,6 +55,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/splash_src_gradient_bg.xml" value="0.212" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/src_box_shape.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/vd_vector.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/web_site_bg_layout.xml" value="0.133" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/add_icon_to_home_src_dialog_layout.xml" value="0.4" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_file_item_grid_layout.xml" value="0.4" />
@@ -70,6 +73,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/toolbar_layout.xml" value="0.4" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/video_fragment_layout.xml" value="0.10822401614530777" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/view_bottom_sheet_dialog.xml" value="0.41690962099125367" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/web_site_fragment_layout.xml" value="0.2" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu-v26/main_menu.xml" value="0.2234375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/main_menu.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/xml/provider_paths.xml" value="0.2234375" />
