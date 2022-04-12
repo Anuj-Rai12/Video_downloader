@@ -14,8 +14,15 @@ data class DownloadItems(
     val fileLength: String,
     val fileExtensionType: String,
     val fileSize: Long,
+    //val category:String,
     val downloadCreatedAt: Long = System.currentTimeMillis()
 ) {
     val createdCurrentTimeData: String
         get() = DateFormat.getDateTimeInstance().format(downloadCreatedAt)
+}
+
+enum class Category {
+    PinFolder,
+    OfflineFolder,
+    OnlineFolder
 }

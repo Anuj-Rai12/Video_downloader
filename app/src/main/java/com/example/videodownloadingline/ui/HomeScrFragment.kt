@@ -57,7 +57,7 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
                         if (!searchText.isNullOrEmpty()) {
                             (activity as MainActivity).setFragment(WebViewFragments(searchText!!))
                                 ?.let {
-                                    MainActivity.viewPager2?.currentItem = it - 1
+                                    MainActivity.viewPager2?.currentItem = it - 3
                                 }
                         }
                     }
