@@ -5,11 +5,9 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.doOnTextChanged
+import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.videodownloadingline.MainActivity
@@ -18,7 +16,9 @@ import com.example.videodownloadingline.adaptor.iconadaptor.HomeSrcAdaptor
 import com.example.videodownloadingline.databinding.HomeSrcFragmentBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
-import com.example.videodownloadingline.utils.*
+import com.example.videodownloadingline.utils.TAG
+import com.example.videodownloadingline.utils.changeStatusBarColor
+import com.example.videodownloadingline.utils.hide
 
 
 class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
@@ -26,7 +26,6 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
     private lateinit var homeSrcAdaptor: HomeSrcAdaptor
     private var iconsDialogBox: AddIconsDialogBox? = null
     private var isDialogBoxIsVisible: Boolean = false
-    private var searchText: String? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,36 +39,13 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
         if (isDialogBoxIsVisible) {
             showDialogBox()
         }
-        setTab(1)
+
         recycleAdaptor()
         setData()
-        binding.toolBarMainActivity.searchBoxEd.doOnTextChanged { text, _, _, _ ->
-            searchText = if (text.isNullOrEmpty()) {
-                null
-            } else {
-                text.toString()
-            }
-        }
-        binding.toolBarMainActivity.searchBoxEd.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN) {
-                when (keyCode) {
-                    KeyEvent.KEYCODE_ENTER -> {
-                        if (!searchText.isNullOrEmpty()) {
-                            (activity as MainActivity).setFragment(WebViewFragments(searchText!!))
-                                ?.let {
-                                    MainActivity.viewPager2?.currentItem = it - 3
-                                }
-                        }
-                    }
-                }
-            }
-            true
-        }
-
 
         binding.srcTv.setOnClickListener {
             it.hide()
-            binding.toolBarMainActivity.searchBoxEd.show()
+            (requireActivity() as MainActivity).changeToolbar()
         }
     }
 
@@ -142,25 +118,15 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
     @SuppressLint("StringFormatMatches")
     @RequiresApi(Build.VERSION_CODES.M)
     private fun initial() {
-        activity?.hideFullSrc()
-        (activity as AppCompatActivity?)?.hideActionBar()
         activity?.changeStatusBarColor()
-        binding.toolBarMainActivity.toolbarHomeBtn.setOnClickListener {
-            MainActivity.viewPager2?.currentItem = 0
-            setTab(MainActivity.viewPager2?.currentItem ?: 0)
-        }
     }
 
-    @SuppressLint("StringFormatMatches")
-    private fun setTab(value: Int) {
-        binding.toolBarMainActivity.totalTabOp.apply {
-            text = getString(
-                R.string.num_of_tab,
-                MainActivity.viewPager2?.currentItem?.plus(value) ?: 10
-            )
-        }
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_TITLE
+        (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
+        (requireActivity() as MainActivity).supportActionBar!!.title = "Video Downloader"
     }
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

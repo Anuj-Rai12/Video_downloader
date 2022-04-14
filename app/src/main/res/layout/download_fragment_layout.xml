@@ -8,25 +8,15 @@
     tools:context="com.example.videodownloadingline.ui.DownloadFragment">
 
 
-    <include
-        android:id="@+id/tool_bar_main_activity"
-        layout="@layout/toolbar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
     <LinearLayout
         android:id="@+id/option_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
         android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="@id/tool_bar_main_activity"
-        app:layout_constraintRight_toRightOf="@id/tool_bar_main_activity"
-        app:layout_constraintTop_toBottomOf="@id/tool_bar_main_activity">
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/total_vid_txt"

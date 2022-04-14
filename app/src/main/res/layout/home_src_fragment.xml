@@ -7,14 +7,14 @@
     android:background="@color/Mine_Shaft_color"
     tools:context="com.example.videodownloadingline.ui.HomeScrFragment">
 
-    <include
+    <!--<include
         android:id="@+id/tool_bar_main_activity"
         layout="@layout/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/src_tv"
@@ -30,7 +30,7 @@
         android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tool_bar_main_activity" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/home_src_icon"

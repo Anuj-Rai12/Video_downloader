@@ -1,16 +1,15 @@
 package com.example.videodownloadingline.ui
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.updateLayoutParams
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -46,16 +45,13 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
         super.onViewCreated(view, savedInstanceState)
         binding = DownloadFragmentLayoutBinding.bind(view)
         initial()
-        menuClickListener()
-        binding.toolBarMainActivity.searchBoxEd.doOnTextChanged { text, _, _, _ ->
-            Log.i(TAG, "onViewCreated: $text")
-        }
         setUpRecycleView(GridLayoutManager(requireActivity(), 2))
         setUpData()
         changeLayoutView()
         binding.addNewFolderBtn.setOnClickListener {
             createFolderDialog()
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onPause() {
@@ -76,6 +72,16 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
         isDialogBoxIsVisible = true
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_menu, menu)
+        val icSort = menu.findItem(R.id.menu_box)
+        icSort.setOnMenuItemClickListener {
+            showSortingDialog()
+            return@setOnMenuItemClickListener true
+        }
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
 
     private fun showSortingDialog() {
         if (newFolderDialogBox == null)
@@ -108,6 +114,14 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
+            ActionBar.DISPLAY_SHOW_TITLE
+        (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
+        (requireActivity() as MainActivity).supportActionBar!!.title = getString(R.string.content_description_down)
     }
 
     private fun setUpRecycleView(layoutManager: GridLayoutManager) {
@@ -165,53 +179,8 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun menuClickListener() {
-
-        binding.toolBarMainActivity.srcBtn.setOnClickListener {
-            binding.toolBarMainActivity.toolbarHomeBtn.apply {
-                setImageResource(R.drawable.ic_arrow_back)
-                show()
-            }
-            binding.toolBarMainActivity.searchBoxEd.apply {
-                updateLayoutParams<ConstraintLayout.LayoutParams> {
-                    rightToLeft = it.id
-                }
-                binding.toolBarMainActivity.toolBarLayout.title = ""
-                show()
-            }
-            it.hide()
-        }
-
-
-        binding.toolBarMainActivity.toolbarHomeBtn.setOnClickListener {
-            it.hide()
-            binding.toolBarMainActivity.searchBoxEd.hide()
-            binding.toolBarMainActivity.toolBarLayout.title =
-                getString(R.string.content_description_down)
-            binding.toolBarMainActivity.srcBtn.show()
-        }
-
-        binding.toolBarMainActivity.threeBotMnuBtn.setOnClickListener {
-            showSortingDialog()
-        }
-
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun initial() {
         MainActivity.bottomNavigation?.show()
-        binding.toolBarMainActivity.totalTabOp.hide()
-        binding.toolBarMainActivity.toolbarHomeBtn.hide()
-        binding.toolBarMainActivity.srcBtn.show()
-        binding.toolBarMainActivity.threeBotMnuBtn.setImageResource(R.drawable.ic_new_list_vew)
-        binding.toolBarMainActivity.searchBoxEd.hide()
-        binding.totalVidTxt.text = getString(R.string.total_vid, 1100)
-        binding.viewTxt.text = getString(R.string.total_vid_view, "view:")
-        setBtnColor(binding.btnForGridView)
-        binding.toolBarMainActivity.toolBarLayout.title =
-            getString(R.string.content_description_down)
-        binding.toolBarMainActivity.toolBarLayout.setTitleTextColor(Color.WHITE)
     }
 
     override fun onItemClicked(type: String) {
