@@ -1,10 +1,11 @@
 package com.example.videodownloadingline.ui
 
 
-import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
@@ -31,8 +32,7 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = HomeSrcFragmentBinding.bind(view)
-        initial()
-
+        activity?.changeStatusBarColor()
         savedInstanceState?.let {
             isDialogBoxIsVisible = it.getBoolean(getString(R.string.add_to_home_src))
         }
@@ -45,8 +45,18 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
 
         binding.srcTv.setOnClickListener {
             it.hide()
+            setHasOptionsMenu(true)
             (requireActivity() as MainActivity).changeToolbar()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.home_frag_menu, menu)
+        val optionOne = menu.findItem(R.id.option_one)
+        optionOne.setOnMenuItemClickListener {
+            return@setOnMenuItemClickListener true
+        }
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun showDialogBox() {
@@ -115,17 +125,14 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
         homeSrcAdaptor.submitList(list)
     }
 
-    @SuppressLint("StringFormatMatches")
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun initial() {
-        activity?.changeStatusBarColor()
-    }
 
     override fun onResume() {
         super.onResume()
-        (requireActivity() as MainActivity).supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_TITLE
+        setHasOptionsMenu(false)
+        (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
+            ActionBar.DISPLAY_SHOW_TITLE
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
-        (requireActivity() as MainActivity).supportActionBar!!.title = "Video Downloader"
+        (requireActivity() as MainActivity).supportActionBar!!.title = getString(R.string.app_name)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

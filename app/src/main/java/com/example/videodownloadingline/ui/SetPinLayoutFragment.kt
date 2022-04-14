@@ -55,7 +55,6 @@ class SetPinLayoutFragment : Fragment(R.layout.set_lock_src_fragment_layout) {
                     )
                     show()
                 }
-                threeBotMnuBtn.hide()
             }
         }
     }

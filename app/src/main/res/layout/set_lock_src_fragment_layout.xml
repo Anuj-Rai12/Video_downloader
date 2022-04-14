@@ -10,7 +10,7 @@
 
     <include
         android:id="@+id/tool_bar_id"
-        layout="@layout/toolbar_layout"
+        layout="@layout/custom_toolbar_layout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

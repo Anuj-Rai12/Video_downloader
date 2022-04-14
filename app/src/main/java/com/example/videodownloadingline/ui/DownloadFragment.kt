@@ -73,7 +73,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.main_menu, menu)
+        inflater.inflate(R.menu.download_frag_menu, menu)
         val icSort = menu.findItem(R.id.menu_box)
         icSort.setOnMenuItemClickListener {
             showSortingDialog()
