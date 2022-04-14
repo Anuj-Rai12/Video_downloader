@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/progressFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_loading"
+        android:title="@string/content_description_pro" />
 
 
     <item
-        android:id="@+id/my_search_view"
+        android:id="@+id/homeScrFragment"
         android:enabled="true"
-        android:icon="@drawable/ic_search"
-        android:title="@string/src_ic"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always|collapseActionView"
-        tools:targetApi="o" />
-
-
+        android:icon="@drawable/ic_homebtn"
+        android:title="@string/home_description_more" />
     <item
-        android:id="@+id/menu_box"
+        android:id="@+id/downloadFragment"
         android:enabled="true"
-        android:icon="@drawable/ic_new_list_vew"
-        android:title="@string/src_ic"
-        app:showAsAction="ifRoom" />
-
+        android:icon="@drawable/ic_download"
+        android:title="@string/content_description_down" />
 </menu>
