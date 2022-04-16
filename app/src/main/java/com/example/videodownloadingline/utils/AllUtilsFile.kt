@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import com.example.videodownloadingline.R
+import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.Executors
 
 const val TAG = "VIDEO_DOWNLOADER"
@@ -97,6 +98,14 @@ enum class BottomType {
 
 interface OnBottomSheetClick {
     fun onItemClicked(type: String)
+}
+
+fun View.showSandbar(msg: String, length: Int = Snackbar.LENGTH_SHORT, color: Int? = null) {
+    val snackBar = Snackbar.make(this, msg, length)
+    color?.let {
+        snackBar.view.setBackgroundColor(it)
+    }
+    snackBar.show()
 }
 
 
