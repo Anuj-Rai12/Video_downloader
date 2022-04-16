@@ -1,6 +1,7 @@
 package com.example.videodownloadingline.ui
 
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import android.view.MenuInflater
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.videodownloadingline.MainActivity
@@ -50,9 +52,14 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.home_frag_menu, menu)
-        val optionOne = menu.findItem(R.id.option_one)
+        if (menu is MenuBuilder) {
+            menu.setOptionalIconsVisible(true)
+        }
+
+        val optionOne = menu.findItem(R.id.new_tab_option)
         optionOne.setOnMenuItemClickListener {
             return@setOnMenuItemClickListener true
         }

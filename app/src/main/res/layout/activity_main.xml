@@ -39,6 +39,7 @@
         app:cbn_fabBg="@color/Surfie_Green_color"
         app:cbn_selectedColor="@color/Turquoise_Blue_color"
         app:cbn_unSelectedColor="@color/Silver_Chalice_color"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

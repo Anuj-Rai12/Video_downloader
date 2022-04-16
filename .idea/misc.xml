@@ -28,6 +28,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_grid_outline.xml" value="0.1375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_home.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_homebtn.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_incognito.xml" value="0.1345" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_launcher_background.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_list.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_loading.xml" value="0.144" />
@@ -38,6 +39,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newdownload.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newhome.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newloading.xml" value="0.212" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newtab.xml" value="0.1345" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_outline.xml" value="0.1375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_pause.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_play.xml" value="0.144" />
@@ -75,7 +77,9 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/view_bottom_sheet_dialog.xml" value="0.41690962099125367" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/web_site_fragment_layout.xml" value="0.4" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu-v26/main_menu.xml" value="0.2234375" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/home_frag_menu.xml" value="0.2234375" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/download_frag_menu.xml" value="0.2234375" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/home_content_mnu.xml" value="0.2234375" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/home_frag_menu.xml" value="0.2" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/main_menu.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/xml/provider_paths.xml" value="0.2234375" />
       </map>

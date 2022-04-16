@@ -2,7 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/option_one"
-        android:title="@string/home_description_more"
-        app:showAsAction="never"/>
+        android:id="@+id/new_tab_option"
+        android:icon="@drawable/ic_newtab"
+        android:title="@string/new_tab_btn"
+        app:showAsAction="withText" />
+
+    <item
+        android:id="@+id/private_tab"
+        android:icon="@drawable/ic_incognito"
+        android:title="@string/prv_inc_btn"
+        app:showAsAction="withText" />
+
 </menu>
