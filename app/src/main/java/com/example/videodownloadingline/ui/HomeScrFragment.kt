@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.videodownloadingline.MainActivity
@@ -20,9 +21,11 @@ import com.example.videodownloadingline.adaptor.iconadaptor.HomeSrcAdaptor
 import com.example.videodownloadingline.databinding.HomeSrcFragmentBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
+import com.example.videodownloadingline.utils.RemoteResponse
 import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.utils.changeStatusBarColor
 import com.example.videodownloadingline.utils.hide
+import com.example.videodownloadingline.view_model.HomeSrcFragmentViewModel
 
 
 class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
@@ -30,6 +33,7 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
     private lateinit var homeSrcAdaptor: HomeSrcAdaptor
     private var iconsDialogBox: AddIconsDialogBox? = null
     private var isDialogBoxIsVisible: Boolean = false
+    private val viewModel: HomeSrcFragmentViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -106,39 +110,22 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
         findNavController().navigate(action)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setData() {
-        val list = listOf(
-            HomeSrcIcon(
-                id = 0,
-                name = "FaceBook",
-                url = "https://www.facebook.com/"
-            ), HomeSrcIcon(
-                id = 1,
-                name = "Instagram",
-                url = "https://www.instagram.com/"
-            ), HomeSrcIcon(
-                id = 2,
-                name = "WhatsApp",
-                url = "https://www.whatsapp.com/"
-            ), HomeSrcIcon(
-                id = 3,
-                name = "Twitter",
-                url = "https://twitter.com/?lang=en"
-            ), HomeSrcIcon(
-                id = 4,
-                name = "DailyMotion",
-                url = "https://www.dailymotion.com/"
-            ), HomeSrcIcon(
-                id = 5,
-                name = "Vimeo",
-                url = "https://vimeo.com/"
-            ), HomeSrcIcon(
-                id = 6,
-                name = null,
-                url = null
-            )
-        )
-        homeSrcAdaptor.submitList(list)
+
+        viewModel.geBookMarkItem.observe(viewLifecycleOwner) {
+            when (it) {
+                is RemoteResponse.Error -> {
+                    Log.i(TAG, "setData: ${it.exception?.localizedMessage}")
+                }
+                is RemoteResponse.Loading -> Log.i(TAG, "setData: ${it.data}")
+                is RemoteResponse.Success -> {
+                    val item = it.data as MutableList<HomeSrcIcon>
+                    homeSrcAdaptor.notifyDataSetChanged()
+                    homeSrcAdaptor.submitList(item)
+                }
+            }
+        }
     }
 
 
