@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -14,17 +15,21 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.ActivityWebBinding
 import com.example.videodownloadingline.databinding.CustomToolbarLayoutBinding
 import com.example.videodownloadingline.utils.*
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 class WebActivity : AppCompatActivity() {
     private val args: WebActivityArgs by navArgs()
     private lateinit var binding: ActivityWebBinding
+    private var goBack: Boolean = true
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +41,7 @@ class WebActivity : AppCompatActivity() {
             setWebSiteData()
             listenForProgress()
         } else {
+            binding.tapToDownloadIcon.visibility = View.INVISIBLE
             binding.progressbar.isIndeterminate = true
             binding.root.showSandbar(
                 "No Internet Connection Available", Snackbar.LENGTH_INDEFINITE,
@@ -67,14 +73,23 @@ class WebActivity : AppCompatActivity() {
                 if (newProgress == 100) {
                     binding.progressbar.progress = 0
                     changeToolbar()
+                    hideImage()
                 }
                 super.onProgressChanged(view, newProgress)
             }
         }
     }
 
+    private fun hideImage() {
+        lifecycleScope.launch {
+            binding.tapToDownloadIcon.show()
+            delay(2000)
+            binding.tapToDownloadIcon.hide()
+        }
+    }
+
     override fun onBackPressed() {
-        if (binding.mainWebView.canGoBack()) {
+        if (binding.mainWebView.canGoBack() && goBack) {
             binding.mainWebView.goBack()
         } else {
             super.onBackPressed()
@@ -124,6 +139,10 @@ class WebActivity : AppCompatActivity() {
                 }
             }
             true
+        }
+        toolbarBinding.toolbarHomeBtn.setOnClickListener {
+            goBack = false
+            onBackPressed()
         }
         toolbarBinding.totalTabOp.text = String.format(
             Locale.getDefault(),

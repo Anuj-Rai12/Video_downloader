@@ -36,19 +36,44 @@
             tools:progress="34" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/download_floating_btn"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="30dp"
-        android:contentDescription="@string/content_description_down"
-        android:src="@drawable/ic_download_web"
-        app:backgroundTint="@color/Alizarin_Crimson_color"
-        app:fabSize="auto"
-        app:maxImageSize="20dp"
-        app:tint="@color/white" />
+        android:layout_gravity="bottom"
+        android:background="@android:color/transparent"
+        android:elevation="0dp"
+        android:orientation="vertical"
+        android:paddingBottom="30dp"
+        app:elevation="0dp">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/download_floating_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="30dp"
+            android:contentDescription="@string/content_description_down"
+            android:elevation="0dp"
+            android:src="@drawable/ic_download_web"
+            app:backgroundTint="@color/Alizarin_Crimson_color"
+            app:elevation="0dp"
+            app:fabSize="auto"
+            app:maxImageSize="20dp"
+            app:tint="@color/white" />
+
+
+        <ImageView
+            android:id="@+id/tap_to_downloadIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="@string/content_description_down"
+            android:src="@drawable/ic_tap_to_download"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </LinearLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
