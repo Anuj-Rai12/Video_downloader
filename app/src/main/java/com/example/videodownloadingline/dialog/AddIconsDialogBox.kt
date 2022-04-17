@@ -23,6 +23,7 @@ import com.example.videodownloadingline.utils.show
 
 private typealias ListerIcon = (bookmarks: HomeSrcIcon) -> Unit
 private typealias ListenDismiss = () -> Unit
+private typealias ListenSetPin = (flag: Boolean) -> Unit
 private typealias ListenNewFolder = (folderName: String) -> Unit
 
 class AddIconsDialogBox {
@@ -183,5 +184,43 @@ class AddIconsDialogBox {
         this.alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         this.alertDialog?.show()
     }
+
+    fun showOptionForOptPin(
+        context: Context,
+        flag: Boolean = true,
+        text: String,
+        listenSetPin: ListenSetPin
+    ) {
+        val con = (context as Activity)
+        val alertDialog = AlertDialog.Builder(con)
+        val inflater = (con).layoutInflater
+        val binding = AddIconToHomeSrcDialogLayoutBinding.inflate(inflater)
+        alertDialog.setView(binding.root)
+        alertDialog.setCancelable(flag)
+        binding.urlEdLayout.hide()
+        binding.nmeEdLayout.hide()
+        binding.folderNameLayout.hide()
+        binding.mainRecycleView.hide()
+        binding.delBtn.hide()
+        binding.doNotDelBtn.hide()
+        binding.selectWithOutPin.show()
+        binding.selectWithPin.show()
+        binding.cancelBtn.text = binding.cancelBtn.context.getString(R.string.cancel_txt)
+        binding.cancelBtn.show()
+        binding.textBoxTitle.text=text
+        binding.okBtn.apply {
+            this.text = this.context.getString(R.string.create_folder_name)
+            updateLayoutParams<ConstraintLayout.LayoutParams> {
+                topToBottom = binding.selectWithPin.id
+                rightToRight=binding.selectWithPin.id
+            }
+            show()
+            setOnClickListener {
+                listenSetPin(true)
+            }
+        }
+        setUpDialogBox(alertDialog)
+    }
+
 
 }

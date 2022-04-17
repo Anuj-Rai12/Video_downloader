@@ -68,6 +68,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
         }, listenerForNewFolder = {
             Log.i(TAG, "showDialogBox: $it")
             newFolderDialogBox?.dismiss()
+            selectPinOptionDialog(it)
         })
         isDialogBoxIsVisible = true
     }
@@ -91,7 +92,20 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
             context = requireActivity(),
             getStringArray,
             listenerForNewFolder = {
-                //   newFolderDialogBox?.dismiss()
+                //newFolderDialogBox?.dismiss()
+            }
+        )
+    }
+
+    private fun selectPinOptionDialog(txt: String) {
+        if (newFolderDialogBox == null)
+            newFolderDialogBox = AddIconsDialogBox()
+
+        newFolderDialogBox?.showOptionForOptPin(
+            context = requireActivity(),
+            text = txt,
+            listenSetPin = {
+                newFolderDialogBox?.dismiss()
             }
         )
     }
@@ -121,7 +135,8 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
         (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
             ActionBar.DISPLAY_SHOW_TITLE
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
-        (requireActivity() as MainActivity).supportActionBar!!.title = getString(R.string.content_description_down)
+        (requireActivity() as MainActivity).supportActionBar!!.title =
+            getString(R.string.content_description_down)
     }
 
     private fun setUpRecycleView(layoutManager: GridLayoutManager) {

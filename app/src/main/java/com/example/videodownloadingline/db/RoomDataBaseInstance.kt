@@ -4,13 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.videodownloadingline.db.dao.BookMarkItemDao
 import com.example.videodownloadingline.db.dao.DownloadItemDao
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
+import com.example.videodownloadingline.utils.DOWNLOAD_ITEM
+import com.example.videodownloadingline.utils.ioThread
 
 
-@Database(entities = [DownloadItems::class, HomeSrcIcon::class], version = 2, exportSchema = true)
+@Database(entities = [DownloadItems::class, HomeSrcIcon::class], version = 1, exportSchema = false)
 abstract class RoomDataBaseInstance : RoomDatabase() {
     abstract fun getDownloadItemDao(): DownloadItemDao
     abstract fun getBookMarkItemDao(): BookMarkItemDao
@@ -33,8 +36,17 @@ abstract class RoomDataBaseInstance : RoomDatabase() {
                         context.applicationContext,
                         RoomDataBaseInstance::class.java,
                         "My_Download_TBL"
-                    ).createFromAsset("db/My_Download_Items.db")
-                        .createFromAsset("db/Book_marks_item.db")
+                    ).addCallback(object : Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            ioThread {
+                                getInstance(context).getDownloadItemDao().insertDownloadItem(
+                                    DOWNLOAD_ITEM
+                                )
+                            }
+                        }
+                    }).createFromAsset("db/Book_marks_item.db")
+                        .fallbackToDestructiveMigration()
                         .build()
                     INSTANCE = oldInstance
                     return oldInstance

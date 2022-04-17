@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import com.example.videodownloadingline.R
+import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.Executors
 
@@ -114,4 +115,64 @@ fun getIconBgLis() = listOf(
     R.color.Malachite_color,
     R.color.Cornflower_Blue_color,
     R.color.Chambray_color
+)
+
+
+val DOWNLOAD_ITEM = listOf(
+    DownloadItems(
+        0,
+        "File 1",
+        "Image.png",
+        "https://www.googl.com",
+        "00:33sec",
+        ".mp3",
+        23,
+        1649567923658
+    ),
+    DownloadItems(
+        0,
+        "File 2",
+        "Image.png",
+        "https://www.googl.com",
+        "00:33sec",
+        ".mp3",
+        23,
+        1649567943595
+    ), DownloadItems(
+        0,
+        "File 3",
+        "Image.png",
+        "https://www.googl.com",
+        "00:33sec",
+        ".mp3",
+        23,
+        1649567956532
+    ), DownloadItems(
+        0,
+        "File 4",
+        "Image.png",
+        "https://www.googl.com",
+        "00:33sec",
+        ".mp3",
+        23,
+        1649567968552
+    ), DownloadItems(
+        0,
+        "File 5",
+        "Image.png",
+        "https://www.googl.com",
+        "00:33sec",
+        ".mp3",
+        23,
+        1649567968552
+    ), DownloadItems(
+        0,
+        "File 6",
+        "Image.png",
+        "https://www.googl.com",
+        "00:33sec",
+        ".mp3",
+        23,
+        1649567979235
+    )
 )

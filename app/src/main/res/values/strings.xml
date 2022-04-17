@@ -51,6 +51,8 @@
     <string name="lock_src_suggestion">PIN must be 6 digits long</string>
     <string name="nxt_btn">Next</string>
     <string name="clr_btn">Clear</string>
+    <string name="with_pin_btn">With Pin</string>
+    <string name="with_out_pin_btn">Without Pin</string>
     <!-- Mnu of Home Fragment -->
     <string name="new_tab_btn">New Tab</string>
     <string name="prv_inc_btn">Incognito Tab</string>

@@ -11,7 +11,8 @@ interface DownloadItemDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertDownloadItem(item: DownloadItems)
-
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertDownloadItem(item: List<DownloadItems>)
 
     @Query("Select * from Download_Items")
     suspend fun getAllDownload(): List<DownloadItems>
