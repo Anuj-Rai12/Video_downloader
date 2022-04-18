@@ -3,9 +3,9 @@ package com.example.videodownloadingline.adaptor.iconadaptor
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
-import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
@@ -19,7 +19,7 @@ import com.example.videodownloadingline.utils.hide
 import com.example.videodownloadingline.utils.show
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import java.lang.Exception
+
 
 typealias ItemClicked = (data: HomeSrcIcon, isAddIcon: Boolean) -> Unit
 
@@ -48,8 +48,13 @@ class HomeSrcAdaptor(private val itemClicked: ItemClicked) :
                         .centerCrop()
                         .into(binding.addHomeSrcBtn, object : Callback {
                             override fun onSuccess() {
-
-
+                                binding.addHomeSrcBtn.apply {
+                                    backgroundTintList=getTintColor(this,data.bg)
+                                }
+                                /*val bm = (binding.addHomeSrcBtn.drawable as BitmapDrawable).bitmap
+                                bm?.let {
+                                    createPaletteAsync(it)
+                                }*/
                             }
 
                             override fun onError(e: Exception?) {
@@ -61,6 +66,11 @@ class HomeSrcAdaptor(private val itemClicked: ItemClicked) :
                                 }
                                 binding.homeSrcName.apply {
                                     show()
+                                    updateLayoutParams<ConstraintLayout.LayoutParams> {
+                                        topToBottom = binding.nameTxt.id
+                                        leftToLeft = binding.nameTxt.id
+                                        rightToRight = binding.nameTxt.id
+                                    }
                                     text = data.name
                                 }
                             }
@@ -87,14 +97,39 @@ class HomeSrcAdaptor(private val itemClicked: ItemClicked) :
                     backgroundTintList = getTintColor(this, data.bg)
                 }
             }
-            binding.addHomeSrcBtn.setOnClickListener {
-                itemClicked(data, true)
-            }
-            binding.nameTxt.setOnClickListener {
-                itemClicked(data, false)
+            binding.root.setOnClickListener {
+                if (data.name.isNullOrEmpty()){
+                    itemClicked(data,true)
+                }else{
+                    itemClicked(data,false)
+                }
             }
 
         }
+
+
+        /*@RequiresApi(Build.VERSION_CODES.M)
+        private fun createPaletteAsync(bitmap: Bitmap) {
+            Palette.from(bitmap).generate { palette ->
+                palette?.lightMutedSwatch?.let { swatch ->
+                    val rbg = swatch.rgb
+                    val darkTheme = manipulateColor(rbg, 0.8.toFloat())
+                    binding.root.setBackgroundColor(rbg)
+                    binding.addHomeSrcBtn.apply {
+                        setBackgroundColor(darkTheme)
+                    }
+                    /*PalletColor(
+                        rgb = rbg,
+                        titleTextColor = swatch.titleTextColor,
+                        bodyTextColor = swatch.bodyTextColor,
+                        darkThemColor = darkTheme
+                    ).also {
+                        color(it)
+                    }*/
+                }
+            }
+        }*/
+
 
         private fun getFabUrl(uri: Uri) = uri.buildUpon().path("favicon.ico").build()
 
