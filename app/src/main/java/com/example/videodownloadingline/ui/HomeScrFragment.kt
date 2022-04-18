@@ -62,9 +62,10 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
 
     private fun currentTab() {
         mainViewModel?.noOfOpenTab?.observe(viewLifecycleOwner) {
-            (requireActivity() as MainActivity).changeToolbar(it!!){url->
+            (requireActivity() as MainActivity).changeToolbar(it!!) { url ->
                 mainViewModel?.addMoreTab()
-                val action=HomeScrFragmentDirections.actionHomeScrFragmentToWebActivity(url,"Searching..")
+                val action =
+                    HomeScrFragmentDirections.actionHomeScrFragmentToWebActivity(url, "Searching..")
                 findNavController().navigate(action)
             }
         }

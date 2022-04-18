@@ -14,7 +14,7 @@
         android:layout_marginStart="3dp"
         android:layout_marginEnd="3dp"
         android:background="@drawable/src_box_shape"
-        android:backgroundTint="@color/Casablanca_color"
+        tools:backgroundTint="@color/Casablanca_color"
         android:fontFamily="@font/inter_medium"
         android:gravity="center"
         android:textColor="@color/white"
@@ -25,17 +25,17 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="V" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/add_home_src_btn"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:background="@drawable/src_box_shape"
-        android:backgroundTint="@color/Casablanca_color"
+        tools:backgroundTint="@color/Casablanca_color"
         android:padding="18dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_add"
+        tools:src="@drawable/ic_add"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
