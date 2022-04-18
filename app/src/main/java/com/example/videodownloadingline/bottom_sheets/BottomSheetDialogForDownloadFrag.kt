@@ -39,12 +39,6 @@ class BottomSheetDialogForDownloadFrag(private val videoTitle: String) :
                 binding.setVideoPin.text.toString().replace("\\s".toRegex(), "")
             )
         }
-
-        binding.deleteOfVideo.setOnClickListener {
-            onBottomIconClicked?.onItemClicked(
-                binding.deleteOfVideo.text.toString().replace("\\s".toRegex(), "")
-            )
-        }
         binding.titleOfVideo.text = videoTitle
         return binding.root
     }
@@ -54,6 +48,9 @@ class BottomSheetDialogForDownloadFrag(private val videoTitle: String) :
         deleteDialogBox?.showDeleteVideoDialogBox(requireActivity(), listenerNoBtn = {
             deleteDialogBox?.dismiss()
         }, listenerYesBtn = {
+            onBottomIconClicked?.onItemClicked(
+                binding.deleteOfVideo.text.toString().replace("\\s".toRegex(), "")
+            )
             deleteDialogBox?.dismiss()
         })
     }
