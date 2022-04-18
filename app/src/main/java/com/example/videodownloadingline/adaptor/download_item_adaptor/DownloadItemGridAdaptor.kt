@@ -9,17 +9,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.DownloadFileItemGridLayoutBinding
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
+import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 
 
 typealias ItemClickedListener = (data: DownloadItems) -> Unit
 
-class DownloadItemGridAdaptor(private val itemClicked: ItemClickedListener) :
+class DownloadItemGridAdaptor(
+    private val type: String,
+    private val itemClicked: ItemClickedListener
+) :
     ListAdapter<DownloadItems, DownloadItemGridAdaptor.DownloadItemGridViewHolder>(diffUtil) {
     inner class DownloadItemGridViewHolder(private val binding: DownloadFileItemGridLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun makeData(data: DownloadItems, itemClicked: ItemClickedListener) {
             binding.root.setOnClickListener {
                 itemClicked(data)
+            }
+            when (TypeOfDownload.valueOf(type)) {
+                TypeOfDownload.IsFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
+                TypeOfDownload.IsFiles -> binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
+                TypeOfDownload.SecureFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_video_pin)
             }
             binding.titleTxt.apply {
                 text = this.context.getString(
@@ -30,7 +39,8 @@ class DownloadItemGridAdaptor(private val itemClicked: ItemClickedListener) :
                 )
             }
             binding.menuBtn.setOnClickListener {
-                Toast.makeText(it.context, "${data.fileTitle} menu Clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(it.context, "${data.fileTitle} menu Clicked", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

@@ -4,11 +4,8 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,7 +23,8 @@ import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
 
 
-class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSheetClick {
+class DownloadFragment(private val type: String) : Fragment(R.layout.download_fragment_layout),
+    OnBottomSheetClick {
     private lateinit var binding: DownloadFragmentLayoutBinding
     private var gridAdaptor: DownloadItemGridAdaptor? = null
     private var linearAdaptor: DownloadItemLinearAdaptor? = null
@@ -35,10 +33,6 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
     private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
 
     private val viewModel: DownloadFragmentViewModel by viewModels()
-
-    private val getStringArray by lazy {
-        resources.getStringArray(R.array.sorting_item)
-    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,7 +45,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
         binding.addNewFolderBtn.setOnClickListener {
             createFolderDialog()
         }
-        setHasOptionsMenu(true)
+
     }
 
     override fun onPause() {
@@ -71,30 +65,6 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
             selectPinOptionDialog(it)
         })
         isDialogBoxIsVisible = true
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.download_frag_menu, menu)
-        val icSort = menu.findItem(R.id.menu_box)
-        icSort.setOnMenuItemClickListener {
-            showSortingDialog()
-            return@setOnMenuItemClickListener true
-        }
-
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    private fun showSortingDialog() {
-        if (newFolderDialogBox == null)
-            newFolderDialogBox = AddIconsDialogBox()
-
-        newFolderDialogBox?.displaySortingViewRecycle(
-            context = requireActivity(),
-            getStringArray,
-            listenerForNewFolder = {
-                //newFolderDialogBox?.dismiss()
-            }
-        )
     }
 
     private fun selectPinOptionDialog(txt: String) {
@@ -130,21 +100,13 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
-            ActionBar.DISPLAY_SHOW_TITLE
-        (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
-        (requireActivity() as MainActivity).supportActionBar!!.title =
-            getString(R.string.content_description_down)
-    }
 
     private fun setUpRecycleView(layoutManager: GridLayoutManager) {
         linearAdaptor = null
         binding.recycleView.apply {
             setHasFixedSize(true)
             this.layoutManager = layoutManager
-            gridAdaptor = DownloadItemGridAdaptor {
+            gridAdaptor = DownloadItemGridAdaptor(type = type) {
                 openBottomSheet(it.fileTitle)
             }
             adapter = gridAdaptor
@@ -161,7 +123,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout), OnBottomSh
         gridAdaptor = null
         binding.recycleView.apply {
             setHasFixedSize(true)
-            linearAdaptor = DownloadItemLinearAdaptor {
+            linearAdaptor = DownloadItemLinearAdaptor(type = type) {
                 openBottomSheet(it.fileTitle)
             }
             this.layoutManager = layoutManager

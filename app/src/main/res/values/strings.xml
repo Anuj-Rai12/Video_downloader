@@ -58,4 +58,11 @@
     <string name="close_tab_btn">Close tab</string>
     <string name="setting_btn">Setting</string>
     <string name="prv_inc_btn">Incognito Tab</string>
+    <!-- Tab Layout  -->
+    <string-array name="tab_item">
+    <item>Files</item>
+    <item>Folders</item>
+    <item>Secure folder</item>
+    </string-array>
+
 </resources>

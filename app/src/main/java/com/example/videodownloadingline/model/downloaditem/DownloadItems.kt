@@ -26,3 +26,9 @@ enum class Category {
     OfflineFolder,
     OnlineFolder
 }
+
+enum class TypeOfDownload {
+    IsFolder,
+    IsFiles,
+    SecureFolder
+}

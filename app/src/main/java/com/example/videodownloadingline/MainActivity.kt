@@ -24,12 +24,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var currentScr: Int = 1
 
-    //private var adaptor: ViewPagerAdaptor? = null
-//    private lateinit var toolbarbinding: CustomToolbarLayoutBinding
     private lateinit var navHostFragment: NavController
 
     companion object {
-        var bottomNavigation: CurvedBottomNavigationView? = null//BottomNavigationView? = null
+        var bottomNavigation: CurvedBottomNavigationView? = null
         var viewPager2: ViewPager2? = null
     }
 
@@ -53,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             CbnMenuItem(
                 R.drawable.ic_download,
                 R.drawable.avd_anim_downloads,
-                R.id.downloadFragment
+                R.id.mainDownloadFragment
             )
         )
         binding.curBottomNav.setMenuItems(menuItem, currentScr)

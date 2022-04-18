@@ -36,4 +36,9 @@
             android:name="name"
             app:argType="string" />
     </activity>
+    <fragment
+        android:id="@+id/mainDownloadFragment"
+        android:name="com.example.videodownloadingline.ui.MainDownloadFragment"
+        android:label="download_main_fragment"
+        tools:layout="@layout/download_main_fragment" />
 </navigation>

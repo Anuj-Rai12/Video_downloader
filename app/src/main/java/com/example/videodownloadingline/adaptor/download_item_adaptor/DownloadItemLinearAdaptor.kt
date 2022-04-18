@@ -9,17 +9,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.DownloadFileItemLinearLayoutBinding
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
+import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 
 
 typealias ItemForLinearLayoutListener = (data: DownloadItems) -> Unit
 
-class DownloadItemLinearAdaptor(private val itemClicked: ItemForLinearLayoutListener) :
+class DownloadItemLinearAdaptor(
+    private val type: String,
+    private val itemClicked: ItemForLinearLayoutListener
+) :
     ListAdapter<DownloadItems, DownloadItemLinearAdaptor.DownloadItemLinearViewHolder>(diffUtil) {
     inner class DownloadItemLinearViewHolder(private val binding: DownloadFileItemLinearLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun makeData(data: DownloadItems, itemClicked: ItemForLinearLayoutListener) {
             binding.root.setOnClickListener {
                 itemClicked(data)
+            }
+            when(TypeOfDownload.valueOf(type)){
+                TypeOfDownload.IsFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
+                TypeOfDownload.IsFiles -> binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
+                TypeOfDownload.SecureFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_video_pin)
             }
             binding.menuIcBtn.setOnClickListener {
                 Toast.makeText(it.context, "${data.fileTitle} Item Clicked", Toast.LENGTH_SHORT)
