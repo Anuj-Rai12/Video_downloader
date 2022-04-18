@@ -68,7 +68,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("RtlHardcoded")
-    fun changeToolbar(totalTab: Int) {
+    fun changeToolbar(totalTab: Int,listenForSearch: ListenForSearch)
+    {
         val toolbarBinding: CustomToolbarLayoutBinding =
             CustomToolbarLayoutBinding.inflate(layoutInflater)
         supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
@@ -96,9 +97,9 @@ class MainActivity : AppCompatActivity() {
                 when (keyCode) {
                     KeyEvent.KEYCODE_ENTER -> {
                         Log.i(TAG, "changeToolbar: $searchText")
-                        /*if (!searchText.isNullOrEmpty()) {
-                            Working on it
-                        }*/
+                        if (!searchText.isNullOrEmpty()) {
+                            listenForSearch(searchText!!)
+                        }
                     }
                 }
             }
@@ -110,5 +111,6 @@ class MainActivity : AppCompatActivity() {
             totalTab
         )
     }
-
 }
+
+private typealias ListenForSearch=(txt:String)->Unit

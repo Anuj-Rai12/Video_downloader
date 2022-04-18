@@ -12,7 +12,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -33,7 +32,12 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
     private var iconsDialogBox: AddIconsDialogBox? = null
     private var isDialogBoxIsVisible: Boolean = false
     private val viewModel: HomeSrcFragmentViewModel by viewModels()
-    private val mainViewModel: MainViewModel by activityViewModels()
+    private var mainViewModel: MainViewModel? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mainViewModel = MainViewModel.getInstance()
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,8 +61,12 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
     }
 
     private fun currentTab() {
-        mainViewModel.noOfOpenTab.observe(viewLifecycleOwner) {
-            (requireActivity() as MainActivity).changeToolbar(it!!)
+        mainViewModel?.noOfOpenTab?.observe(viewLifecycleOwner) {
+            (requireActivity() as MainActivity).changeToolbar(it!!){url->
+                mainViewModel?.addMoreTab()
+                val action=HomeScrFragmentDirections.actionHomeScrFragmentToWebActivity(url,"Searching..")
+                findNavController().navigate(action)
+            }
         }
     }
 
@@ -71,7 +79,7 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
 
         val optionOne = menu.findItem(R.id.new_tab_option)
         optionOne.setOnMenuItemClickListener {
-            mainViewModel.addMoreTab()
+            mainViewModel?.addMoreTab()
             return@setOnMenuItemClickListener true
         }
         super.onCreateOptionsMenu(menu, inflater)
@@ -104,7 +112,7 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
                 if (isAddIcon)
                     showDialogBox()
                 else {
-                    mainViewModel.addMoreTab()
+                    mainViewModel?.addMoreTab()
                     openWebDialogBox(data)
                 }
             }

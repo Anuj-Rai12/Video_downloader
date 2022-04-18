@@ -23,6 +23,7 @@ import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.ActivityWebBinding
 import com.example.videodownloadingline.databinding.CustomToolbarLayoutBinding
 import com.example.videodownloadingline.utils.*
+import com.example.videodownloadingline.view_model.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -32,12 +33,14 @@ class WebActivity : AppCompatActivity() {
     private val args: WebActivityArgs by navArgs()
     private lateinit var binding: ActivityWebBinding
     private var goBack: Boolean = true
+    private var mainViewModel: MainViewModel? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWebBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        mainViewModel = MainViewModel.getInstance()
         if (applicationContext.isNetworkAvailable()) {
             binding.mainWebView.show()
             setWebSiteData()
@@ -83,11 +86,18 @@ class WebActivity : AppCompatActivity() {
                 binding.progressbar.progress = newProgress
                 if (newProgress == 100) {
                     binding.progressbar.progress = 0
-                    changeToolbar()
+                    getAllTab()
                     hideImage()
                 }
                 super.onProgressChanged(view, newProgress)
             }
+        }
+    }
+
+    private fun getAllTab() {
+        mainViewModel?.noOfOpenTab?.observe(this) {
+            val item = it ?: 0
+            changeToolbar(item)
         }
     }
 
@@ -115,7 +125,7 @@ class WebActivity : AppCompatActivity() {
     }
 
     @SuppressLint("RtlHardcoded")
-    fun changeToolbar() {
+    fun changeToolbar(totalTab: Int) {
         val toolbarBinding: CustomToolbarLayoutBinding =
             CustomToolbarLayoutBinding.inflate(layoutInflater)
         supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
@@ -129,8 +139,8 @@ class WebActivity : AppCompatActivity() {
         supportActionBar!!.setCustomView(toolbarBinding.root, lp)
 
         toolbarBinding.root.setContentInsetsAbsolute(0, 0)
-        toolbarBinding.searchBoxEd.setText(args.name)
-        var searchText: String? = args.name
+        toolbarBinding.searchBoxEd.setText(args.url)
+        var searchText: String? = args.url
         toolbarBinding.searchBoxEd.doOnTextChanged { text, _, _, _ ->
             searchText = if (text.isNullOrEmpty()) {
                 null
@@ -158,7 +168,7 @@ class WebActivity : AppCompatActivity() {
         toolbarBinding.totalTabOp.text = String.format(
             Locale.getDefault(),
             "%d",
-            1243
+            totalTab
         )
     }
 

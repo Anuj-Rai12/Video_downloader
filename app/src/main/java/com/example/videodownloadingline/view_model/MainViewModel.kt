@@ -10,6 +10,23 @@ class MainViewModel : ViewModel() {
         get() = _noOfTab
 
 
+    companion object {
+        @Volatile
+        private var INSTANCE: MainViewModel? = null
+
+
+        fun getInstance(): MainViewModel? {
+            synchronized(this) {
+                if (INSTANCE == null) {
+                    INSTANCE = MainViewModel()
+                    return INSTANCE
+                }
+                return INSTANCE
+            }
+        }
+    }
+
+
     init {
         _noOfTab.postValue(1)
     }
