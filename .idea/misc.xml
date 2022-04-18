@@ -41,6 +41,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newloading.xml" value="0.212" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newtab.xml" value="0.1345" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_outline.xml" value="0.1375" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_outline_settings.xml" value="0.1345" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_pause.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_play.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_search.xml" value="0.144" />
@@ -83,6 +84,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/home_content_mnu.xml" value="0.2234375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/home_frag_menu.xml" value="0.2" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/main_menu.xml" value="0.264" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/web_frag_menu.xml" value="0.2234375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/xml/provider_paths.xml" value="0.2234375" />
       </map>
     </option>

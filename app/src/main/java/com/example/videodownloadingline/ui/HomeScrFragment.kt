@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,11 +22,9 @@ import com.example.videodownloadingline.adaptor.iconadaptor.HomeSrcAdaptor
 import com.example.videodownloadingline.databinding.HomeSrcFragmentBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
-import com.example.videodownloadingline.utils.RemoteResponse
-import com.example.videodownloadingline.utils.TAG
-import com.example.videodownloadingline.utils.changeStatusBarColor
-import com.example.videodownloadingline.utils.hide
+import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.HomeSrcFragmentViewModel
+import com.example.videodownloadingline.view_model.MainViewModel
 
 
 class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
@@ -34,6 +33,7 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
     private var iconsDialogBox: AddIconsDialogBox? = null
     private var isDialogBoxIsVisible: Boolean = false
     private val viewModel: HomeSrcFragmentViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,11 +49,16 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
 
         recycleAdaptor()
         setData()
-
         binding.srcTv.setOnClickListener {
             it.hide()
             setHasOptionsMenu(true)
-            (requireActivity() as MainActivity).changeToolbar()
+            currentTab()
+        }
+    }
+
+    private fun currentTab() {
+        mainViewModel.noOfOpenTab.observe(viewLifecycleOwner) {
+            (requireActivity() as MainActivity).changeToolbar(it!!)
         }
     }
 
@@ -66,6 +71,7 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
 
         val optionOne = menu.findItem(R.id.new_tab_option)
         optionOne.setOnMenuItemClickListener {
+            mainViewModel.addMoreTab()
             return@setOnMenuItemClickListener true
         }
         super.onCreateOptionsMenu(menu, inflater)
@@ -97,8 +103,10 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
                 Log.i(TAG, "recycleAdaptor: $isAddIcon with $data")
                 if (isAddIcon)
                     showDialogBox()
-                else
+                else {
+                    mainViewModel.addMoreTab()
                     openWebDialogBox(data)
+                }
             }
             adapter = homeSrcAdaptor
         }
@@ -112,7 +120,6 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setData() {
-
         viewModel.geBookMarkItem.observe(viewLifecycleOwner) {
             when (it) {
                 is RemoteResponse.Error -> {
@@ -132,6 +139,7 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
     override fun onResume() {
         super.onResume()
         setHasOptionsMenu(false)
+        binding.srcTv.show()
         (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
             ActionBar.DISPLAY_SHOW_TITLE
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)

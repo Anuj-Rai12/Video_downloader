@@ -54,6 +54,8 @@
     <string name="with_pin_btn">With Pin</string>
     <string name="with_out_pin_btn">Without Pin</string>
     <!-- Mnu of Home Fragment -->
-    <string name="new_tab_btn">New Tab</string>
+    <string name="new_tab_btn">Add a new Tab</string>
+    <string name="close_tab_btn">Close tab</string>
+    <string name="setting_btn">Setting</string>
     <string name="prv_inc_btn">Incognito Tab</string>
 </resources>

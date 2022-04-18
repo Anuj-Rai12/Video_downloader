@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("RtlHardcoded")
-    fun changeToolbar() {
+    fun changeToolbar(totalTab: Int) {
         val toolbarBinding: CustomToolbarLayoutBinding =
             CustomToolbarLayoutBinding.inflate(layoutInflater)
         supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         toolbarBinding.totalTabOp.text = String.format(
             Locale.getDefault(),
             "%d",
-            2322
+            totalTab
         )
     }
 

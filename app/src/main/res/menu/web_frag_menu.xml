@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/new_tab_option_mnu"
+        android:icon="@drawable/ic_newtab"
+        android:title="@string/new_tab_btn"
+        app:showAsAction="withText" />
+
+
+    <item
+        android:id="@+id/close_tab_mnu"
+        android:icon="@drawable/ic_close"
+        app:iconTint="@color/Emperor_color"
+        android:title="@string/close_tab_btn"
+        app:showAsAction="withText" />
+
+
+    <item
+        android:id="@+id/setting_btn_mnu"
+        android:icon="@drawable/ic_outline_settings"
+        android:title="@string/setting_btn"
+        app:showAsAction="withText" />
+
+</menu>
