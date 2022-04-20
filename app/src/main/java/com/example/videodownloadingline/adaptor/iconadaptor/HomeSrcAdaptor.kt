@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.HomeSrcIconsLayoutBinding
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
+import com.example.videodownloadingline.utils.RoundedCornersTransformation
 import com.example.videodownloadingline.utils.hide
 import com.example.videodownloadingline.utils.show
 import com.squareup.picasso.Callback
@@ -46,6 +47,7 @@ class HomeSrcAdaptor(private val itemClicked: ItemClicked) :
                         .load(fab)
                         .resize(80, 80)
                         .centerCrop()
+                        .transform(RoundedCornersTransformation(20,0))
                         .into(binding.addHomeSrcBtn, object : Callback {
                             override fun onSuccess() {
                                 binding.addHomeSrcBtn.apply {
