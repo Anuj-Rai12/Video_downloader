@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,42 +7,73 @@
     android:background="@drawable/web_site_bg_layout"
     tools:context="com.example.videodownloadingline.ui.WebViewFragments">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/tool_bar_main_activity"
-        layout="@layout/custom_toolbar_layout"
+        <WebView
+            android:id="@+id/main_web_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-3dp"
+            android:indeterminateTint="@color/Dodger_Blue_color"
+            android:indeterminateTintMode="src_atop"
+            android:max="100"
+            android:progressBackgroundTint="@android:color/transparent"
+            android:progressTint="@color/Dodger_Blue_color"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:progress="34" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="bottom"
+        android:background="@android:color/transparent"
+        android:elevation="0dp"
+        android:orientation="vertical"
+        android:paddingBottom="30dp"
+        app:elevation="0dp">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/download_floating_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="30dp"
+            android:contentDescription="@string/content_description_down"
+            android:elevation="0dp"
+            android:src="@drawable/ic_download_web"
+            app:backgroundTint="@color/Alizarin_Crimson_color"
+            app:elevation="0dp"
+            app:fabSize="auto"
+            app:maxImageSize="20dp"
+            app:tint="@color/white" />
 
 
-    <WebView
-        android:id="@+id/main_web_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@id/tool_bar_main_activity"
-        app:layout_constraintRight_toRightOf="@id/tool_bar_main_activity"
-        app:layout_constraintTop_toBottomOf="@id/tool_bar_main_activity" />
+        <ImageView
+            android:id="@+id/tap_to_downloadIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="@string/content_description_down"
+            android:src="@drawable/ic_tap_to_download"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </LinearLayout>
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/download_floating_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="30dp"
-        app:backgroundTint="@color/Alizarin_Crimson_color"
-        android:contentDescription="@string/content_description_down"
-        android:src="@drawable/ic_download_web"
-        app:fabSize="auto"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:maxImageSize="20dp"
-        app:tint="@color/white" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
