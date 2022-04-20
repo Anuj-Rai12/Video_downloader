@@ -51,10 +51,6 @@ class HomeSrcAdaptor(private val itemClicked: ItemClicked) :
                                 binding.addHomeSrcBtn.apply {
                                     backgroundTintList=getTintColor(this,data.bg)
                                 }
-                                /*val bm = (binding.addHomeSrcBtn.drawable as BitmapDrawable).bitmap
-                                bm?.let {
-                                    createPaletteAsync(it)
-                                }*/
                             }
 
                             override fun onError(e: Exception?) {
@@ -106,30 +102,6 @@ class HomeSrcAdaptor(private val itemClicked: ItemClicked) :
             }
 
         }
-
-
-        /*@RequiresApi(Build.VERSION_CODES.M)
-        private fun createPaletteAsync(bitmap: Bitmap) {
-            Palette.from(bitmap).generate { palette ->
-                palette?.lightMutedSwatch?.let { swatch ->
-                    val rbg = swatch.rgb
-                    val darkTheme = manipulateColor(rbg, 0.8.toFloat())
-                    binding.root.setBackgroundColor(rbg)
-                    binding.addHomeSrcBtn.apply {
-                        setBackgroundColor(darkTheme)
-                    }
-                    /*PalletColor(
-                        rgb = rbg,
-                        titleTextColor = swatch.titleTextColor,
-                        bodyTextColor = swatch.bodyTextColor,
-                        darkThemColor = darkTheme
-                    ).also {
-                        color(it)
-                    }*/
-                }
-            }
-        }*/
-
 
         private fun getFabUrl(uri: Uri) = uri.buildUpon().path("favicon.ico").build()
 
