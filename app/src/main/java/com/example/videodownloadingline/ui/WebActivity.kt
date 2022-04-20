@@ -72,6 +72,10 @@ class WebActivity : AppCompatActivity() {
         return viewPagerAdapter?.getSize()
     }
 
+    fun removeFragment(position:Int): Int? {
+        viewPagerAdapter?.removedFragment(position)
+        return viewPagerAdapter?.getSize()
+    }
 
     override fun onResume() {
         super.onResume()

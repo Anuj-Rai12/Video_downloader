@@ -66,8 +66,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("RtlHardcoded")
-    fun changeToolbar(totalTab: Int,listenForSearch: ListenForSearch)
-    {
+    fun changeToolbar(totalTab: Int,listenForSearch: (txt:String)->Unit) {
         val toolbarBinding: CustomToolbarLayoutBinding =
             CustomToolbarLayoutBinding.inflate(layoutInflater)
         supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
@@ -110,5 +109,3 @@ class MainActivity : AppCompatActivity() {
         )
     }
 }
-
-private typealias ListenForSearch=(txt:String)->Unit

@@ -16,18 +16,18 @@ class ViewPagerAdapter(fm: FragmentActivity) : FragmentStateAdapter(fm) {
 
     override fun createFragment(position: Int): Fragment {
         return getTotalFragment[position]
-        /*return when (position) {
-            0 -> ProgressFragment()
-            1 -> HomeScrFragment()
-            2 -> DownloadFragment()
-            else -> throw  IllegalArgumentException("There is Not Fragment At $position")
-        }*/
     }
 
     fun setFragment(fragment: Fragment) {
         getTotalFragment.add(fragment)
         Log.i(TAG, "setFragment: $getTotalFragment")
     }
+
+    fun removedFragment(position: Int) {
+        getTotalFragment.removeAt(position)
+        Log.i(TAG, "removedFragment: $getTotalFragment")
+    }
+
 
     fun getSize(): Int {
         Log.i(TAG, "getSize: ${getTotalFragment.size}")

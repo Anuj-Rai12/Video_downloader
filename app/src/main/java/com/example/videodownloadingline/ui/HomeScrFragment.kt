@@ -66,7 +66,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         mainViewModel?.noOfOpenTab?.observe(viewLifecycleOwner) {
             if (!isInWebView) {
                 (requireActivity() as MainActivity).changeToolbar(it!!) { url ->
-                    mainViewModel?.addMoreTab()
+                    //mainViewModel?.addMoreTab()
                     val action =
                         HomeScrFragmentDirections.actionHomeScrFragmentToWebActivity(
                             url,
@@ -76,14 +76,16 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                 }
             } else {
                 (requireActivity() as WebActivity).changeToolbar(it!!, "") { url ->
-                    mainViewModel?.addMoreTab()
-                    (requireActivity() as WebActivity).setFragment(
-                        WebViewFragments(
-                            "Searching..",
-                            url
-                        )
-                    )?.also { size ->
-                        WebActivity.viewPager?.currentItem = size - 1
+                    //mainViewModel?.addMoreTab()
+                    (requireActivity() as WebActivity).also { activity ->
+                        activity.setFragment(
+                            WebViewFragments(
+                                "Searching..",
+                                url
+                            )
+                        )?.also { size ->
+                            WebActivity.viewPager?.currentItem = size - 1
+                        }
                     }
                 }
             }
@@ -123,6 +125,12 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         if (isDialogBoxIsVisible) {
             iconsDialogBox?.dismiss()
         }
+        if (isInWebView) {
+            val size = WebActivity.viewPager?.currentItem
+            size?.let {
+                (requireActivity() as WebActivity).removeFragment(it)
+            }
+        }
     }
 
     private fun recycleAdaptor() {
@@ -133,7 +141,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                 if (isAddIcon)
                     showDialogBox()
                 else {
-                    mainViewModel?.addMoreTab()
+                    //mainViewModel?.addMoreTab()
                     if (!isInWebView) {
                         openWebDialogBox(data)
                     } else {
