@@ -26,7 +26,8 @@ import com.example.videodownloadingline.view_model.HomeSrcFragmentViewModel
 import com.example.videodownloadingline.view_model.MainViewModel
 
 
-class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
+class HomeScrFragment(private val isInWebView: Boolean = false) :
+    Fragment(R.layout.home_src_fragment) {
     private lateinit var binding: HomeSrcFragmentBinding
     private lateinit var homeSrcAdaptor: HomeSrcAdaptor
     private var iconsDialogBox: AddIconsDialogBox? = null
@@ -55,33 +56,52 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
         setData()
         binding.srcTv.setOnClickListener {
             it.hide()
-            setHasOptionsMenu(true)
+            if (!isInWebView)
+                setHasOptionsMenu(true)
             currentTab()
         }
     }
 
     private fun currentTab() {
         mainViewModel?.noOfOpenTab?.observe(viewLifecycleOwner) {
-            (requireActivity() as MainActivity).changeToolbar(it!!) { url ->
-                mainViewModel?.addMoreTab()
-                val action =
-                    HomeScrFragmentDirections.actionHomeScrFragmentToWebActivity(url, "Searching..")
-                findNavController().navigate(action)
+            if (!isInWebView) {
+                (requireActivity() as MainActivity).changeToolbar(it!!) { url ->
+                    mainViewModel?.addMoreTab()
+                    val action =
+                        HomeScrFragmentDirections.actionHomeScrFragmentToWebActivity(
+                            url,
+                            "Searching.."
+                        )
+                    findNavController().navigate(action)
+                }
+            } else {
+                (requireActivity() as WebActivity).changeToolbar(it!!, "") { url ->
+                    mainViewModel?.addMoreTab()
+                    (requireActivity() as WebActivity).setFragment(
+                        WebViewFragments(
+                            "Searching..",
+                            url
+                        )
+                    )?.also { size ->
+                        WebActivity.viewPager?.currentItem = size - 1
+                    }
+                }
             }
         }
     }
 
     @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.home_frag_menu, menu)
-        if (menu is MenuBuilder) {
-            menu.setOptionalIconsVisible(true)
-        }
-
-        val optionOne = menu.findItem(R.id.new_tab_option)
-        optionOne.setOnMenuItemClickListener {
-            mainViewModel?.addMoreTab()
-            return@setOnMenuItemClickListener true
+        if (!isInWebView) {
+            inflater.inflate(R.menu.home_frag_menu, menu)
+            if (menu is MenuBuilder) {
+                menu.setOptionalIconsVisible(true)
+            }
+            val optionOne = menu.findItem(R.id.new_tab_option)
+            optionOne.setOnMenuItemClickListener {
+                //mainViewModel?.addMoreTab()
+                return@setOnMenuItemClickListener true
+            }
         }
         super.onCreateOptionsMenu(menu, inflater)
     }
@@ -114,7 +134,18 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
                     showDialogBox()
                 else {
                     mainViewModel?.addMoreTab()
-                    openWebDialogBox(data)
+                    if (!isInWebView) {
+                        openWebDialogBox(data)
+                    } else {
+                        (requireActivity() as WebActivity).setFragment(
+                            WebViewFragments(
+                                data.name!!,
+                                data.url!!
+                            )
+                        )?.also { size ->
+                            WebActivity.viewPager?.currentItem = size - 1
+                        }
+                    }
                 }
             }
             adapter = homeSrcAdaptor
@@ -149,10 +180,19 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
         super.onResume()
         setHasOptionsMenu(false)
         binding.srcTv.show()
-        (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
-            ActionBar.DISPLAY_SHOW_TITLE
-        (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
-        (requireActivity() as MainActivity).supportActionBar!!.title = getString(R.string.app_name)
+        if (!isInWebView) {
+            (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
+                ActionBar.DISPLAY_SHOW_TITLE
+            (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
+            (requireActivity() as MainActivity).supportActionBar!!.title =
+                getString(R.string.app_name)
+        } else {
+            (requireActivity() as WebActivity).supportActionBar!!.displayOptions =
+                ActionBar.DISPLAY_SHOW_TITLE
+            (requireActivity() as WebActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
+            (requireActivity() as WebActivity).supportActionBar!!.title =
+                getString(R.string.app_name)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -12,27 +12,38 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.navigation.navArgs
+import androidx.viewpager2.widget.ViewPager2
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.viewpager_adaptor.ViewPagerAdapter
 import com.example.videodownloadingline.databinding.ActivityWebBinding
 import com.example.videodownloadingline.databinding.CustomToolbarLayoutBinding
 import com.example.videodownloadingline.utils.TAG
+import com.example.videodownloadingline.view_model.MainViewModel
 import java.util.*
 
 class WebActivity : AppCompatActivity() {
     private val args: WebActivityArgs by navArgs()
     private lateinit var binding: ActivityWebBinding
     private var viewPagerAdapter: ViewPagerAdapter? = null
+    private val mainViewModel: MainViewModel? by lazy {
+        MainViewModel.getInstance()
+    }
+
+    companion object {
+        var viewPager: ViewPager2? = null
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWebBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewPagerAdapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
-        viewPagerAdapter?.setFragment(WebViewFragments(args.name, args.url))
-        binding.mainWebViewViewPager.adapter = viewPagerAdapter
+        viewPager = binding.mainWebViewViewPager
+        viewPagerAdapter = ViewPagerAdapter(this)
+        setFragment(WebViewFragments(args.name, args.url))
+        //binding.mainWebViewViewPager.adapter = viewPagerAdapter
         binding.mainWebViewViewPager.isUserInputEnabled = false
     }
 
@@ -42,8 +53,25 @@ class WebActivity : AppCompatActivity() {
         if (menu is MenuBuilder) {
             menu.setOptionalIconsVisible(true)
         }
+        val newTab = menu?.findItem(R.id.new_tab_option_mnu)
+
+        newTab?.setOnMenuItemClickListener {
+            mainViewModel?.addMoreTab()
+            val size = setFragment(HomeScrFragment(true))
+            Log.i(TAG, "onCreateOptionsMenu: $size")
+            binding.mainWebViewViewPager.currentItem = size!! - 1
+            return@setOnMenuItemClickListener true
+        }
         return true
     }
+
+
+    fun setFragment(fragment: Fragment): Int? {
+        viewPagerAdapter?.setFragment(fragment)
+        binding.mainWebViewViewPager.adapter = viewPagerAdapter
+        return viewPagerAdapter?.getSize()
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -52,7 +80,7 @@ class WebActivity : AppCompatActivity() {
     }
 
     @SuppressLint("RtlHardcoded")
-    fun changeToolbar(totalTab: Int) {
+    fun changeToolbar(totalTab: Int, url: String, listenForSearch: (txt: String) -> Unit) {
         val toolbarBinding: CustomToolbarLayoutBinding =
             CustomToolbarLayoutBinding.inflate(layoutInflater)
         supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
@@ -66,8 +94,8 @@ class WebActivity : AppCompatActivity() {
         supportActionBar!!.setCustomView(toolbarBinding.root, lp)
 
         toolbarBinding.root.setContentInsetsAbsolute(0, 0)
-        toolbarBinding.searchBoxEd.setText(args.url)
-        var searchText: String? = args.url
+        toolbarBinding.searchBoxEd.setText(url)
+        var searchText: String? = url
         toolbarBinding.searchBoxEd.doOnTextChanged { text, _, _, _ ->
             searchText = if (text.isNullOrEmpty()) {
                 null
@@ -79,10 +107,9 @@ class WebActivity : AppCompatActivity() {
             if (event.action == KeyEvent.ACTION_DOWN) {
                 when (keyCode) {
                     KeyEvent.KEYCODE_ENTER -> {
-                        Log.i(TAG, "changeToolbar: $searchText")
-                        /*if (!searchText.isNullOrEmpty()) {
-                            Working on it
-                        }*/
+                        if (!searchText.isNullOrEmpty()) {
+                            listenForSearch(searchText!!)
+                        }
                     }
                 }
             }

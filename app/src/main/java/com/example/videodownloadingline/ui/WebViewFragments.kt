@@ -32,7 +32,6 @@ class WebViewFragments(private val title: String, private val url: String) :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = WebSiteFragmentLayoutBinding.bind(view)
-
         mainViewModel = MainViewModel.getInstance()
         if (requireActivity().applicationContext.isNetworkAvailable()) {
             binding.mainWebView.show()
@@ -57,7 +56,7 @@ class WebViewFragments(private val title: String, private val url: String) :
                     if (binding.mainWebView.canGoBack()) {
                         binding.mainWebView.goBack()
                     } else {
-                        isEnabled=false
+                        isEnabled = false
                         activity?.onBackPressed()
                     }
                 }
@@ -67,7 +66,7 @@ class WebViewFragments(private val title: String, private val url: String) :
     private fun getAllTab() {
         mainViewModel?.noOfOpenTab?.observe(this) {
             val item = it ?: 0
-            (requireActivity() as WebActivity).changeToolbar(item)
+            (requireActivity() as WebActivity).changeToolbar(item, url) { _ -> }
         }
     }
 
