@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Mine_Shaft_color"
-    tools:context="com.example.videodownloadingline.ui.WebActivity">
+    tools:context="com.example.videodownloadingline.ui.BrowserFragment">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/main_web_view_view_pager"
@@ -12,4 +12,4 @@
         android:layout_height="match_parent" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

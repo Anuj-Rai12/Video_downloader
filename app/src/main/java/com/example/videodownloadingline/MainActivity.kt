@@ -15,6 +15,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.videodownloadingline.databinding.ActivityMainBinding
 import com.example.videodownloadingline.databinding.CustomToolbarLayoutBinding
 import com.example.videodownloadingline.utils.TAG
+import com.example.videodownloadingline.utils.hide
+import com.example.videodownloadingline.utils.show
 import np.com.susanthapa.curved_bottom_navigation.CbnMenuItem
 import np.com.susanthapa.curved_bottom_navigation.CurvedBottomNavigationView
 import java.util.*
@@ -58,6 +60,14 @@ class MainActivity : AppCompatActivity() {
         binding.curBottomNav.setupWithNavController(navHostFragment)
     }
 
+
+    fun hideBottomNav(isHide: Boolean) {
+        if (isHide)
+            binding.curBottomNav.hide()
+        else
+            binding.curBottomNav.show()
+    }
+
     override fun onResume() {
         super.onResume()
         supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_TITLE
@@ -66,7 +76,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("RtlHardcoded")
-    fun changeToolbar(totalTab: Int,listenForSearch: (txt:String)->Unit) {
+    fun changeToolbar(
+        totalTab: Int,
+        url: String = "",
+        listenForSearch: (txt: String) -> Unit,
+        goTo: () -> Unit
+    ) {
         val toolbarBinding: CustomToolbarLayoutBinding =
             CustomToolbarLayoutBinding.inflate(layoutInflater)
         supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
@@ -81,6 +96,9 @@ class MainActivity : AppCompatActivity() {
 
         toolbarBinding.root.setContentInsetsAbsolute(0, 0)
 
+        toolbarBinding.toolbarHomeBtn.setOnClickListener {
+            goTo()
+        }
         var searchText: String? = null
         toolbarBinding.searchBoxEd.doOnTextChanged { text, _, _, _ ->
             searchText = if (text.isNullOrEmpty()) {
@@ -89,6 +107,7 @@ class MainActivity : AppCompatActivity() {
                 text.toString()
             }
         }
+        toolbarBinding.searchBoxEd.setText(url)
         toolbarBinding.searchBoxEd.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN) {
                 when (keyCode) {

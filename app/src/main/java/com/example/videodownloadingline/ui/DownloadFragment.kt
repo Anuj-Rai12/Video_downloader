@@ -166,7 +166,6 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
             BottomType.MoveTo -> Log.i(TAG, "onItemClicked: working on it")
             BottomType.SetPin -> {
                 MainActivity.bottomNavigation?.hide()
-                MainActivity.viewPager2?.currentItem = 3
             }
         }
     }

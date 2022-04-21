@@ -15,12 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VideoEditingLine">
         <activity
-            android:name=".ui.WebActivity"
-            android:exported="false" />
-        <activity android:name=".MainActivity" />
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SplashSrcActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

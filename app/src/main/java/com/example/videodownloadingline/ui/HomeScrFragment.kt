@@ -57,39 +57,34 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         setData()
         binding.srcTv.setOnClickListener {
             it.hide()
-            if (!isInWebView)
-                setHasOptionsMenu(true)
+            setHasOptionsMenu(true)
             currentTab()
         }
     }
 
     private fun currentTab() {
         mainViewModel?.noOfOpenTab?.observe(viewLifecycleOwner) {
-            if (!isInWebView) {
-                (requireActivity() as MainActivity).changeToolbar(it!!) { url ->
-                    //mainViewModel?.addMoreTab()
+            (requireActivity() as MainActivity).changeToolbar(it!!, listenForSearch = { url ->
+                if (isInWebView) {
+                    (parentFragment as BrowserFragment).setFragment(
+                        WebViewFragments(
+                            "Searching..",
+                            url
+                        )
+                    )?.also { size ->
+                        BrowserFragment.viewPager?.currentItem = size - 1
+                    }
+                } else {
                     val action =
-                        HomeScrFragmentDirections.actionHomeScrFragmentToWebActivity(
+                        HomeScrFragmentDirections.actionHomeScrFragmentToBrowserFragment(
+                            "Searching..",
                             url,
-                            "Searching.."
                         )
                     findNavController().navigate(action)
                 }
-            } else {
-                (requireActivity() as WebActivity).changeToolbar(it!!, "") { url ->
-                    //mainViewModel?.addMoreTab()
-                    (requireActivity() as WebActivity).also { activity ->
-                        activity.setFragment(
-                            WebViewFragments(
-                                "Searching..",
-                                url
-                            )
-                        )?.also { size ->
-                            WebActivity.viewPager?.currentItem = size - 1
-                        }
-                    }
-                }
-            }
+            }, goTo = {
+                findNavController().popBackStack()
+            })
         }
     }
 
@@ -103,6 +98,20 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             val optionOne = menu.findItem(R.id.new_tab_option)
             optionOne.setOnMenuItemClickListener {
                 //mainViewModel?.addMoreTab()
+                return@setOnMenuItemClickListener true
+            }
+        } else {
+            inflater.inflate(R.menu.web_frag_menu, menu)
+            if (menu is MenuBuilder) {
+                menu.setOptionalIconsVisible(true)
+            }
+            val newTab = menu.findItem(R.id.new_tab_option_mnu)
+
+            newTab?.setOnMenuItemClickListener {
+                mainViewModel?.addMoreTab()
+                val size = (parentFragment as BrowserFragment).setFragment(HomeScrFragment(true))
+                Log.i(TAG, "onCreateOptionsMenu: $size")
+                BrowserFragment.viewPager?.currentItem = size!! - 1
                 return@setOnMenuItemClickListener true
             }
         }
@@ -127,9 +136,9 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             iconsDialogBox?.dismiss()
         }
         if (isInWebView && isNewTab) {
-            val size = WebActivity.viewPager?.currentItem
+            val size = BrowserFragment.viewPager?.currentItem
             size?.let {
-                (requireActivity() as WebActivity).removeFragment(it)
+                (parentFragment as BrowserFragment).removeFragment(it)
             }
         }
     }
@@ -142,18 +151,17 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                 if (isAddIcon)
                     showDialogBox()
                 else {
-                    //mainViewModel?.addMoreTab()
                     if (!isInWebView) {
                         openWebDialogBox(data)
                     } else {
                         isNewTab = true
-                        (requireActivity() as WebActivity).setFragment(
+                        (parentFragment as BrowserFragment).setFragment(
                             WebViewFragments(
                                 data.name!!,
                                 data.url!!
                             )
                         )?.also { size ->
-                            WebActivity.viewPager?.currentItem = size - 1
+                            BrowserFragment.viewPager?.currentItem = size - 1
                         }
                     }
                 }
@@ -164,7 +172,10 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
 
     private fun openWebDialogBox(data: HomeSrcIcon) {
         val action =
-            HomeScrFragmentDirections.actionHomeScrFragmentToWebActivity(data.url!!, data.name!!)
+            HomeScrFragmentDirections.actionHomeScrFragmentToBrowserFragment(
+                data.name!!,
+                data.url!!
+            )
         findNavController().navigate(action)
     }
 
@@ -190,19 +201,11 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         super.onResume()
         setHasOptionsMenu(false)
         binding.srcTv.show()
-        if (!isInWebView) {
-            (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
-                ActionBar.DISPLAY_SHOW_TITLE
-            (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
-            (requireActivity() as MainActivity).supportActionBar!!.title =
-                getString(R.string.app_name)
-        } else {
-            (requireActivity() as WebActivity).supportActionBar!!.displayOptions =
-                ActionBar.DISPLAY_SHOW_TITLE
-            (requireActivity() as WebActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
-            (requireActivity() as WebActivity).supportActionBar!!.title =
-                getString(R.string.app_name)
-        }
+        (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
+            ActionBar.DISPLAY_SHOW_TITLE
+        (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
+        (requireActivity() as MainActivity).supportActionBar!!.title =
+            getString(R.string.app_name)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
