@@ -44,7 +44,7 @@ class WebActivity : AppCompatActivity() {
         viewPagerAdapter = ViewPagerAdapter(this)
         setFragment(WebViewFragments(args.name, args.url))
         //binding.mainWebViewViewPager.adapter = viewPagerAdapter
-        binding.mainWebViewViewPager.isUserInputEnabled = false
+        //binding.mainWebViewViewPager.isUserInputEnabled = false
     }
 
     @SuppressLint("RestrictedApi")

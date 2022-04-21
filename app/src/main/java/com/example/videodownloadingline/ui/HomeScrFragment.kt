@@ -32,6 +32,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
     private lateinit var homeSrcAdaptor: HomeSrcAdaptor
     private var iconsDialogBox: AddIconsDialogBox? = null
     private var isDialogBoxIsVisible: Boolean = false
+    private var isNewTab: Boolean = false
     private val viewModel: HomeSrcFragmentViewModel by viewModels()
     private var mainViewModel: MainViewModel? = null
 
@@ -125,7 +126,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         if (isDialogBoxIsVisible) {
             iconsDialogBox?.dismiss()
         }
-        if (isInWebView) {
+        if (isInWebView && isNewTab) {
             val size = WebActivity.viewPager?.currentItem
             size?.let {
                 (requireActivity() as WebActivity).removeFragment(it)
@@ -145,6 +146,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                     if (!isInWebView) {
                         openWebDialogBox(data)
                     } else {
+                        isNewTab = true
                         (requireActivity() as WebActivity).setFragment(
                             WebViewFragments(
                                 data.name!!,
