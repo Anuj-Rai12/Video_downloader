@@ -2,7 +2,6 @@ package com.example.videodownloadingline.adaptor.viewpager_adaptor
 
 import android.util.Log
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -12,7 +11,22 @@ class ViewPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fm, lifecycle) {
 
     private val getTotalFragment: MutableList<Fragment> = mutableListOf()
+    companion object {
 
+        @Volatile
+        private var INSTANCE: ViewPagerAdapter? = null
+        fun getInstance(fm: FragmentManager, lifecycle: Lifecycle): ViewPagerAdapter? {
+            synchronized(this) {
+                if (INSTANCE == null) {
+                    INSTANCE = ViewPagerAdapter(fm, lifecycle)
+                    return INSTANCE
+                }
+                return INSTANCE
+            }
+        }
+
+
+    }
     override fun getItemCount(): Int {
         return getTotalFragment.size
     }
