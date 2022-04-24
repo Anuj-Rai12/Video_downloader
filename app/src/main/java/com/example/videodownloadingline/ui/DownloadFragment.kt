@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.videodownloadingline.MainActivity
@@ -38,7 +39,6 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DownloadFragmentLayoutBinding.bind(view)
-        initial()
         setUpRecycleView(GridLayoutManager(requireActivity(), 2))
         setUpData()
         changeLayoutView()
@@ -155,17 +155,15 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun initial() {
-        MainActivity.bottomNavigation?.show()
-    }
 
     override fun onItemClicked(type: String) {
         when (BottomType.valueOf(type)) {
             BottomType.Delete -> Log.i(TAG, "onItemClicked: working on it")
             BottomType.MoveTo -> Log.i(TAG, "onItemClicked: working on it")
             BottomType.SetPin -> {
-                MainActivity.bottomNavigation?.hide()
+                openBottomSheetDialog?.dismiss()
+               (parentFragment as MainDownloadFragment).goToSetPin()
+                //findNavController().navigate(R.id.action_global_setPinFragment)
             }
         }
     }

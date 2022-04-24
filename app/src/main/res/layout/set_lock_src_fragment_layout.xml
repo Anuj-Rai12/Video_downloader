@@ -5,15 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Mine_Shaft_color"
-    tools:context="com.example.videodownloadingline.ui.SetPinLayoutFragment">
-
-
-    <include
-        android:id="@+id/tool_bar_id"
-        layout="@layout/custom_toolbar_layout"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context="com.example.videodownloadingline.ui.SetPinFragment">
 
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -27,7 +19,7 @@
         android:tint="@color/Surfie_Green_color"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tool_bar_id" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <TextView
@@ -116,8 +108,8 @@
         android:fontFamily="@font/inter_medium"
         android:text="@string/clr_btn"
         android:textColor="@color/Emperor_color"
-        android:textStyle="bold"
         android:textSize="12sp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/set_lock_pin"
         app:layout_constraintTop_toTopOf="@id/next_btn" />

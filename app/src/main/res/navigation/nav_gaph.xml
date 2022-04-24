@@ -20,11 +20,6 @@
         android:label="progress_fragment_layout"
         tools:layout="@layout/progress_fragment_layout" />
     <fragment
-        android:id="@+id/downloadFragment"
-        android:name="com.example.videodownloadingline.ui.DownloadFragment"
-        android:label="download_fragment_layout"
-        tools:layout="@layout/download_fragment_layout" />
-    <fragment
         android:id="@+id/mainDownloadFragment"
         android:name="com.example.videodownloadingline.ui.MainDownloadFragment"
         android:label="download_main_fragment"
@@ -41,4 +36,15 @@
             android:name="url"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/setPinFragment"
+        android:name="com.example.videodownloadingline.ui.SetPinFragment"
+        android:label="set_lock_src_fragment_layout"
+        tools:layout="@layout/set_lock_src_fragment_layout" />
+    <fragment
+        android:id="@+id/downloadFragment"
+        android:name="com.example.videodownloadingline.ui.DownloadFragment"
+        android:label="download_fragment_layout"
+        tools:layout="@layout/download_fragment_layout" />
+    <action android:id="@+id/action_global_setPinFragment" app:destination="@id/setPinFragment" />
 </navigation>

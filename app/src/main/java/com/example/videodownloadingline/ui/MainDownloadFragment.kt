@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.View
 import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.viewpager_adaptor.ViewPagerAdapter
@@ -70,18 +71,25 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment) {
     }
 
     private fun setUpAdaptor() {
-        if (viewPagerAdaptor == null) {
-            viewPagerAdaptor = ViewPagerAdapter(childFragmentManager,lifecycle)
-            viewPagerAdaptor?.setFragment(DownloadFragment(TypeOfDownload.IsFiles.name))
-            viewPagerAdaptor?.setFragment(DownloadFragment(TypeOfDownload.IsFolder.name))
-            viewPagerAdaptor?.setFragment(DownloadFragment(TypeOfDownload.SecureFolder.name))
-        }
+        viewPagerAdaptor = ViewPagerAdapter(childFragmentManager, lifecycle)
+        viewPagerAdaptor?.setFragment(DownloadFragment(TypeOfDownload.IsFiles.name))
+        viewPagerAdaptor?.setFragment(DownloadFragment(TypeOfDownload.IsFolder.name))
+        viewPagerAdaptor?.setFragment(DownloadFragment(TypeOfDownload.SecureFolder.name))
         binding.viewPager.adapter = viewPagerAdaptor
+    }
+
+    fun goToSetPin() {
+        val action = MainDownloadFragmentDirections.actionGlobalSetPinFragment()
+        findNavController().navigate(action)
     }
 
     override fun onPause() {
         super.onPause()
-        setUpAdaptor()
         newFolderDialogBox?.dismiss()
+    }
+
+    override fun onDestroyView() {
+        binding.viewPager.adapter = null
+        super.onDestroyView()
     }
 }
