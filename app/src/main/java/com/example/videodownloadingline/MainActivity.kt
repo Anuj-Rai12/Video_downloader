@@ -11,29 +11,18 @@ import androidx.core.widget.doOnTextChanged
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.example.videodownloadingline.databinding.ActivityMainBinding
 import com.example.videodownloadingline.databinding.CustomToolbarLayoutBinding
 import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.utils.hide
 import com.example.videodownloadingline.utils.show
 import np.com.susanthapa.curved_bottom_navigation.CbnMenuItem
-import np.com.susanthapa.curved_bottom_navigation.CurvedBottomNavigationView
 import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private var currentScr: Int = 1
-
     private lateinit var navHostFragment: NavController
-
-    companion object {
-        var bottomNavigation: CurvedBottomNavigationView? = null
-        var viewPager2: ViewPager2? = null
-    }
-
-
     @SuppressLint("StringFormatMatches")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.mainDownloadFragment
             )
         )
-        binding.curBottomNav.setMenuItems(menuItem, currentScr)
+        binding.curBottomNav.setMenuItems(menuItem, 1)
         binding.curBottomNav.setupWithNavController(navHostFragment)
     }
 

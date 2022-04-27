@@ -94,7 +94,6 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                     gridAdaptor?.submitList(list)
                     linearAdaptor?.notifyDataSetChanged()
                     linearAdaptor?.submitList(list)
-                    MainActivity.bottomNavigation?.show()
                 }
             }
         }

@@ -1,16 +1,14 @@
 package com.example.videodownloadingline.ui
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
@@ -21,17 +19,33 @@ import androidx.navigation.fragment.findNavController
 import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.WebSiteFragmentLayoutBinding
+import com.example.videodownloadingline.model.downloadlink.WebViewDownloadUrl
 import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
 class WebViewFragments(private val title: String, private val url: String) :
     Fragment(R.layout.web_site_fragment_layout) {
     private lateinit var binding: WebSiteFragmentLayoutBinding
     private var mainViewModel: MainViewModel? = null
     private var isWebLoaded = false
+
+    inner class MyJavaScriptInterface {
+        @JavascriptInterface
+        fun showHTML(html: String?) {
+            daisyChainDownload(html)
+        }
+    }
+
+    private fun daisyChainDownload(html: String?) {
+        if (mainViewModel == null)
+            mainViewModel = MainViewModel.getInstance()
+        mainViewModel?.daisyChainDownload(html)
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     @SuppressLint("StringFormatMatches")
@@ -41,7 +55,8 @@ class WebViewFragments(private val title: String, private val url: String) :
         mainViewModel = MainViewModel.getInstance()
         if (requireActivity().applicationContext.isNetworkAvailable()) {
             binding.mainWebView.show()
-            setWebSiteData()
+            setWebSiteData(url, false)
+            checkVideoDownloadLink()
             listenForProgress()
         } else {
             binding.tapToDownloadIcon.visibility = View.INVISIBLE
@@ -53,6 +68,17 @@ class WebViewFragments(private val title: String, private val url: String) :
         }
         onBackPress()
     }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun checkVideoDownloadLink() {
+        mainViewModel?.daisyChannelVideoDownloadLink?.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { data ->
+                setData(data)
+                Log.i(TAG, "checkVideoDownloadLink: $data")
+            }
+        }
+    }
+
 
     @SuppressLint("RestrictedApi")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -89,30 +115,127 @@ class WebViewFragments(private val title: String, private val url: String) :
             })
     }
 
-    private fun getAllTab() {
+    private fun getAllTab(url: String) {
         mainViewModel?.noOfOpenTab?.observe(this) {
             val item = it ?: 0
-            (requireActivity() as MainActivity).changeToolbar(item, url, { _ ->
-
-            }, {
+            (requireActivity() as MainActivity).changeToolbar(item, url, { _ -> }, {
                 findNavController().popBackStack()
             })
         }
     }
 
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun setWebSiteData() {
-        binding.mainWebView.apply {
-            webViewClient = WebViewClient()
-            loadUrl(this@WebViewFragments.url)
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun setData(webViewDownloadUrl: WebViewDownloadUrl) {
+        val info = if (!webViewDownloadUrl.hdurl.isNullOrEmpty()) {
+            changeFab(R.color.Casablanca_color)
+            webViewDownloadUrl.hdurl
+        } else if (!webViewDownloadUrl.sdurl.isNullOrEmpty()) {
+            changeFab(R.color.Surfie_Green_color)
+            webViewDownloadUrl.sdurl
+        } else
+            null
+        binding.downloadFloatingBtn.setOnClickListener {
+            if (info != null) {
+                setWebSiteData(info, true)
+            }
         }
-        val webSettings: WebSettings = binding.mainWebView.settings
-        webSettings.javaScriptEnabled = true
-        webSettings.loadWithOverviewMode = true
-        webSettings.useWideViewPort = true
-        webSettings.domStorageEnabled = true
-        webSettings.loadsImagesAutomatically = true
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun changeFab(color: Int) {
+        binding.downloadFloatingBtn.backgroundTintList =
+            ColorStateList.valueOf(requireActivity().getColorInt(color))
+
+        /*binding.downloadFloatingBtn.viewTreeObserver?.addOnGlobalLayoutListener(
+            object : OnGlobalLayoutListener {
+                @SuppressLint("UnsafeOptInUsageError")
+                override fun onGlobalLayout() {
+                    val badgeDrawable = BadgeDrawable.create(requireActivity())
+                    badgeDrawable.number = 12
+                    //Important to change the position of the Badge
+                    badgeDrawable.horizontalOffset = 30
+                    badgeDrawable.verticalOffset = 20
+                    BadgeUtils.attachBadgeDrawable(
+                        badgeDrawable,
+                        binding.downloadFloatingBtn,
+                        null
+                    )
+                    binding.downloadFloatingBtn.viewTreeObserver.removeOnGlobalLayoutListener(
+                        this
+                    )
+                }
+            })*/
+    }
+
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun setWebSiteData(url: String, flag: Boolean) {
+        val extraHeaders: MutableMap<String, String> = HashMap()
+        if (flag) extraHeaders["Referer"] = url
+
+        binding.mainWebView.apply {
+            settings.apply {
+                javaScriptEnabled = true
+                loadWithOverviewMode = true
+                useWideViewPort = true
+                domStorageEnabled = true
+                cacheMode = WebSettings.LOAD_DEFAULT
+                javaScriptCanOpenWindowsAutomatically = true
+                addJavascriptInterface(MyJavaScriptInterface(), "HtmlViewer")
+                loadsImagesAutomatically = true
+            }
+            webViewClient = object : WebViewClient() {
+                override fun shouldInterceptRequest(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): WebResourceResponse? {
+                    when {
+                        request!!.url.toString().contains(".m3u8") -> {
+                            Log.d(TAG, request.url.toString())
+                        }
+                        request.url.toString().contains(".mp4") -> {
+                            Log.d(TAG, request.url.toString())
+                        }
+                        else -> {
+                            Log.d(TAG, request.url.toString())
+                        }
+                    }
+                    return super.shouldInterceptRequest(view, request)
+                }
+
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    this@apply.loadUrl(
+                        "javascript:window.HtmlViewer.showHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');",
+                        extraHeaders
+                    )
+                    super.onPageFinished(view, url)
+                }
+
+
+                override fun onReceivedHttpAuthRequest(
+                    view: WebView?,
+                    handler: HttpAuthHandler?,
+                    host: String?,
+                    realm: String?
+                ) {
+                    super.onReceivedHttpAuthRequest(view, handler, host, realm)
+                }
+
+
+                override fun shouldOverrideUrlLoading(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): Boolean {
+                    return false
+                }
+
+            }
+            post {
+                loadUrl(url, extraHeaders)
+            }
+        }
     }
 
 
@@ -125,7 +248,7 @@ class WebViewFragments(private val title: String, private val url: String) :
                     setHasOptionsMenu(true)
                     binding.progressbar.progress = 0
                     isWebLoaded = true
-                    getAllTab()
+                    getAllTab(binding.mainWebView.url ?: url)
                     hideImage()
                 }
                 super.onProgressChanged(view, newProgress)
@@ -150,7 +273,7 @@ class WebViewFragments(private val title: String, private val url: String) :
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
         (requireActivity() as MainActivity).supportActionBar!!.title = title
         if (isWebLoaded) {
-            getAllTab()
+            getAllTab(binding.mainWebView.url ?: url)
         }
     }
 
