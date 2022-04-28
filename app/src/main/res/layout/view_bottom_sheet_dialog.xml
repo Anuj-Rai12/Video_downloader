@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foregroundTint="@android:color/transparent"
     android:background="@drawable/bottom_sheet_bg_layout"
+    android:foregroundTint="@android:color/transparent"
     android:paddingTop="15dp">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -23,7 +23,25 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/Untitled_folder_name" />
+        tools:text="@string/Untitled_folder_name"
+        tools:visibility="gone" />
+
+
+    <ImageButton
+        android:id="@+id/cls_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/close_tab_btn"
+        android:padding="8dp"
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:src="@drawable/ic_close"
+        app:layout_constraintBottom_toTopOf="@id/space"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <View
         android:id="@+id/space"
@@ -33,19 +51,8 @@
         android:background="@color/Bon_Jour_color"
         app:layout_constraintLeft_toLeftOf="@id/title_of_video"
         app:layout_constraintRight_toRightOf="@id/title_of_video"
-        app:layout_constraintTop_toBottomOf="@id/title_of_video" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/main_recycle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/space" />
-
+        app:layout_constraintTop_toBottomOf="@id/title_of_video"
+        tools:visibility="gone" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/delete_of_video"
@@ -62,7 +69,8 @@
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/space" />
+        app:layout_constraintTop_toBottomOf="@id/space"
+        tools:visibility="gone" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -80,7 +88,8 @@
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/delete_of_video" />
+        app:layout_constraintTop_toBottomOf="@id/delete_of_video"
+        tools:visibility="gone" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -100,7 +109,47 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/move_the_video" />
+        app:layout_constraintTop_toBottomOf="@id/move_the_video"
+        tools:visibility="gone" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/main_rec"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cls_btn"
+        tools:listitem="@layout/item_resolution_layout"
+        tools:visibility="visible" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/download_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/src_box_shape"
+        android:backgroundTint="@color/Surfie_Green_color"
+        android:fontFamily="@font/inter_medium"
+        android:paddingStart="32dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="32dp"
+        android:paddingBottom="10dp"
+        android:text="@string/content_description_down"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="21sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_rec"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

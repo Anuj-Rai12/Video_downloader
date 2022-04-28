@@ -10,7 +10,10 @@ import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.utils.OnBottomSheetClick
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class BottomSheetDialogForDownloadFrag(private val videoTitle: String) :
+class BottomSheetDialogForDownloadFrag(
+    private val videoTitle: String,
+    private val enum: Bottom = Bottom.DOWNLOAD_FRAG
+) :
     BottomSheetDialogFragment() {
 
     private lateinit var binding: ViewBottomSheetDialogBinding
@@ -23,6 +26,19 @@ class BottomSheetDialogForDownloadFrag(private val videoTitle: String) :
         savedInstanceState: Bundle?
     ): View {
         binding = ViewBottomSheetDialogBinding.inflate(inflater)
+        when (enum) {
+            Bottom.DOWNLOAD_FRAG -> {
+                downloadFrag()
+            }
+            Bottom.WEB_VIEW_FRAGMENT -> {
+                //Show Frag
+            }
+        }
+        binding.titleOfVideo.text = videoTitle
+        return binding.root
+    }
+
+    private fun downloadFrag() {
         binding.deleteOfVideo.setOnClickListener {
             openDialogBox()
         }
@@ -39,8 +55,6 @@ class BottomSheetDialogForDownloadFrag(private val videoTitle: String) :
                 binding.setVideoPin.text.toString().replace("\\s".toRegex(), "")
             )
         }
-        binding.titleOfVideo.text = videoTitle
-        return binding.root
     }
 
     private fun openDialogBox() {
@@ -62,4 +76,10 @@ class BottomSheetDialogForDownloadFrag(private val videoTitle: String) :
 
     override fun getTheme() = R.style.SheetDialog
 
+    companion object {
+        enum class Bottom {
+            DOWNLOAD_FRAG,
+            WEB_VIEW_FRAGMENT
+        }
+    }
 }

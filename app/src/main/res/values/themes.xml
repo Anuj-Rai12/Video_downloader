@@ -19,7 +19,7 @@
         <!--<item name="android:windowCloseOnTouchOutside">false</item>-->
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:colorBackground"> @android:color/transparent</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.3</item>
         <item name="android:windowFrame">@null</item>
@@ -27,12 +27,17 @@
     </style>
 
 
-
-
     <style name="customTabLayout" parent="Widget.Design.TabLayout">
         <item name="textAllCaps">false</item>
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/inter_medium</item>
     </style>
+
+
+    <style name="CustomCheckbox01" parent="@style/Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/radio_button_check_layout</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
 
 </resources>

@@ -2,6 +2,8 @@ package com.example.videodownloadingline.ui
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -137,9 +139,33 @@ class WebViewFragments(private val title: String, private val url: String) :
             null
         binding.downloadFloatingBtn.setOnClickListener {
             if (info != null) {
-                setWebSiteData(info, true)
+                //urlResolution(info)
+                 setWebSiteData(info, true)
             }
         }
+    }
+
+    private fun urlResolution(url: String) {
+        // Create a MediaMetaDataRetriever
+        // Create a MediaMetaDataRetriever
+//        val op = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"
+//        val retriever = MediaMetadataRetriever()
+// Set video url as data source
+// Set video url as data source
+        //retriever.setDataSource(requireActivity(), Uri.parse(op))
+// Get frame at 2nd second as Bitmap image
+// Get frame at 2nd second as Bitmap image
+//        val bitmap = retriever.getFrameAtTime(2000000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+//        Log.i(TAG, "urlResolution: $bitmap")
+        /*val metaRetriever = MediaMetadataRetriever()
+        metaRetriever.setDataSource(url)
+        val vid = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO)
+        val title = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
+        val height = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)
+        val width = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
+        Log.i(TAG, "urlResolution: $height and $width and vid $vid and title $title")
+        Toast.makeText(activity, "height $height and width $width", Toast.LENGTH_LONG).show()*/
+        //   metaRetriever.release()
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

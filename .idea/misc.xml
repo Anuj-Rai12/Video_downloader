@@ -44,6 +44,8 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_outline_settings.xml" value="0.1345" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_pause.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_play.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_radio_button_checked.xml" value="0.1345" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_radio_button_unchecked.xml" value="0.1345" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_search.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_three_dot_mnu.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_trash_outline.xml" value="0.1375" />
@@ -52,6 +54,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_web_download.xml" value="0.133" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_yearlogo.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/layout_tab_layout.xml" value="0.1345" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/radio_button_check_layout.xml" value="0.1345" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/round_corners_bg_6dp.xml" value="0.133" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/round_corners_green_teal_borders.xml" value="0.133" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/round_corners_white_teal_borders.xml" value="0.133" />
@@ -75,6 +78,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_video_progress_item_list_view.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/home_src_fragment.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/home_src_icons_layout.xml" value="0.6" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/item_resolution_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/progress_fragment_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/set_lock_src_fragment_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/set_lock_src_layout.xml" value="0.2234375" />
@@ -83,7 +87,7 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/splash_screen_fragment.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/toolbar_layout.xml" value="0.4" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/video_fragment_layout.xml" value="0.10822401614530777" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/view_bottom_sheet_dialog.xml" value="0.41690962099125367" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/view_bottom_sheet_dialog.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/web_site_fragment_layout.xml" value="0.4" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu-v26/main_menu.xml" value="0.2234375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/download_frag_menu.xml" value="0.2234375" />

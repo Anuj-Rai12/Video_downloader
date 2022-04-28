@@ -32,4 +32,11 @@
     </style>
 
 
+
+    <style name="CustomCheckbox01" parent="@style/Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/radio_button_check_layout</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+
 </resources>
