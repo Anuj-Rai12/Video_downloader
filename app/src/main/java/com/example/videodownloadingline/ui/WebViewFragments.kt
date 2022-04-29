@@ -199,9 +199,6 @@ class WebViewFragments(private val title: String, private val url: String) :
         for (i in 0 until trackGroups.length) {
             val h = trackGroups[i].getFormat(0).height
             val w = trackGroups[i].getFormat(0).width
-            val op = trackGroups[i].getFormat(0).metadata
-            val op1 = trackGroups[i].getFormat(0).metadata?.get(0)
-            Log.i(TAG, "getHeightAndWidth: ${op?.get(0)?.wrappedMetadataBytes?.size}")
             val other = trackGroups[i].getFormat(0)
             if (h > -1)
                 height = h

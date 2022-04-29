@@ -1,6 +1,7 @@
 package com.example.videodownloadingline.ui
 
-import android.graphics.Color
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.ActionBar
@@ -9,29 +10,31 @@ import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.progress_adaptor.ProgressAdaptor
 import com.example.videodownloadingline.databinding.ProgressFragmentLayoutBinding
-import com.example.videodownloadingline.model.progress.ProgressData
-import com.example.videodownloadingline.model.progress.Vid
-import com.example.videodownloadingline.utils.hide
 
 
 class ProgressFragment : Fragment(R.layout.progress_fragment_layout) {
     private lateinit var binding: ProgressFragmentLayoutBinding
     private lateinit var videoDownloadAdaptor: ProgressAdaptor
+    private var downloadReceiver: BroadcastReceiver? = null
+    private val listOfUrls = mutableListOf<String>()
+    private var downloadManager: DownloadManager? = null
+    private val listOfDownloadIds = mutableListOf<Long>()
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ProgressFragmentLayoutBinding.bind(view)
         setRecycle()
-        setData()
+
+
+
+        //  setData()
     }
 
 
-    private fun setData() {
-        val list = listOf(
-            ProgressData(1, getString(R.string.sample_txt), 54, 5, Vid.speed),
-            ProgressData(2, getString(R.string.sample_txt), 70, 10, Vid.pause)
-        )
-        videoDownloadAdaptor.submitList(list)
-    }
+    /*private fun setData() {
+
+    }*/
 
     private fun setRecycle() {
         binding.recycleView.apply {

@@ -3,98 +3,44 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/avd_anim.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/avd_anim_downloads.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/avd_anim_loading.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/avd_downloading.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/avd_home_anim.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/avd_loading.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/bottom_border_for_edit_text_layout.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/bottom_sheet_bg_layout.xml" value="0.1375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/check_box_shape.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/cursor_line_layout.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/dialog_box_shape.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/edit_text_with_border_layout.xml" value="0.1375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_add.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_arrow_back.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_check.xml" value="0.133" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_check_it.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_checkmark.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_clear_btn.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_close.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_download.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_download_list.xml" value="0.1375" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_folder_remove.xml" value="0.1375" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_grid_outline.xml" value="0.1375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_home.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_homebtn.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_incognito.xml" value="0.1345" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_launcher_background.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_list.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_loading.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_loding.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_main_loding.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_more_horizontal.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_new_list_vew.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newdownload.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newhome.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newloading.xml" value="0.212" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_newtab.xml" value="0.1345" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_outline.xml" value="0.1375" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_outline_settings.xml" value="0.1345" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_pause.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_play.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_radio_button_checked.xml" value="0.1345" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_radio_button_unchecked.xml" value="0.1345" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_search.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_three_dot_mnu.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_trash_outline.xml" value="0.1375" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_video.xml" value="0.1375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_viedoapplogo.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_web_download.xml" value="0.133" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/ic_yearlogo.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/layout_tab_layout.xml" value="0.1345" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/radio_button_check_layout.xml" value="0.1345" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/round_corners_bg_6dp.xml" value="0.133" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/round_corners_green_teal_borders.xml" value="0.133" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/round_corners_white_teal_borders.xml" value="0.133" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/search_box_dash_board_shape.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/splash_src_gradient_bg.xml" value="0.212" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/src_box_shape.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/tab_bg_layout.xml" value="0.1345" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/tab_bg_selected.xml" value="0.214" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/tab_bg_unseleted.xml" value="0.1345" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/tab_layout.xml" value="0.214" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/vd_vector.xml" value="0.144" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/web_site_bg_layout.xml" value="0.133" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/activity_web.xml" value="0.2234375" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/add_icon_to_home_src_dialog_layout.xml" value="0.536" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/custom_toolbar_layout.xml" value="0.2234375" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_file_item_grid_layout.xml" value="0.4" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_file_item_linear_layout.xml" value="0.4" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_fragment_layout.xml" value="0.264" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_main_fragment.xml" value="0.2234375" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/add_icon_to_home_src_dialog_layout.xml" value="0.4" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_fragment_layout.xml" value="0.10822401614530777" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_video_progress_item_list_view.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/home_src_fragment.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/home_src_icons_layout.xml" value="0.6" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/item_resolution_layout.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/progress_fragment_layout.xml" value="0.264" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/set_lock_src_fragment_layout.xml" value="0.264" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/set_lock_src_layout.xml" value="0.2234375" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/sorted_item_layout.xml" value="0.4" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/splash_screen_activity.xml" value="0.10822401614530777" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/splash_screen_fragment.xml" value="0.264" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/toolbar_layout.xml" value="0.4" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/toolbar_layout.xml" value="0.536" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/video_fragment_layout.xml" value="0.10822401614530777" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/view_bottom_sheet_dialog.xml" value="0.264" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/web_site_fragment_layout.xml" value="0.4" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/web_site_fragment_layout.xml" value="0.10822401614530777" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu-v26/main_menu.xml" value="0.2234375" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/download_frag_menu.xml" value="0.2234375" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/home_content_mnu.xml" value="0.2234375" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/home_frag_menu.xml" value="0.2" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/main_menu.xml" value="0.264" />
-        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/web_frag_menu.xml" value="0.2234375" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/menu/main_menu.xml" value="0.5631067961165048" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/xml/provider_paths.xml" value="0.2234375" />
       </map>
     </option>

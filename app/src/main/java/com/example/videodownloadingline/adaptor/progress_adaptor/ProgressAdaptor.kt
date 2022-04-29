@@ -7,63 +7,61 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.DownloadVideoProgressItemListViewBinding
-import com.example.videodownloadingline.model.progress.ProgressData
-import com.example.videodownloadingline.model.progress.Vid
+import com.example.videodownloadingline.model.downloadlink.DownloadItem
+import com.example.videodownloadingline.utils.DownloadProgressLiveData
+import com.example.videodownloadingline.utils.DownloadProgressLiveData.Companion.getMb
 
-typealias Listener = (data: ProgressData) -> Unit
 
-class ProgressAdaptor(private val itemClicked: Listener) :
-    ListAdapter<ProgressData, ProgressAdaptor.DownloadVideoItemViewHolder>(diffUtil) {
-    inner class DownloadVideoItemViewHolder(private val binding: DownloadVideoProgressItemListViewBinding) :
+typealias itemClicked = (data: DownloadItem) -> Unit
+
+class ProgressAdaptor(private val itemClicked: itemClicked) :
+    ListAdapter<DownloadItem, ProgressAdaptor.DownloadFileViewHolder>(diffUtil) {
+
+    inner class DownloadFileViewHolder(private val binding: DownloadVideoProgressItemListViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun makeData(data: ProgressData, itemClicked: Listener) {
-            binding.titleDownload.text = data.title
-            binding.progressBar.progress = data.progress
+        fun makeData(data: DownloadItem, itemClicked: itemClicked) {
             binding.root.setOnClickListener {
                 itemClicked(data)
             }
-            binding.totalSize.text =
-                binding.totalSize.context.getString(
-                    R.string.value_sample_txt,
-                    (data.size / 2).toString(),
-                    data.size.toString()
-                )
 
-            binding.downloadStatusVid.text = data.status.name
+            binding.downloadStatusVid.text = DownloadProgressLiveData.getStatus(data.status)
 
-            binding.btnPauseOrPlay.setOnClickListener {
-                when (data.status) {
-                    Vid.pause -> it.setBackgroundResource(R.drawable.ic_play)
-                    Vid.speed -> it.setBackgroundResource(R.drawable.ic_pause)
-                }
-            }
+            binding.totalSize.text = binding.totalSize.context.getString(
+                R.string.size_test_tab,
+                getMb(data.bytesDownloadedSoFar),
+                getMb(data.totalSizeBytes)
+            )
+
+            binding.progressBar.progress =
+                (data.bytesDownloadedSoFar * 100.0 / data.totalSizeBytes).toInt()
+
         }
     }
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<ProgressData>() {
+        val diffUtil = object : DiffUtil.ItemCallback<DownloadItem>() {
             override fun areItemsTheSame(
-                oldItem: ProgressData,
-                newItem: ProgressData
-            ) = oldItem.id == newItem.id
+                oldItem: DownloadItem,
+                newItem: DownloadItem
+            ) = oldItem.uri == newItem.uri
 
             override fun areContentsTheSame(
-                oldItem: ProgressData,
-                newItem: ProgressData
+                oldItem: DownloadItem,
+                newItem: DownloadItem
             ) = oldItem == newItem
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DownloadVideoItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DownloadFileViewHolder {
         val binding = DownloadVideoProgressItemListViewBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return DownloadVideoItemViewHolder(binding)
+        return DownloadFileViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: DownloadVideoItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DownloadFileViewHolder, position: Int) {
         val currItem = getItem(position)
         currItem?.let {
             holder.makeData(it, itemClicked)
