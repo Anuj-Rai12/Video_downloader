@@ -54,7 +54,7 @@ class AddIconsDialogBox {
                     .show()
                 return@setOnClickListener
             }
-            listenerIcon(HomeSrcIcon(id = 121, name, url))
+            listenerIcon(HomeSrcIcon(id = 0, name, url))
         }
         setUpDialogBox(alertDialog)
     }

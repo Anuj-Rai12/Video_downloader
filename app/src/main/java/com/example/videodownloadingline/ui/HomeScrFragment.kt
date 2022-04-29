@@ -125,22 +125,14 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             isDialogBoxIsVisible = false
         }, listenerIcon = {
             addHomeIcon(it)
-            isDialogBoxIsVisible=false
+            isDialogBoxIsVisible = false
             iconsDialogBox?.dismiss()
         })
         isDialogBoxIsVisible = true
     }
 
     private fun addHomeIcon(homeSrcIcon: HomeSrcIcon) {
-        viewModel.addVideoItem(homeSrcIcon).observe(viewLifecycleOwner){
-            when(it){
-                is RemoteResponse.Error -> Log.i(TAG, "addHomeIcon: ${it.exception?.message}")
-                is RemoteResponse.Loading -> Log.i(TAG, "addHomeIcon: ${it.data}")
-                is RemoteResponse.Success -> {
-                    Log.i(TAG, "addHomeIcon: ${it.data}")
-                }
-            }
-        }
+        viewModel.addVideoItem(homeSrcIcon)
     }
 
     override fun onPause() {
@@ -194,16 +186,23 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setData() {
-        viewModel.geBookMarkItem.observe(viewLifecycleOwner) {
+        viewModel.getBookMarkResponse.observe(viewLifecycleOwner) {
             when (it) {
                 is RemoteResponse.Error -> {
                     Log.i(TAG, "setData: ${it.exception?.localizedMessage}")
                 }
                 is RemoteResponse.Loading -> Log.i(TAG, "setData: ${it.data}")
                 is RemoteResponse.Success -> {
-                    val item = it.data as MutableList<HomeSrcIcon>
+                    val item = it.data as MutableList<*>
+                    val res = mutableListOf<HomeSrcIcon>()
+                    item.forEach { value ->
+                        (value as HomeSrcIcon?)?.let { home ->
+                            res.add(home)
+                        }
+                    }
+                    Log.i(TAG, "setData: Output screen is -> $res")
                     homeSrcAdaptor.notifyDataSetChanged()
-                    homeSrcAdaptor.submitList(item)
+                    homeSrcAdaptor.submitList(res)
                 }
             }
         }

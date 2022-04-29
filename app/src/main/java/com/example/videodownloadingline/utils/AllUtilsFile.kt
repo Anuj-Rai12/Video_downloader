@@ -11,6 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
+import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
 import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.Executors
 
@@ -190,4 +191,13 @@ val DOWNLOAD_ITEM = listOf(
         23,
         1649567979235
     )
+)
+
+val BOOK_MARK_IC = listOf(
+    HomeSrcIcon(0, "FaceBook", "https://www.facebook.com/", 2131099651),
+    HomeSrcIcon(0, "Instagram", "https://www.instagram.com/", 2131099655),
+    HomeSrcIcon(0, "WhatsApp", "https://www.whatsapp.com/", 2131099653),
+    HomeSrcIcon(0, "Twitter", "	https://www.twitter.com/", 2131099651),
+    HomeSrcIcon(0, "DailyMotion", "https://www.dailymotion.com/", 2131099653),
+    HomeSrcIcon(0, "Vimeo", "https://vimeo.com/", 2131099651)
 )

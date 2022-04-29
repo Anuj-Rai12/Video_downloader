@@ -9,6 +9,8 @@ interface BookMarkItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertBookMarkItem(item: HomeSrcIcon)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertBookMarkItem(item: List<HomeSrcIcon>)
 
     @Query("Select * from HomeBookMarks")
     suspend fun getAllBookMark(): List<HomeSrcIcon>

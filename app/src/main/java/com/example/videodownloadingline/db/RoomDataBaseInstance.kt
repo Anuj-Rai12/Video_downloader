@@ -9,6 +9,7 @@ import com.example.videodownloadingline.db.dao.BookMarkItemDao
 import com.example.videodownloadingline.db.dao.DownloadItemDao
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
+import com.example.videodownloadingline.utils.BOOK_MARK_IC
 import com.example.videodownloadingline.utils.DOWNLOAD_ITEM
 import com.example.videodownloadingline.utils.ioThread
 
@@ -43,10 +44,12 @@ abstract class RoomDataBaseInstance : RoomDatabase() {
                                 getInstance(context).getDownloadItemDao().insertDownloadItem(
                                     DOWNLOAD_ITEM
                                 )
+                                getInstance(context).getBookMarkItemDao().insertBookMarkItem(
+                                    BOOK_MARK_IC
+                                )
                             }
                         }
-                    }).createFromAsset("db/Book_marks_item.db")
-                        .fallbackToDestructiveMigration()
+                    }).fallbackToDestructiveMigration()
                         .build()
                     INSTANCE = oldInstance
                     return oldInstance
