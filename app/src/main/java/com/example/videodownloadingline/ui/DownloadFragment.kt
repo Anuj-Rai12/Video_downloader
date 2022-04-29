@@ -64,7 +64,6 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
                     downloadItem.des = getString(R.string.urls_type_desc, (index + 1) * 5)
                 }
             }
-            Log.i(TAG, "onViewCreated: $it")
             adapter.submitList(it)
             //adapter.notifyDataSetChanged()
         }
@@ -101,7 +100,15 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
             @SuppressLint("Range")
             @RequiresApi(Build.VERSION_CODES.M)
             override fun onReceive(context: Context?, intent: Intent?) {
+                val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+                val item = listOfDownloadIds.find {
+                    it == id
+                }
+                Log.i(TAG, "onReceive: $item")
+                listOfDownloadIds.indexOf(id)
                 //startDownloading(TrueId, manage)
+
+
                 Toast.makeText(
                     activity,
                     "Downloaded Completed",
