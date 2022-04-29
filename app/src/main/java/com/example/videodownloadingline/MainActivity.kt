@@ -15,6 +15,7 @@ import com.example.videodownloadingline.databinding.ActivityMainBinding
 import com.example.videodownloadingline.databinding.CustomToolbarLayoutBinding
 import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.utils.hide
+import com.example.videodownloadingline.utils.isValidUrl
 import com.example.videodownloadingline.utils.show
 import np.com.susanthapa.curved_bottom_navigation.CbnMenuItem
 import java.util.*
@@ -23,6 +24,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navHostFragment: NavController
+
     @SuppressLint("StringFormatMatches")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                 when (keyCode) {
                     KeyEvent.KEYCODE_ENTER -> {
                         Log.i(TAG, "changeToolbar: $searchText")
-                        if (!searchText.isNullOrEmpty()) {
+                        if (!searchText.isNullOrEmpty() && isValidUrl(searchText)) {
                             listenForSearch(searchText!!)
                         }
                     }

@@ -2,8 +2,6 @@ package com.example.videodownloadingline.ui
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
-import android.media.MediaMetadataRetriever
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +9,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.webkit.*
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
@@ -20,20 +19,31 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
+import com.example.videodownloadingline.bottom_sheets.BottomSheetDialogForDownloadFrag
 import com.example.videodownloadingline.databinding.WebSiteFragmentLayoutBinding
+import com.example.videodownloadingline.model.downloadlink.VideoType
 import com.example.videodownloadingline.model.downloadlink.WebViewDownloadUrl
 import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.MainViewModel
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.MetadataRetriever
+import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.google.common.util.concurrent.FutureCallback
+import com.google.common.util.concurrent.Futures
+import com.google.common.util.concurrent.ListenableFuture
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import java.lang.Runnable
 
 
 class WebViewFragments(private val title: String, private val url: String) :
-    Fragment(R.layout.web_site_fragment_layout) {
+    Fragment(R.layout.web_site_fragment_layout), OnBottomSheetClick {
+
     private lateinit var binding: WebSiteFragmentLayoutBinding
     private var mainViewModel: MainViewModel? = null
     private var isWebLoaded = false
+    private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
 
     inner class MyJavaScriptInterface {
         @JavascriptInterface
@@ -49,7 +59,7 @@ class WebViewFragments(private val title: String, private val url: String) :
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.M)
+    @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("StringFormatMatches")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -71,7 +81,7 @@ class WebViewFragments(private val title: String, private val url: String) :
         onBackPress()
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun checkVideoDownloadLink() {
         mainViewModel?.daisyChannelVideoDownloadLink?.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { data ->
@@ -127,7 +137,7 @@ class WebViewFragments(private val title: String, private val url: String) :
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.M)
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun setData(webViewDownloadUrl: WebViewDownloadUrl) {
         val info = if (!webViewDownloadUrl.hdurl.isNullOrEmpty()) {
             changeFab(R.color.Casablanca_color)
@@ -139,33 +149,70 @@ class WebViewFragments(private val title: String, private val url: String) :
             null
         binding.downloadFloatingBtn.setOnClickListener {
             if (info != null) {
-                //urlResolution(info)
-                 setWebSiteData(info, true)
+                Toast.makeText(requireActivity(), "Please Wait while checking Video Quality..", Toast.LENGTH_LONG).show()
+                urlResolution(info) { height, width, size ->
+                    VideoType(height, width, size).also {
+                        openBottomSheet(listOf(it))
+                    }
+                }
             }
         }
     }
 
-    private fun urlResolution(url: String) {
-        // Create a MediaMetaDataRetriever
-        // Create a MediaMetaDataRetriever
-//        val op = "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"
-//        val retriever = MediaMetadataRetriever()
-// Set video url as data source
-// Set video url as data source
-        //retriever.setDataSource(requireActivity(), Uri.parse(op))
-// Get frame at 2nd second as Bitmap image
-// Get frame at 2nd second as Bitmap image
-//        val bitmap = retriever.getFrameAtTime(2000000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
-//        Log.i(TAG, "urlResolution: $bitmap")
-        /*val metaRetriever = MediaMetadataRetriever()
-        metaRetriever.setDataSource(url)
-        val vid = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_HAS_VIDEO)
-        val title = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)
-        val height = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)
-        val width = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
-        Log.i(TAG, "urlResolution: $height and $width and vid $vid and title $title")
-        Toast.makeText(activity, "height $height and width $width", Toast.LENGTH_LONG).show()*/
-        //   metaRetriever.release()
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun urlResolution(url: String, getRes: (Int, Int, Int) -> Unit) {
+        val trackGroupsFuture: ListenableFuture<TrackGroupArray> =
+            MetadataRetriever.retrieveMetadata(
+                requireActivity(), MediaItem.fromUri(url)
+            )
+        Futures.addCallback(
+            trackGroupsFuture,
+            object : FutureCallback<TrackGroupArray?> {
+                override fun onSuccess(trackGroups: TrackGroupArray?) {
+                    trackGroups?.let {
+                        lifecycleScope.launchWhenCreated {
+                            val size = async(IO) {
+                                getVideoFileSize(url)
+                            }
+                            val gHW = async {
+                                getHeightAndWidth(it)
+                            }
+                            val gHWRes = gHW.await()
+                            getRes(gHWRes.first, gHWRes.second, size.await())
+                        }
+                    }
+
+                }
+
+                override fun onFailure(t: Throwable) {
+                    Log.i(TAG, "onFailure: ${t.message}")
+                }
+            },
+            Runnable::run
+        )
+    }
+
+    private fun getHeightAndWidth(trackGroups: TrackGroupArray): Pair<Int, Int> {
+        var height = 0
+        var width = 0
+        for (i in 0 until trackGroups.length) {
+            val h = trackGroups[i].getFormat(0).height
+            val w = trackGroups[i].getFormat(0).width
+            val op = trackGroups[i].getFormat(0).metadata
+            val op1 = trackGroups[i].getFormat(0).metadata?.get(0)
+            Log.i(TAG, "getHeightAndWidth: ${op?.get(0)?.wrappedMetadataBytes?.size}")
+            val other = trackGroups[i].getFormat(0)
+            if (h > -1)
+                height = h
+            if (w > -1)
+                width = w
+            Log.i(
+                TAG,
+                "onSuccess: $h and $w the other format -> $other"
+            )
+        }
+        return Pair(height, width)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -194,6 +241,16 @@ class WebViewFragments(private val title: String, private val url: String) :
             })*/
     }
 
+    private fun openBottomSheet(list: List<VideoType>) {
+        openBottomSheetDialog =
+            BottomSheetDialogForDownloadFrag(
+                "",
+                BottomSheetDialogForDownloadFrag.Companion.Bottom.WEB_VIEW_FRAGMENT
+            )
+        BottomSheetDialogForDownloadFrag.list = list
+        openBottomSheetDialog?.onBottomIconClicked = this
+        openBottomSheetDialog?.show(childFragmentManager, "Open Bottom Sheet For Choose Download")
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setWebSiteData(url: String, flag: Boolean) {
@@ -301,6 +358,16 @@ class WebViewFragments(private val title: String, private val url: String) :
         if (isWebLoaded) {
             getAllTab(binding.mainWebView.url ?: url)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        openBottomSheetDialog?.dismiss()
+    }
+
+    override fun <T> onItemClicked(type: T) {
+        Log.i(TAG, "onItemClicked: $type")
+        openBottomSheetDialog?.dismiss()
     }
 
 }

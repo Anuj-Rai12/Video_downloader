@@ -1,9 +1,15 @@
 package com.example.videodownloadingline.utils
 
+import android.app.Activity
+import android.os.Build
 import android.util.Log
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.example.videodownloadingline.model.downloadlink.WebViewDownloadUrl
 import org.json.JSONObject
 import org.jsoup.Jsoup
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 fun websiteScrapperPart1(data: String?): WebViewDownloadUrl? {
@@ -192,4 +198,31 @@ private fun getWebViewDownloadObj(fbValue: WebViewDownloadUrl): WebViewDownloadU
 }
 
 
+@RequiresApi(Build.VERSION_CODES.N)
+fun getVideoFileSize(url: String): Int {
+    val size = try {
+        val link = URL(url)
+        val urlConnection: HttpURLConnection = link.openConnection() as HttpURLConnection
+        urlConnection.requestMethod = "HEAD"
+        urlConnection.connect()
+        urlConnection.inputStream
+        val op = urlConnection.contentLengthLong
+        Log.i(TAG, "getVideoFileSize: $op")
+        if (op.toInt() <= 0) 10 else op.toInt()
+    } catch (e: Exception) {
+        Log.i(TAG, "getVideoFileSize: ${e.message}")
+        0
+    }
+    return size
+}
 
+
+fun Activity.isValidUrl(url: String?): Boolean {
+    return try {
+        URL(url).toURI()
+        true
+    } catch (e: java.lang.Exception) {
+        Toast.makeText(this, "Please Enter valid Url", Toast.LENGTH_SHORT).show()
+        false
+    }
+}

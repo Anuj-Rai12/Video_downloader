@@ -113,7 +113,7 @@ enum class BottomType {
 }
 
 interface OnBottomSheetClick {
-    fun onItemClicked(type: String)
+    fun <T> onItemClicked(type: T)
 }
 
 fun View.showSandbar(msg: String, length: Int = Snackbar.LENGTH_SHORT, color: Int? = null) {

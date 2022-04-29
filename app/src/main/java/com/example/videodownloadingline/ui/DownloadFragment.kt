@@ -9,10 +9,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadItemGridAdaptor
 import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadItemLinearAdaptor
@@ -20,7 +18,10 @@ import com.example.videodownloadingline.bottom_sheets.BottomSheetDialogForDownlo
 import com.example.videodownloadingline.databinding.DownloadFragmentLayoutBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
-import com.example.videodownloadingline.utils.*
+import com.example.videodownloadingline.utils.BottomType
+import com.example.videodownloadingline.utils.OnBottomSheetClick
+import com.example.videodownloadingline.utils.RemoteResponse
+import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
 
 
@@ -155,8 +156,8 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     }
 
 
-    override fun onItemClicked(type: String) {
-        when (BottomType.valueOf(type)) {
+    override fun <T> onItemClicked(type: T) {
+        when (BottomType.valueOf(type as String)) {
             BottomType.Delete -> Log.i(TAG, "onItemClicked: working on it")
             BottomType.MoveTo -> Log.i(TAG, "onItemClicked: working on it")
             BottomType.SetPin -> {

@@ -9,6 +9,7 @@ import com.example.videodownloadingline.model.downloadlink.WebViewDownloadUrl
 import com.example.videodownloadingline.utils.*
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -93,4 +94,11 @@ class MainViewModel : ViewModel() {
                 _noOfTab.postValue(it - 1)
         }
     }
+
+
+    override fun onCleared() {
+        viewModelScope.cancel()
+        super.onCleared()
+    }
+
 }
