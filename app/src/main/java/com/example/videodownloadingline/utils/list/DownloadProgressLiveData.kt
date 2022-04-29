@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
+import com.example.videodownloadingline.ui.TAG
+import com.example.videodownloadingline.utils.DownloadProgressLiveData
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -46,8 +49,10 @@ class DownloadProgressLiveData(
                 val list = mutableListOf<DownloadItem>()
 
                 while (cursor.moveToNext()) {
-                    when (val status =
-                        cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
+                    val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+                    val stat = DownloadProgressLiveData.getStatus(status)
+                    Log.i(TAG, "onActive: status is => $status and its $stat")
+                    when (status) {
                         DownloadManager.STATUS_PENDING,
                         DownloadManager.STATUS_RUNNING,
                         DownloadManager.STATUS_PAUSED -> with(cursor) {

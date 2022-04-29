@@ -64,7 +64,9 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
                     downloadItem.des = getString(R.string.urls_type_desc, (index + 1) * 5)
                 }
             }
+            Log.i(TAG, "onViewCreated: $it")
             adapter.submitList(it)
+            //adapter.notifyDataSetChanged()
         }
     }
 
@@ -74,6 +76,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
             layoutManager = LinearLayoutManager(requireActivity())
             this@DownloadFragment.adapter = RecycleViewForDownload {
                 Toast.makeText(activity, "$it", Toast.LENGTH_SHORT).show()
+                Log.i(TAG, "setUpRecycleView: $it")
             }
             adapter = this@DownloadFragment.adapter
         }
@@ -85,7 +88,7 @@ class DownloadFragment : Fragment(R.layout.download_fragment_layout) {
     ): DownloadManager.Request {
         return request.setDescription(getString(R.string.urls_type_desc, position * 5))
             .setTitle(getString(R.string.urls_type_title, position * 5))
-            .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE)
+            .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
             .setDestinationInExternalPublicDir(
                 Environment.DIRECTORY_DOWNLOADS,
                 "Video_File_${position * 5}.mp4"

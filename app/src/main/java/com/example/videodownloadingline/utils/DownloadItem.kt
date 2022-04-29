@@ -40,7 +40,7 @@ class DownloadProgressLiveData(private val application: Application, private val
                 if (cursor.moveToFirst()) {
                     val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
                     val stat = getStatus(status)
-                    //Log.i(TAG, "onActive: status is => $status")
+                    Log.i(TAG, "onActive: status is => $status")
                     when (status) {
                         DownloadManager.STATUS_SUCCESSFUL,
                         DownloadManager.STATUS_PENDING,

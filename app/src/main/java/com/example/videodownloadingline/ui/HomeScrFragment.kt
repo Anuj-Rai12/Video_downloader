@@ -44,7 +44,7 @@ class HomeScrFragment : Fragment(R.layout.home_src_fragment) {
         binding.downloadLayout.titleDownload.text = des
         request.setDescription(des)
             .setTitle(title)
-            .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE)
+            .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE or DownloadManager.Request.NETWORK_WIFI)
             .setDestinationInExternalPublicDir(
                 Environment.DIRECTORY_DOWNLOADS,
                 "AnujCv.mp4"
