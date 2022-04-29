@@ -19,6 +19,7 @@ import com.example.videodownloadingline.databinding.AddIconToHomeSrcDialogLayout
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
 import com.example.videodownloadingline.utils.checkInputField
 import com.example.videodownloadingline.utils.hide
+import com.example.videodownloadingline.utils.isValidUrl
 import com.example.videodownloadingline.utils.show
 
 private typealias ListerIcon = (bookmarks: HomeSrcIcon) -> Unit
@@ -48,7 +49,7 @@ class AddIconsDialogBox {
         binding.okBtn.setOnClickListener {
             val name = binding.nmeEd.text.toString()
             val url = binding.urlEd.text.toString()
-            if (checkInputField(name) || checkInputField(url)) {
+            if (checkInputField(name) || checkInputField(url) || !con.isValidUrl(url)) {
                 Toast.makeText(it.context, "Please Enter correct Information ", Toast.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener

@@ -124,10 +124,23 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             iconsDialogBox?.dismiss()
             isDialogBoxIsVisible = false
         }, listenerIcon = {
-            Log.i(TAG, "showDialogBox: $it")
+            addHomeIcon(it)
+            isDialogBoxIsVisible=false
             iconsDialogBox?.dismiss()
         })
         isDialogBoxIsVisible = true
+    }
+
+    private fun addHomeIcon(homeSrcIcon: HomeSrcIcon) {
+        viewModel.addVideoItem(homeSrcIcon).observe(viewLifecycleOwner){
+            when(it){
+                is RemoteResponse.Error -> Log.i(TAG, "addHomeIcon: ${it.exception?.message}")
+                is RemoteResponse.Loading -> Log.i(TAG, "addHomeIcon: ${it.data}")
+                is RemoteResponse.Success -> {
+                    Log.i(TAG, "addHomeIcon: ${it.data}")
+                }
+            }
+        }
     }
 
     override fun onPause() {

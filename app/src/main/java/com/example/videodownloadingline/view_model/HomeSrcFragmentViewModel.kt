@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import com.example.videodownloadingline.db.RoomDataBaseInstance
+import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
 import com.example.videodownloadingline.repo.HomeSrcFragmentRepository
 
 class HomeSrcFragmentViewModel(application: Application) : AndroidViewModel(application) {
@@ -14,4 +15,5 @@ class HomeSrcFragmentViewModel(application: Application) : AndroidViewModel(appl
 
     val geBookMarkItem = repo.getBookMarkItem().asLiveData()
 
+    fun addVideoItem(homeSrcIcon: HomeSrcIcon) = repo.addBookMarkItem(homeSrcIcon).asLiveData()
 }

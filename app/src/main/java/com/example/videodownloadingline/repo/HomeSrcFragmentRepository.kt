@@ -28,4 +28,18 @@ class HomeSrcFragmentRepository(private val roomDataBaseInstance: RoomDataBaseIn
         }
         emit(data)
     }.flowOn(Dispatchers.IO)
+
+
+    fun addBookMarkItem(homeSrcIcon: HomeSrcIcon) = flow {
+        emit(RemoteResponse.Loading("Adding Item.."))
+        val data = try {
+            roomDataBaseInstance.getBookMarkItemDao().insertBookMarkItem(homeSrcIcon)
+            RemoteResponse.Success("Video is Added")
+        } catch (e: Exception) {
+            RemoteResponse.Error(null, e)
+        }
+        emit(data)
+    }.flowOn(Dispatchers.IO)
+
+
 }
