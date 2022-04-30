@@ -10,7 +10,7 @@ import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.ItemResolutionLayoutBinding
 import com.example.videodownloadingline.model.downloadlink.VideoType
 
-typealias vidSelectorListener = (flag:Boolean,data: VideoType) -> Unit
+typealias vidSelectorListener = (flag: Boolean, data: VideoType) -> Unit
 
 class VideoQualityAdaptor(private val itemClicked: vidSelectorListener) :
     ListAdapter<VideoType, VideoQualityAdaptor.VidSelectorViewHolder>(diffUtil) {
@@ -26,7 +26,7 @@ class VideoQualityAdaptor(private val itemClicked: vidSelectorListener) :
             binding.txtVidSize.text =
                 binding.txtVidSize.context.getString(R.string.num_of_tab, "${data.size}MB")
             binding.itemResId.setOnCheckedChangeListener { _, isChecked ->
-                    itemClicked(isChecked,data)
+                itemClicked(isChecked, data)
             }
         }
     }

@@ -208,7 +208,7 @@ fun getVideoFileSize(url: String): Int {
         urlConnection.inputStream
         val op = urlConnection.contentLengthLong
         Log.i(TAG, "getVideoFileSize: $op")
-        if (op.toInt() <= 0) 10 else op.toInt()
+        if (op.toInt() <= 0) 10 else DownloadProgressLiveData.getMb(op)
     } catch (e: Exception) {
         Log.i(TAG, "getVideoFileSize: ${e.message}")
         0
