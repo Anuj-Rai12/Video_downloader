@@ -1,8 +1,10 @@
 package com.example.videodownloadingline.ui
 
+import android.annotation.SuppressLint
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.Fragment
@@ -10,36 +12,60 @@ import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.progress_adaptor.ProgressAdaptor
 import com.example.videodownloadingline.databinding.ProgressFragmentLayoutBinding
+import com.example.videodownloadingline.model.downloadlink.DownloadItem
+import com.example.videodownloadingline.utils.DownloadProgressLiveData
+import com.example.videodownloadingline.utils.TAG
+import com.example.videodownloadingline.utils.createdCurrentTimeData
+import com.example.videodownloadingline.view_model.MainViewModel
 
 
 class ProgressFragment : Fragment(R.layout.progress_fragment_layout) {
     private lateinit var binding: ProgressFragmentLayoutBinding
     private lateinit var videoDownloadAdaptor: ProgressAdaptor
-    private var downloadReceiver: BroadcastReceiver? = null
-    private val listOfUrls = mutableListOf<String>()
+
+    //private var downloadReceiver: BroadcastReceiver? = null
     private var downloadManager: DownloadManager? = null
-    private val listOfDownloadIds = mutableListOf<Long>()
+    private var viewModel: MainViewModel? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ProgressFragmentLayoutBinding.bind(view)
+        viewModel = MainViewModel.getInstance()
+        downloadManager =
+            requireActivity().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         setRecycle()
-
-
-
-        //  setData()
+        viewModel?.downloadId?.observe(viewLifecycleOwner) {
+            setData(it)
+        }
     }
 
 
-    /*private fun setData() {
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setData(list: MutableList<Long>) {
+        DownloadProgressLiveData(requireActivity(), requestIds = list).observe(
+            viewLifecycleOwner
+        ) {
+            if (!it.isNullOrEmpty()) {
+                it.forEachIndexed { index, downloadItem ->
+                    downloadItem.id = list[index]//listOfDownloadIds[index]
+                    downloadItem.title =
+                        viewModel?.getVideoDataByIndex(index)?.webViewDownloadUrl?.videotitle
+                            ?: createdCurrentTimeData//getString(R.string.urls_type_title, (index + 1) * 5)
+                    downloadItem.des = "please wait while downloading..."
+                }
+            }
+            videoDownloadAdaptor.submitList(it)
+            videoDownloadAdaptor.notifyDataSetChanged()
+        }
 
-    }*/
+
+    }
 
     private fun setRecycle() {
         binding.recycleView.apply {
             videoDownloadAdaptor = ProgressAdaptor {
-
+                Log.i(TAG, "setRecycle: $it")
             }
             adapter = videoDownloadAdaptor
         }

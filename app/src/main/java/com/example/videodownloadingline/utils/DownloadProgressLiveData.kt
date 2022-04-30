@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.videodownloadingline.model.downloadlink.DownloadItem
 import kotlinx.coroutines.*
@@ -38,8 +37,6 @@ class DownloadProgressLiveData(
 
                 while (cursor.moveToNext()) {
                     val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                    val stat = getStatus(status)
-                    Log.i(TAG, "onActive: status is => $status and its $stat")
                     when (status) {
                         DownloadManager.STATUS_PENDING,
                         DownloadManager.STATUS_RUNNING,
@@ -74,10 +71,11 @@ class DownloadProgressLiveData(
 
         fun getStatus(status: Int): String {
             return when (status) {
-                DownloadManager.STATUS_SUCCESSFUL -> "success"
+                DownloadManager.STATUS_SUCCESSFUL -> "Success"
                 DownloadManager.STATUS_PENDING -> "Pending"
                 DownloadManager.STATUS_FAILED -> "Failed"
-                DownloadManager.STATUS_PAUSED -> "Passed"
+                DownloadManager.STATUS_PAUSED -> "Paused"
+                DownloadManager.STATUS_RUNNING -> "Speed"
                 else -> ""
             }
         }

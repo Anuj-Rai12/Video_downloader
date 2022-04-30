@@ -23,18 +23,25 @@ class ProgressAdaptor(private val itemClicked: itemClicked) :
             binding.root.setOnClickListener {
                 itemClicked(data)
             }
+            binding.titleDownload.text = data.title
+            //binding.downloadStatusVid.text = DownloadProgressLiveData.getStatus(data.status)
 
-            binding.downloadStatusVid.text = DownloadProgressLiveData.getStatus(data.status)
-
-            binding.totalSize.text = binding.totalSize.context.getString(
-                R.string.value_sample_txt,
-                getMb(data.bytesDownloadedSoFar).toString(),
-                getMb(data.totalSizeBytes).toString()
-            )
-
-            binding.progressBar.progress =
-                (data.bytesDownloadedSoFar * 100.0 / data.totalSizeBytes).toInt()
-
+            if (data.totalSizeBytes.toInt() <= 0) {
+                binding.progressBar.isIndeterminate = true
+                binding.totalSize.text = binding.totalSize.context.getString(
+                    R.string.total_vid_view,
+                    "${getMb(data.bytesDownloadedSoFar)}MB",
+                )
+            } else {
+                binding.progressBar.progress =
+                    (data.bytesDownloadedSoFar * 100.0 / data.totalSizeBytes).toInt()
+                binding.totalSize.text = binding.totalSize.context.getString(
+                    R.string.value_sample_txt,
+                    getMb(data.bytesDownloadedSoFar).toString(),
+                    getMb(data.totalSizeBytes).toString()
+                )
+            }
+            binding.totalSize.append("\n\n${DownloadProgressLiveData.getStatus(data.status)}\n")
         }
     }
 
