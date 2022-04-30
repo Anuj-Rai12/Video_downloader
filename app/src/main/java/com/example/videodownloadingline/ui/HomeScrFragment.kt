@@ -200,7 +200,6 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                             res.add(home)
                         }
                     }
-                    Log.i(TAG, "setData: Output screen is -> $res")
                     homeSrcAdaptor.notifyDataSetChanged()
                     homeSrcAdaptor.submitList(res)
                 }

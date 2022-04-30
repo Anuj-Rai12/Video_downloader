@@ -27,9 +27,9 @@ class ProgressAdaptor(private val itemClicked: itemClicked) :
             binding.downloadStatusVid.text = DownloadProgressLiveData.getStatus(data.status)
 
             binding.totalSize.text = binding.totalSize.context.getString(
-                R.string.size_test_tab,
-                getMb(data.bytesDownloadedSoFar),
-                getMb(data.totalSizeBytes)
+                R.string.value_sample_txt,
+                getMb(data.bytesDownloadedSoFar).toString(),
+                getMb(data.totalSizeBytes).toString()
             )
 
             binding.progressBar.progress =

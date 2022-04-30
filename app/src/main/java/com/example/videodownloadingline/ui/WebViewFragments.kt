@@ -9,7 +9,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.webkit.*
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
@@ -32,9 +31,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.common.util.concurrent.FutureCallback
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import java.lang.Runnable
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class WebViewFragments(private val title: String, private val url: String) :
@@ -147,11 +147,19 @@ class WebViewFragments(private val title: String, private val url: String) :
             webViewDownloadUrl.sdurl
         } else
             null
+        var click = false
         binding.downloadFloatingBtn.setOnClickListener {
             if (info != null) {
-                Toast.makeText(requireActivity(), "Please Wait while checking Video Quality..", Toast.LENGTH_LONG).show()
+                requireActivity().toastMsg("Please Wait while checking Video Quality..")
+            } else {
+                requireActivity().toastMsg("Could not find download url")
+                return@setOnClickListener
+            }
+            if (!click) {
+                click = true
                 urlResolution(info) { height, width, size ->
-                    VideoType(height, width, size).also {
+                    VideoType(height, width, size, webViewDownloadUrl, info).also {
+                        click = false
                         openBottomSheet(listOf(it))
                     }
                 }
@@ -363,7 +371,9 @@ class WebViewFragments(private val title: String, private val url: String) :
     }
 
     override fun <T> onItemClicked(type: T) {
-        Log.i(TAG, "onItemClicked: $type")
+        (type as VideoType).apply {
+
+        }
         openBottomSheetDialog?.dismiss()
     }
 

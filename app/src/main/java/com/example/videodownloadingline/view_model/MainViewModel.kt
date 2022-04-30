@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.videodownloadingline.model.downloadlink.VideoType
 import com.example.videodownloadingline.model.downloadlink.WebViewDownloadUrl
 import com.example.videodownloadingline.utils.*
 import kotlinx.coroutines.CoroutineStart
@@ -21,6 +22,17 @@ class MainViewModel : ViewModel() {
     private val _daisyChannelVideoDownloadLink = MutableLiveData<Event<WebViewDownloadUrl?>>()
     val daisyChannelVideoDownloadLink: LiveData<Event<WebViewDownloadUrl?>>
         get() = _daisyChannelVideoDownloadLink
+
+
+    private val _downloadId = MutableLiveData<MutableList<Long>>()
+    val downloadId: LiveData<MutableList<Long>>
+        get() = _downloadId
+
+
+    private val _downloadVid = MutableLiveData<MutableList<VideoType>>()
+    val downloadVid: LiveData<MutableList<VideoType>>
+        get() = _downloadVid
+
 
     companion object {
         @Volatile
@@ -95,6 +107,52 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    // ID Manipulation --------------------------
+
+    fun addID(id: Long) {
+        _downloadId.value?.let {
+            it.add(id)
+            _downloadId.postValue(it)
+        }
+    }
+
+
+    fun removeID(index: Int) {
+        _downloadId.value?.let {
+            it.removeAt(index)
+            _downloadId.postValue(it)
+        }
+    }
+
+    fun removeAllID() {
+        _downloadId.value?.let {
+            it.clear()
+            _downloadId.postValue(it)
+        }
+    }
+
+    // Video Manipulation ---------------------------------------------
+
+    fun removeVideo(index: Int) {
+        _downloadVid.value?.let {
+            it.removeAt(index)
+            _downloadVid.postValue(it)
+        }
+    }
+
+    fun removeAllVideo() {
+        _downloadVid.value?.let {
+            it.clear()
+            _downloadVid.postValue(it)
+        }
+    }
+
+    fun addVideo(videoType: VideoType) {
+        _downloadVid.value?.let {
+            it.add(videoType)
+            _downloadVid.postValue(it)
+        }
+    }
 
     override fun onCleared() {
         viewModelScope.cancel()

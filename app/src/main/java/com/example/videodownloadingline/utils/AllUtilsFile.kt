@@ -5,6 +5,7 @@ import android.os.Build
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -126,6 +127,11 @@ fun View.showSandbar(msg: String, length: Int = Snackbar.LENGTH_SHORT, color: In
 }
 
 
+fun Activity.toastMsg(msg: String, duration: Int = Toast.LENGTH_LONG) {
+    Toast.makeText(this, msg, duration).show()
+}
+
+
 fun getIconBgLis() = listOf(
     R.color.Dodger_Blue_color,
     R.color.Malachite_color,
@@ -199,5 +205,11 @@ val BOOK_MARK_IC = listOf(
     HomeSrcIcon(0, "WhatsApp", "https://www.whatsapp.com/", 2131099653),
     HomeSrcIcon(0, "Twitter", "	https://www.twitter.com/", 2131099651),
     HomeSrcIcon(0, "DailyMotion", "https://www.dailymotion.com/", 2131099653),
-    HomeSrcIcon(0, "Vimeo", "https://vimeo.com/", 2131099651)
+    HomeSrcIcon(0, "Vimeo", "https://vimeo.com/", 2131099651),
+    HomeSrcIcon(
+        0,
+        "Sample",
+        "https://www.learningcontainer.com/mp4-sample-video-files-download/",
+        2131099653
+    )
 )

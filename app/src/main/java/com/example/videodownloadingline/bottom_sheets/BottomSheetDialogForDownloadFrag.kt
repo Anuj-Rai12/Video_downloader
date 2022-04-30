@@ -2,7 +2,6 @@ package com.example.videodownloadingline.bottom_sheets
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import com.example.videodownloadingline.databinding.ViewBottomSheetDialogBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.downloadlink.VideoType
 import com.example.videodownloadingline.utils.OnBottomSheetClick
-import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.utils.hide
 import com.example.videodownloadingline.utils.show
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -74,9 +72,13 @@ class BottomSheetDialogForDownloadFrag(
 
     private fun adaptor() {
         binding.mainRec.apply {
-            videoQualityAdaptor = VideoQualityAdaptor {
-                selectedVideoQuality = it
-                videoQualityAdaptor.selectedItem(it)
+            videoQualityAdaptor = VideoQualityAdaptor { flag, data ->
+                if (flag) {
+                    selectedVideoQuality = data
+                    videoQualityAdaptor.selectedItem(data)
+                } else {
+                    selectedVideoQuality = null
+                }
             }
             adapter = videoQualityAdaptor
         }
