@@ -20,9 +20,7 @@ import com.example.videodownloadingline.view_model.MainViewModel
 
 class ProgressFragment : Fragment(R.layout.progress_fragment_layout) {
     private lateinit var binding: ProgressFragmentLayoutBinding
-    private lateinit var videoDownloadAdaptor: ProgressAdaptor
-
-    //private var downloadReceiver: BroadcastReceiver? = null
+    private var videoDownloadAdaptor: ProgressAdaptor? = null
     private var downloadManager: DownloadManager? = null
     private var viewModel: MainViewModel? = null
 
@@ -54,8 +52,8 @@ class ProgressFragment : Fragment(R.layout.progress_fragment_layout) {
                     downloadItem.des = "please wait while downloading..."
                 }
             }
-            videoDownloadAdaptor.submitList(it)
-            videoDownloadAdaptor.notifyDataSetChanged()
+            videoDownloadAdaptor?.submitList(it)
+            videoDownloadAdaptor?.notifyDataSetChanged()
         }
 
 

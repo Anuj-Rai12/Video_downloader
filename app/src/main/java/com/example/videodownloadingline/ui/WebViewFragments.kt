@@ -79,7 +79,7 @@ class WebViewFragments(private val title: String, private val url: String) :
         if (requireActivity().applicationContext.isNetworkAvailable()) {
             binding.mainWebView.show()
             setWebSiteData(url, false)
-            setBroadcastReceiver()
+            (requireActivity() as MainActivity).setBroadcastReceiver(mainViewModel)
             checkVideoDownloadLink()
             listenForProgress()
         } else {
@@ -409,40 +409,6 @@ class WebViewFragments(private val title: String, private val url: String) :
             }
         }
         openBottomSheetDialog?.dismiss()
-    }
-
-
-    private fun setBroadcastReceiver() {
-        downloadReceiver = object : BroadcastReceiver() {
-            @SuppressLint("Range")
-            @RequiresApi(Build.VERSION_CODES.M)
-            override fun onReceive(context: Context?, intent: Intent?) {
-                val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-                mainViewModel?.let {
-                    if (id == null)
-                        return@let
-                    val index = it.getIDIndex(id)
-                    Log.i(TAG, "onReceive: this index  for id is -> $index")
-                    if (index != -1) {
-                        it.getVideoDataByIndex(index).let { res ->
-                            Log.i(TAG, "onReceive: $res")
-                        }
-                        //Save to Data Base
-
-                        //Remove Video and IDs
-                        it.removeID(index)
-                        it.removeVideo(index)
-                    }
-                }
-                // requireActivity().toastMsg("Downloaded Completed", Toast.LENGTH_SHORT)
-                Log.i(TAG, "onReceive: Download Completed")
-            }
-        }
-
-        activity?.registerReceiver(
-            downloadReceiver,
-            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
-        )
     }
 
 }
