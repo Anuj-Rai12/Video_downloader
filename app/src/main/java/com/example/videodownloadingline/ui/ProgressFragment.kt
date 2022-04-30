@@ -12,7 +12,6 @@ import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.progress_adaptor.ProgressAdaptor
 import com.example.videodownloadingline.databinding.ProgressFragmentLayoutBinding
-import com.example.videodownloadingline.model.downloadlink.DownloadItem
 import com.example.videodownloadingline.utils.DownloadProgressLiveData
 import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.utils.createdCurrentTimeData
@@ -78,5 +77,10 @@ class ProgressFragment : Fragment(R.layout.progress_fragment_layout) {
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
         (requireActivity() as MainActivity).supportActionBar!!.title =
             getString(R.string.content_description_pro)
+    }
+
+    companion object {
+        const val testingTitle = "May 1, 2022 12:22:55 AM"
+        const val testingUrl = "https://download.samplelib.com/mp4/sample-5s.mp4"
     }
 }

@@ -24,7 +24,6 @@ class ProgressAdaptor(private val itemClicked: itemClicked) :
                 itemClicked(data)
             }
             binding.titleDownload.text = data.title
-            //binding.downloadStatusVid.text = DownloadProgressLiveData.getStatus(data.status)
 
             if (data.totalSizeBytes.toInt() <= 0) {
                 binding.progressBar.isIndeterminate = true
