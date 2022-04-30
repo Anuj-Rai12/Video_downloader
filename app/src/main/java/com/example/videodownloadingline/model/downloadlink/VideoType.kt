@@ -4,6 +4,7 @@ data class VideoType(
     val height: Int,
     val weight: Int,
     val size: Int,
+    val format:String,
     val webViewDownloadUrl: WebViewDownloadUrl,
     val url:String
 )

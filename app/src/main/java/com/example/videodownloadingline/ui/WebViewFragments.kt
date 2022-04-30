@@ -1,7 +1,13 @@
 package com.example.videodownloadingline.ui
 
 import android.annotation.SuppressLint
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -44,6 +50,8 @@ class WebViewFragments(private val title: String, private val url: String) :
     private var mainViewModel: MainViewModel? = null
     private var isWebLoaded = false
     private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
+    private var downloadReceiver: BroadcastReceiver? = null
+    private var downloadManager: DownloadManager? = null
 
     inner class MyJavaScriptInterface {
         @JavascriptInterface
@@ -65,9 +73,13 @@ class WebViewFragments(private val title: String, private val url: String) :
         super.onViewCreated(view, savedInstanceState)
         binding = WebSiteFragmentLayoutBinding.bind(view)
         mainViewModel = MainViewModel.getInstance()
+        downloadManager =
+            requireActivity().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
         if (requireActivity().applicationContext.isNetworkAvailable()) {
             binding.mainWebView.show()
             setWebSiteData(url, false)
+            setBroadcastReceiver()
             checkVideoDownloadLink()
             listenForProgress()
         } else {
@@ -157,8 +169,8 @@ class WebViewFragments(private val title: String, private val url: String) :
             }
             if (!click) {
                 click = true
-                urlResolution(info) { height, width, size ->
-                    VideoType(height, width, size, webViewDownloadUrl, info).also {
+                urlResolution(info) { height, width, type, size ->
+                    VideoType(height, width, size, type, webViewDownloadUrl, info).also {
                         click = false
                         openBottomSheet(listOf(it))
                     }
@@ -169,7 +181,7 @@ class WebViewFragments(private val title: String, private val url: String) :
 
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun urlResolution(url: String, getRes: (Int, Int, Int) -> Unit) {
+    private fun urlResolution(url: String, getRes: (Int, Int, String, Int) -> Unit) {
         val trackGroupsFuture: ListenableFuture<TrackGroupArray> =
             MetadataRetriever.retrieveMetadata(
                 requireActivity(), MediaItem.fromUri(url)
@@ -187,7 +199,12 @@ class WebViewFragments(private val title: String, private val url: String) :
                                 getHeightAndWidth(it)
                             }
                             val gHWRes = gHW.await()
-                            getRes(gHWRes.first, gHWRes.second, size.await())
+                            getRes(
+                                gHWRes.first.first,
+                                gHWRes.first.second,
+                                gHWRes.second,
+                                size.await()
+                            )
                         }
                     }
 
@@ -201,15 +218,18 @@ class WebViewFragments(private val title: String, private val url: String) :
         )
     }
 
-    private fun getHeightAndWidth(trackGroups: TrackGroupArray): Pair<Int, Int> {
+    private fun getHeightAndWidth(trackGroups: TrackGroupArray): Pair<Pair<Int, Int>, String> {
         var height = 0
         var width = 0
+        var type = ""
         for (i in 0 until trackGroups.length) {
             val h = trackGroups[i].getFormat(0).height
             val w = trackGroups[i].getFormat(0).width
-            val other = trackGroups[i].getFormat(0)
-            if (h > -1)
+            val other = trackGroups[i].getFormat(0).sampleMimeType
+            if (h > -1) {
                 height = h
+                type = other!!
+            }
             if (w > -1)
                 width = w
             Log.i(
@@ -217,7 +237,7 @@ class WebViewFragments(private val title: String, private val url: String) :
                 "onSuccess: $h and $w the other format -> $other"
             )
         }
-        return Pair(height, width)
+        return Pair(Pair(height, width), type)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -371,10 +391,58 @@ class WebViewFragments(private val title: String, private val url: String) :
     }
 
     override fun <T> onItemClicked(type: T) {
-        (type as VideoType).apply {
-
+        (type as VideoType).also { response ->
+            response.webViewDownloadUrl.videotitle =
+                response.webViewDownloadUrl.videotitle ?: createdCurrentTimeData
+            Log.i(TAG, "onItemClicked: ${response.webViewDownloadUrl.videotitle}")
+            val id = downloadManager?.enqueue(
+                requestDownload(
+                    requireContext(),
+                    DownloadManager.Request(Uri.parse(response.url)),
+                    title = response.webViewDownloadUrl.videotitle!!
+                )
+            )
+            Log.i(TAG, "onItemClicked: $id and $response")
+            if (id != null) {
+                mainViewModel?.addID(id)
+                mainViewModel?.addVideo(response)
+            }
         }
         openBottomSheetDialog?.dismiss()
+    }
+
+
+    private fun setBroadcastReceiver() {
+        downloadReceiver = object : BroadcastReceiver() {
+            @SuppressLint("Range")
+            @RequiresApi(Build.VERSION_CODES.M)
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+                mainViewModel?.let {
+                    if (id == null)
+                        return@let
+                    val index = it.getIDIndex(id)
+                    Log.i(TAG, "onReceive: this index  for id is -> $index")
+                    if (index != -1) {
+                        it.getVideoDataByIndex(index).let { res ->
+                            Log.i(TAG, "onReceive: $res")
+                        }
+                        //Save to Data Base
+
+                        //Remove Video and IDs
+                        it.removeID(index)
+                        it.removeVideo(index)
+                    }
+                }
+                // requireActivity().toastMsg("Downloaded Completed", Toast.LENGTH_SHORT)
+                Log.i(TAG, "onReceive: Download Completed")
+            }
+        }
+
+        activity?.registerReceiver(
+            downloadReceiver,
+            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+        )
     }
 
 }

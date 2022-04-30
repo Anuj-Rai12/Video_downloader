@@ -53,6 +53,8 @@ class MainViewModel : ViewModel() {
 
     init {
         _noOfTab.postValue(1)
+        _downloadId.postValue(mutableListOf())
+        _downloadVid.postValue(mutableListOf())
     }
 
 
@@ -124,6 +126,12 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun getIDIndex(id: Long): Int {
+        Log.i(TAG, "getIDIndex: ${_downloadId.value}")
+        return _downloadId.value?.indexOf(id) ?: -1
+    }
+
+
     fun removeAllID() {
         _downloadId.value?.let {
             it.clear()
@@ -153,6 +161,8 @@ class MainViewModel : ViewModel() {
             _downloadVid.postValue(it)
         }
     }
+
+    fun getVideoDataByIndex(index: Int)=_downloadVid.value?.get(index)
 
     override fun onCleared() {
         viewModelScope.cancel()
