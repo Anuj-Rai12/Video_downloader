@@ -20,7 +20,7 @@ class ProgressAdaptor(private val itemClicked: itemClicked) :
     inner class DownloadFileViewHolder(private val binding: DownloadVideoProgressItemListViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun makeData(data: DownloadItem, itemClicked: itemClicked) {
-            binding.root.setOnClickListener {
+            binding.btnCancel.setOnClickListener {
                 itemClicked(data)
             }
             binding.titleDownload.text = data.title

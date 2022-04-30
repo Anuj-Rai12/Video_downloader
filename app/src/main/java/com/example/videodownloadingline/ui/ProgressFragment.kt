@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.Fragment
@@ -13,7 +12,6 @@ import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.progress_adaptor.ProgressAdaptor
 import com.example.videodownloadingline.databinding.ProgressFragmentLayoutBinding
 import com.example.videodownloadingline.utils.DownloadProgressLiveData
-import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.utils.createdCurrentTimeData
 import com.example.videodownloadingline.view_model.MainViewModel
 
@@ -62,7 +60,10 @@ class ProgressFragment : Fragment(R.layout.progress_fragment_layout) {
     private fun setRecycle() {
         binding.recycleView.apply {
             videoDownloadAdaptor = ProgressAdaptor {
-                Log.i(TAG, "setRecycle: $it")
+                val index = viewModel?.getIDIndex(it.id!!)!!
+                viewModel?.removeID(index)
+                viewModel?.removeVideo(index)
+                downloadManager?.remove(it.id!!)
             }
             adapter = videoDownloadAdaptor
         }
