@@ -124,6 +124,9 @@ class MainViewModel : ViewModel() {
             it.removeAt(index)
             _downloadId.postValue(it)
         }
+        if (_downloadId.value.isNullOrEmpty()){
+            _downloadId.postValue(mutableListOf())
+        }
     }
 
     fun getIDIndex(id: Long): Int {
@@ -137,6 +140,9 @@ class MainViewModel : ViewModel() {
             it.clear()
             _downloadId.postValue(it)
         }
+        if (_downloadId.value.isNullOrEmpty()){
+            _downloadId.postValue(mutableListOf())
+        }
     }
 
     // Video Manipulation ---------------------------------------------
@@ -146,6 +152,9 @@ class MainViewModel : ViewModel() {
             it.removeAt(index)
             _downloadVid.postValue(it)
         }
+        if (_downloadVid.value.isNullOrEmpty()){
+            _downloadVid.postValue(mutableListOf())
+        }
     }
 
     fun removeAllVideo() {
@@ -153,6 +162,7 @@ class MainViewModel : ViewModel() {
             it.clear()
             _downloadVid.postValue(it)
         }
+        _downloadVid.postValue(mutableListOf())
     }
 
     fun addVideo(videoType: VideoType) {

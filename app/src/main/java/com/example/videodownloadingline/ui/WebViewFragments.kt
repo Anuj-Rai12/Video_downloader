@@ -147,7 +147,7 @@ class WebViewFragments(private val title: String, private val url: String) :
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun setData(webViewDownloadUrl: WebViewDownloadUrl) {
-        val info = if (!webViewDownloadUrl.hdurl.isNullOrEmpty()) {
+        var info = if (!webViewDownloadUrl.hdurl.isNullOrEmpty()) {
             changeFab(R.color.Casablanca_color)
             webViewDownloadUrl.hdurl
         } else if (!webViewDownloadUrl.sdurl.isNullOrEmpty()) {
@@ -155,9 +155,15 @@ class WebViewFragments(private val title: String, private val url: String) :
             webViewDownloadUrl.sdurl
         } else
             null
+
         var click = false
+
+
         binding.downloadFloatingBtn.setOnClickListener {
             if (info != null) {
+                if (!info!!.contains("http")) {
+                    info = "https:$info"
+                }
                 requireActivity().toastMsg("Please Wait while checking Video Quality..")
             } else {
                 requireActivity().toastMsg("Could not find download url")
@@ -165,8 +171,8 @@ class WebViewFragments(private val title: String, private val url: String) :
             }
             if (!click) {
                 click = true
-                urlResolution(info) { height, width, type, size ->
-                    VideoType(height, width, size, type, webViewDownloadUrl, info).also {
+                urlResolution(info!!) { height, width, type, size ->
+                    VideoType(height, width, size, type, webViewDownloadUrl, info!!).also {
                         click = false
                         openBottomSheet(listOf(it))
                     }
