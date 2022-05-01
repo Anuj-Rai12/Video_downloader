@@ -27,7 +27,6 @@ import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.repo.DownloadFragmentRepo
 import com.example.videodownloadingline.ui.ProgressFragment
 import com.example.videodownloadingline.utils.*
-import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
 import com.example.videodownloadingline.view_model.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
