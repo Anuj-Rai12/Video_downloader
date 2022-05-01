@@ -25,7 +25,6 @@ import com.example.videodownloadingline.databinding.CustomToolbarLayoutBinding
 import com.example.videodownloadingline.db.RoomDataBaseInstance
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.repo.DownloadFragmentRepo
-import com.example.videodownloadingline.ui.ProgressFragment
 import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -159,7 +158,7 @@ class MainActivity : AppCompatActivity() {
                             ).also { value ->
                                 Log.i(TAG, "onReceive: Download Save Item $value")
                                 lifecycleScope.launchWhenCreated {
-                                    val doit = async(Dispatchers.IO) {
+                                    val saveDownloadItem = async(Dispatchers.IO) {
                                         DownloadFragmentRepo(
                                             RoomDataBaseInstance.getInstance(
                                                 applicationContext
@@ -168,7 +167,7 @@ class MainActivity : AppCompatActivity() {
                                             value
                                         )
                                     }
-                                    doit.await()
+                                    saveDownloadItem.await()
                                 }
                             }
                         }
