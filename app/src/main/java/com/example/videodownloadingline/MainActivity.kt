@@ -14,17 +14,23 @@ import android.view.KeyEvent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.example.videodownloadingline.databinding.ActivityMainBinding
 import com.example.videodownloadingline.databinding.CustomToolbarLayoutBinding
-import com.example.videodownloadingline.utils.TAG
-import com.example.videodownloadingline.utils.hide
-import com.example.videodownloadingline.utils.isValidUrl
-import com.example.videodownloadingline.utils.show
+import com.example.videodownloadingline.db.RoomDataBaseInstance
+import com.example.videodownloadingline.model.downloaditem.DownloadItems
+import com.example.videodownloadingline.repo.DownloadFragmentRepo
+import com.example.videodownloadingline.ui.ProgressFragment
+import com.example.videodownloadingline.utils.*
+import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
 import com.example.videodownloadingline.view_model.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import np.com.susanthapa.curved_bottom_navigation.CbnMenuItem
 import java.util.*
 
@@ -139,17 +145,38 @@ class MainActivity : AppCompatActivity() {
                     val index = it.getIDIndex(id)
                     Log.i(TAG, "onReceive: this index  for id is -> $index")
                     if (index != -1) {
-                        it.getVideoDataByIndex(index).let { res ->
-                            Log.i(TAG, "onReceive: $res")
+                        it.getVideoDataByIndex(index)?.let { res ->
+                            val title = res.webViewDownloadUrl.videotitle ?: ""
+                            val file = getFileDir(
+                                ProgressFragment.testingTitle,
+                                this@MainActivity
+                            )
+                            DownloadItems(
+                                0, title, "",
+                                file.toUri().toString(),
+                                this@MainActivity.videoDuration(file),
+                                res.format,
+                                DownloadProgressLiveData.getMb(file.length()).toLong()
+                            ).also { value ->
+                                Log.i(TAG, "onReceive: Download Save Item $value")
+                                lifecycleScope.launchWhenCreated {
+                                    val doit = async(Dispatchers.IO) {
+                                        DownloadFragmentRepo(
+                                            RoomDataBaseInstance.getInstance(
+                                                applicationContext
+                                            )
+                                        ).addDownload(
+                                            value
+                                        )
+                                    }
+                                    doit.await()
+                                }
+                            }
                         }
-                        //Save to Data Base
-
-                        //Remove Video and IDs
                         it.removeID(index)
                         it.removeVideo(index)
                     }
                 }
-                // requireActivity().toastMsg("Downloaded Completed", Toast.LENGTH_SHORT)
                 Log.i(TAG, "onReceive: Download Completed")
             }
         }

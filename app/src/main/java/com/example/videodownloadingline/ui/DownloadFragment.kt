@@ -86,7 +86,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     @SuppressLint("NotifyDataSetChanged")
     private fun setUpData() {
 
-        viewModel.getDownloadItem.observe(viewLifecycleOwner) {
+        viewModel.downloadItemDb.observe(viewLifecycleOwner) {
             when (it) {
                 is RemoteResponse.Error -> Log.i(TAG, "setUpData: ${it.exception}")
                 is RemoteResponse.Loading -> Log.i(TAG, "setUpData: ${it.data}")

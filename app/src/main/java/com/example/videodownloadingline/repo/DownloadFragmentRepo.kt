@@ -1,7 +1,10 @@
 package com.example.videodownloadingline.repo
 
+import android.util.Log
 import com.example.videodownloadingline.db.RoomDataBaseInstance
+import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.utils.RemoteResponse
+import com.example.videodownloadingline.utils.TAG
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -18,4 +21,13 @@ class DownloadFragmentRepo(private val roomDataBaseInstance: RoomDataBaseInstanc
         }
         emit(data)
     }.flowOn(IO)
+
+
+     fun addDownload(downloadItems: DownloadItems) {
+        Log.i(TAG, "addDownload: file is getting saved")
+        roomDataBaseInstance.getDownloadItemDao().insertDownloadItem(
+            downloadItems
+        )
+    }
+
 }

@@ -1,9 +1,11 @@
 package com.example.videodownloadingline.utils
 
 import android.content.Context
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.util.Log
 import androidx.core.content.FileProvider
 import java.io.File
 import java.text.DateFormat
@@ -39,6 +41,20 @@ private fun convertMillieToHMmSs(millie: Long): String {
         String.format("%02d:%02d", minute, second)
     }
 }
+
+
+fun Context.videoDuration(file: File): String {
+    val retriever = MediaMetadataRetriever()
+    retriever.setDataSource(this, getFileUrl(file,this))
+    val time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong()
+    Log.i(TAG, "videoDuration: $time")
+    retriever.release()
+    return convertMillieToHMmSs(time?:0)
+}
+
+
+/*val File.getVideoLength: Int
+    get() = DownloadProgressLiveData.getMb(this.length())*/
 
 
 val createdCurrentTimeData: String
