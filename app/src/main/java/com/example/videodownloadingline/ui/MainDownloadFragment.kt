@@ -1,12 +1,12 @@
 package com.example.videodownloadingline.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.viewpager_adaptor.ViewPagerAdapter
@@ -14,6 +14,7 @@ import com.example.videodownloadingline.databinding.DownloadMainFragmentBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.google.android.material.tabs.TabLayoutMediator
+
 
 class MainDownloadFragment : Fragment(R.layout.download_main_fragment) {
     private lateinit var binding: DownloadMainFragmentBinding
@@ -79,8 +80,8 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment) {
     }
 
     fun goToSetPin() {
-        val action = MainDownloadFragmentDirections.actionGlobalSetPinFragment()
-        findNavController().navigate(action)
+        val intent = Intent(activity, SetPinActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onPause() {

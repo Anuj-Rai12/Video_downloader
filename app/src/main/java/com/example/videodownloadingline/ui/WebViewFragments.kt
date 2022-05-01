@@ -2,10 +2,7 @@ package com.example.videodownloadingline.ui
 
 import android.annotation.SuppressLint
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
@@ -50,7 +47,6 @@ class WebViewFragments(private val title: String, private val url: String) :
     private var mainViewModel: MainViewModel? = null
     private var isWebLoaded = false
     private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
-    private var downloadReceiver: BroadcastReceiver? = null
     private var downloadManager: DownloadManager? = null
 
     inner class MyJavaScriptInterface {

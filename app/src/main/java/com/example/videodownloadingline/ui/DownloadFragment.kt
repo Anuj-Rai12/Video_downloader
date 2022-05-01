@@ -40,6 +40,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DownloadFragmentLayoutBinding.bind(view)
+        binding.viewTxt.text = getString(R.string.total_vid_view, "View:")
         setUpRecycleView(GridLayoutManager(requireActivity(), 2))
         setUpData()
         changeLayoutView()
@@ -91,6 +92,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                 is RemoteResponse.Loading -> Log.i(TAG, "setUpData: ${it.data}")
                 is RemoteResponse.Success -> {
                     val list = it.data as List<DownloadItems>
+                    binding.totalVidTxt.text = getString(R.string.total_vid, list.size)
                     gridAdaptor?.notifyDataSetChanged()
                     gridAdaptor?.submitList(list)
                     linearAdaptor?.notifyDataSetChanged()
@@ -162,8 +164,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
             BottomType.MoveTo -> Log.i(TAG, "onItemClicked: working on it")
             BottomType.SetPin -> {
                 openBottomSheetDialog?.dismiss()
-               (parentFragment as MainDownloadFragment).goToSetPin()
-                //findNavController().navigate(R.id.action_global_setPinFragment)
+                (parentFragment as MainDownloadFragment).goToSetPin()
             }
         }
     }
