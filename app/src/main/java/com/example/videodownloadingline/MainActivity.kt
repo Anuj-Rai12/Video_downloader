@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
                         it.getVideoDataByIndex(index)?.let { res ->
                             val title = res.webViewDownloadUrl.videotitle ?: ""
                             val file = getFileDir(
-                                ProgressFragment.testingTitle,
+                                title,
                                 this@MainActivity
                             )
                             DownloadItems(
