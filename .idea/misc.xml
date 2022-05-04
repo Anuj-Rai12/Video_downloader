@@ -29,10 +29,15 @@
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/search_box_dash_board_shape.xml" value="0.144" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/splash_src_gradient_bg.xml" value="0.212" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/src_box_shape.xml" value="0.144" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/tab_bg_selected.xml" value="0.214" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/drawable/tab_layout.xml" value="0.214" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/activity_whatsapp.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/add_icon_to_home_src_dialog_layout.xml" value="0.4" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_fragment_layout.xml" value="0.264" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_main_fragment.xml" value="0.10822401614530777" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/download_video_progress_item_list_view.xml" value="0.4" />
+        <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/fragments_whatsapp_layout.xml" value="0.2234375" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/home_src_fragment.xml" value="0.264" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/home_src_icons_layout.xml" value="0.6" />
         <entry key="..\:/Androidprojects/VideoEditingLine/app/src/main/res/layout/progress_fragment_layout.xml" value="0.264" />

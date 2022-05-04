@@ -21,6 +21,7 @@ import com.example.videodownloadingline.adaptor.iconadaptor.HomeSrcAdaptor
 import com.example.videodownloadingline.databinding.HomeSrcFragmentBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
+import com.example.videodownloadingline.ui.whatsapp.WhatsappActivity
 import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.HomeSrcFragmentViewModel
 import com.example.videodownloadingline.view_model.MainViewModel
@@ -152,17 +153,19 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         binding.homeSrcIcon.apply {
             layoutManager = GridLayoutManager(requireActivity(), 4)
             homeSrcAdaptor = HomeSrcAdaptor { data: HomeSrcIcon, isAddIcon: Boolean ->
-                Log.i(TAG, "recycleAdaptor: $isAddIcon with $data")
-                if (isAddIcon)
+                if (isAddIcon) {
                     showDialogBox()
-                else {
+                }
+                else if (data.name?.equals(getString(R.string.whatsapp_name))!!) {
+                    requireActivity().goToNextActivity<WhatsappActivity>()
+                } else {
                     if (!isInWebView) {
                         openWebDialogBox(data)
                     } else {
                         isNewTab = true
                         (parentFragment as BrowserFragment).setFragment(
                             WebViewFragments(
-                                data.name!!,
+                                data.name,
                                 data.url!!
                             )
                         )?.also { size ->

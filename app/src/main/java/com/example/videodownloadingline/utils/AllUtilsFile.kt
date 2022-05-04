@@ -1,6 +1,8 @@
 package com.example.videodownloadingline.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.view.View
 import android.view.WindowInsets
@@ -10,9 +12,11 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.Executors
 
@@ -131,6 +135,11 @@ fun Activity.toastMsg(msg: String, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, msg, duration).show()
 }
 
+inline fun <reified T> Activity.goToNextActivity() {
+    val intent = Intent(this, T::class.java)
+    startActivity(intent)
+}
+
 
 fun getIconBgLis() = listOf(
     R.color.Dodger_Blue_color,
@@ -138,6 +147,27 @@ fun getIconBgLis() = listOf(
     R.color.Cornflower_Blue_color,
     R.color.Chambray_color
 )
+
+@SuppressLint("UseCompatLoadingForDrawables")
+fun Fragment.showDialogBox(
+    title: String = getString(R.string.permission_title),
+    desc: String = getString(R.string.permission_desc, "Storage"),
+    btn: String = getString(R.string.permission_btn),
+    callback: () -> Unit
+) {
+    MaterialAlertDialogBuilder(
+        requireContext(),
+        R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
+    )
+        .setTitle(title)
+        .setMessage(desc)
+        .setCancelable(false)
+        .setBackground(resources.getDrawable(R.drawable.dialog_box_shape, null))
+        .setPositiveButton(btn) { dialog, _ ->
+            callback.invoke()
+            dialog.dismiss()
+        }.show()
+}
 
 
 val DOWNLOAD_ITEM = listOf(
@@ -202,7 +232,7 @@ val DOWNLOAD_ITEM = listOf(
 val BOOK_MARK_IC = listOf(
     HomeSrcIcon(0, "FaceBook", "https://www.facebook.com/", 2131099651),
     HomeSrcIcon(0, "Instagram", "https://www.instagram.com/", 2131099655),
-    HomeSrcIcon(0, "WhatsApp", "https://www.whatsapp.com/", 2131099653),
+    HomeSrcIcon(0, "Whatsapp status", "https://www.whatsapp.com/", 2131099653),
     HomeSrcIcon(0, "Twitter", "	https://www.twitter.com/", 2131099651),
     HomeSrcIcon(0, "DailyMotion", "https://www.dailymotion.com/", 2131099653),
     HomeSrcIcon(0, "Vimeo", "https://vimeo.com/", 2131099651),

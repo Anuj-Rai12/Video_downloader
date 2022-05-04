@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Mine_Shaft_color"
-    tools:context="com.example.videodownloadingline.ui.MainDownloadFragment">
+    tools:context=".ui.whatsapp.WhatsappActivity">
 
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="7dp"
+        android:layout_marginTop="7dp"
         android:background="@color/Mine_Shaft_color"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"

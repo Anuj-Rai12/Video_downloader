@@ -1,6 +1,5 @@
 package com.example.videodownloadingline.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,6 +12,7 @@ import com.example.videodownloadingline.adaptor.viewpager_adaptor.ViewPagerAdapt
 import com.example.videodownloadingline.databinding.DownloadMainFragmentBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
+import com.example.videodownloadingline.utils.goToNextActivity
 import com.google.android.material.tabs.TabLayoutMediator
 
 
@@ -80,8 +80,7 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment) {
     }
 
     fun goToSetPin() {
-        val intent = Intent(activity, SetPinActivity::class.java)
-        startActivity(intent)
+        requireActivity().goToNextActivity<SetPinActivity>()
     }
 
     override fun onPause() {

@@ -60,9 +60,21 @@
     <string name="prv_inc_btn">Incognito Tab</string>
     <!-- Tab Layout  -->
     <string-array name="tab_item">
-    <item>Files</item>
-    <item>Folders</item>
-    <item>Secure folder</item>
+        <item>Files</item>
+        <item>Folders</item>
+        <item>Secure folder</item>
     </string-array>
+
+    <!-- Tab Layout  For Whatsapp Activity -->
+    <string name="whatsapp_name">Whatsapp status</string>
+
+    <string-array name="whatsapp_tab_item">
+        <item>Images</item>
+        <item>Videos</item>
+    </string-array>
+    <!-- Dialog For Permission -->
+    <string name="permission_title">Permission Needed!!</string>
+    <string name="permission_desc">Kindly Give us %s permission,otherwise application may not work Properly.</string>
+    <string name="permission_btn">Ok got,it</string>
 
 </resources>
