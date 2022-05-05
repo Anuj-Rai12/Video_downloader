@@ -65,9 +65,10 @@
         <item>Secure folder</item>
     </string-array>
 
-    <!-- Tab Layout  For Whatsapp Activity -->
+    <!-- For Whatsapp Activity -->
     <string name="whatsapp_name">Whatsapp status</string>
-
+    <string name="whatsapp_media_loc">/media/com.whatsapp/WhatsApp/Media/.Statuses/</string>
+    <!-- /WhatsApp/Media/.Statuses/ -->
     <string-array name="whatsapp_tab_item">
         <item>Images</item>
         <item>Videos</item>

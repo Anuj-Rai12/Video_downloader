@@ -11,10 +11,7 @@ import androidx.fragment.app.Fragment
 import com.example.videodownloadingline.BuildConfig
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.FragmentsWhatsappLayoutBinding
-import com.example.videodownloadingline.utils.Permission
-import com.example.videodownloadingline.utils.PermissionManager
-import com.example.videodownloadingline.utils.TAG
-import com.example.videodownloadingline.utils.showDialogBox
+import com.example.videodownloadingline.utils.*
 
 
 class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_whatsapp_layout) {
@@ -26,18 +23,15 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
         binding = FragmentsWhatsappLayoutBinding.bind(view)
         permissionManager = PermissionManager.from(this)
         requestPermission()
-        when (WhatsappActivity.Companion.WhatsappClick.valueOf(type)) {
-            WhatsappActivity.Companion.WhatsappClick.IsImage -> {
-
-            }
-            WhatsappActivity.Companion.WhatsappClick.IsVideo -> {
-
+        permissionManager?.checkPermission {
+            if (it){
+                val res=getWhatsappStoryPath(WhatsappActivity.Companion.WhatsappClick.valueOf(type))
+                Log.i(TAG, "onViewCreated: $type $res")
             }
         }
     }
 
     private fun requestPermission() {
-        Log.i(TAG, "requestPermission: checking permission")
         permissionManager?.request(Permission.Storage)
             ?.rationale(getString(R.string.permission_desc, "Storage"))
             ?.checkDetailedPermission { result ->
@@ -47,7 +41,12 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
             }
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        permissionManager?.checkPermission {
+            Log.i(TAG, "onResume: Permission $it")
+        }
+    }
     private fun showErrorDialog(result: Map<Permission, Boolean>) {
         Log.i(TAG, "showErrorDialog: $result")
         showDialogBox {     //For Request Permission
@@ -55,7 +54,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             val uri: Uri =
-                Uri.fromParts("package",BuildConfig.APPLICATION_ID, null)
+                Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
             intent.data = uri
             startActivity(intent)
         }

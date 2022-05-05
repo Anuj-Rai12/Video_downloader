@@ -153,6 +153,7 @@ fun Fragment.showDialogBox(
     title: String = getString(R.string.permission_title),
     desc: String = getString(R.string.permission_desc, "Storage"),
     btn: String = getString(R.string.permission_btn),
+    flag: Boolean = false,
     callback: () -> Unit
 ) {
     MaterialAlertDialogBuilder(
@@ -161,7 +162,7 @@ fun Fragment.showDialogBox(
     )
         .setTitle(title)
         .setMessage(desc)
-        .setCancelable(false)
+        .setCancelable(flag)
         .setBackground(resources.getDrawable(R.drawable.dialog_box_shape, null))
         .setPositiveButton(btn) { dialog, _ ->
             callback.invoke()
