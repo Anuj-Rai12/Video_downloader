@@ -35,9 +35,9 @@ fun getFileUrl(file: File, context: Context): Uri? {
 // Whats App Stories
 
 
-fun getWhatsappStoryPath(type: WhatsappActivity.Companion.WhatsappClick): ArrayList<String> {
+fun getWhatsappStoryPath(type: WhatsappActivity.Companion.WhatsappClick): ArrayList<File> {
     // image path list
-    val list: ArrayList<String> = ArrayList()
+    val list: ArrayList<File> = ArrayList()
 
     // fetching file path from storage
     //val file = getFileDir(getString(R.string.whatsapp_media_loc), requireContext())
@@ -83,17 +83,23 @@ private fun getWhatsAppPath(): File {
     }
 }
 
-private fun checkFile(flag: Boolean, imgFile: File): String? {
+private fun checkFile(flag: Boolean, imgFile: File): File? {
     return if (flag) {
         if (imgFile.name.endsWith(".jpg") || imgFile.name.endsWith(".jpeg") || imgFile.name.endsWith(
                 ".png"
             )
         ) {
-            imgFile.absolutePath
+            imgFile
         } else
             null
     } else if (!flag) {
-        imgFile.absolutePath
+        if (imgFile.name.endsWith(".mp4") || imgFile.name.endsWith(".gif") || imgFile.name.endsWith(
+                ".mkv"
+            )
+        ) {
+            imgFile
+        } else
+            null
     } else
         return null
 }
