@@ -108,8 +108,8 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         binding.recycleView.apply {
             setHasFixedSize(true)
             this.layoutManager = layoutManager
-            gridAdaptor = DownloadItemGridAdaptor(type = type) {
-                openBottomSheet(it.fileTitle)
+            gridAdaptor = DownloadItemGridAdaptor(type = type) { data, _ ->
+                openBottomSheet(data.fileTitle)
             }
             adapter = gridAdaptor
         }

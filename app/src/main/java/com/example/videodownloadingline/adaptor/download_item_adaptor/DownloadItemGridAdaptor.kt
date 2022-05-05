@@ -2,14 +2,16 @@ package com.example.videodownloadingline.adaptor.download_item_adaptor
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.media.ThumbnailUtils
 import android.os.Build
 import android.os.CancellationSignal
 import android.provider.MediaStore
 import android.util.Size
 import android.util.TypedValue
-import android.view.ViewGroup
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.net.toUri
@@ -26,7 +28,7 @@ import com.example.videodownloadingline.utils.hide
 import java.io.File
 
 
-typealias ItemClickedListener = (data: DownloadItems) -> Unit
+typealias ItemClickedListener = (data: DownloadItems, bitmap: Bitmap?) -> Unit
 
 class DownloadItemGridAdaptor(
     private val type: String,
@@ -41,7 +43,7 @@ class DownloadItemGridAdaptor(
         RecyclerView.ViewHolder(binding.root) {
         fun makeData(data: DownloadItems, itemClicked: ItemClickedListener) {
             binding.root.setOnClickListener {
-                itemClicked(data)
+                itemClicked(data, null)
             }
             when (TypeOfDownload.valueOf(type)) {
                 TypeOfDownload.IsFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
@@ -52,7 +54,7 @@ class DownloadItemGridAdaptor(
                 text = this.context.getString(
                     R.string.grid_download_info,
                     data.fileTitle,
-                    data.fileSize,
+                    getSizeKbOrMb(data.fileSize).first,
                     data.createdCurrentTimeData
                 )
             }
@@ -67,7 +69,7 @@ class DownloadItemGridAdaptor(
         fun whatsAppDownloadData(data: DownloadItems, itemClicked: ItemClickedListener) {
             binding.menuBtn.hide()
             binding.root.setOnClickListener {
-                itemClicked.invoke(data)
+                itemClicked.invoke(data, (binding.fileThumbNail.drawable as BitmapDrawable).bitmap)
             }
             when (WhatsappActivity.Companion.WhatsappClick.valueOf(type)) {
                 WhatsappActivity.Companion.WhatsappClick.IsImage -> {
@@ -97,16 +99,10 @@ class DownloadItemGridAdaptor(
                 }
             }
 
-            var size = DownloadProgressLiveData.getMb(data.fileSize)
-            var str = "${size}MB"
-            if (size >= 0) {
-                size = DownloadProgressLiveData.getKb(data.fileSize)
-                str = "${size}KB"
-            }
             binding.titleTxt.apply {
                 text = this.context.getString(
                     R.string.total_vid_view,
-                    "${str}\n\n${data.createdCurrentTimeData}"
+                    "${getSizeKbOrMb(data.fileSize).first}\n\n${data.createdCurrentTimeData}"
                 )
             }
         }
@@ -132,6 +128,17 @@ class DownloadItemGridAdaptor(
                 newItem: DownloadItems
             ) = oldItem == newItem
         }
+
+        fun getSizeKbOrMb(len: Long): Pair<String, Int> {
+            var size = DownloadProgressLiveData.getMb(len)
+            var str = "${size}MB"
+            if (size <= 0) {
+                size = DownloadProgressLiveData.getKb(len)
+                str = "${size}KB"
+            }
+            return Pair(str, size)
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DownloadItemGridViewHolder {

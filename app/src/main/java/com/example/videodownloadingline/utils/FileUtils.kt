@@ -1,14 +1,23 @@
 package com.example.videodownloadingline.utils
 
+import android.app.Activity
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
+import android.webkit.MimeTypeMap
+import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import com.example.videodownloadingline.ui.whatsapp.WhatsappActivity
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.net.URL
 import java.text.DateFormat
 import java.util.*
 
@@ -30,6 +39,17 @@ fun getFileUrl(file: File, context: Context): Uri? {
         file
     )
 }
+
+/*
+@RequiresApi(Build.VERSION_CODES.R)
+fun getFileLocationInDownloadsFolder(title: String): File {
+    val file = File(Environment.getExternalStorageDirectory().absolutePath + title)
+    //file.createNewFile()
+    if (!file.exists()) {
+        Log.i(TAG, "getFileLocationInDownloadsFolder: ${file.mkdirs()}")
+    }
+    return file
+}*/
 
 
 // Whats App Stories
@@ -128,8 +148,52 @@ fun Context.videoDuration(file: File): String {
 }
 
 
-/*val File.getVideoLength: Int
-    get() = DownloadProgressLiveData.getMb(this.length())*/
+fun getMimeType(uri: Uri, context: Context): String? {
+    return if (ContentResolver.SCHEME_CONTENT == uri.scheme) {
+        val cr: ContentResolver? = context.contentResolver
+        cr?.getType(uri)
+    } else {
+        val fileExtension = MimeTypeMap.getFileExtensionFromUrl(
+            uri.toString()
+        )
+        MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+            fileExtension.lowercase(Locale.getDefault())
+        )
+    }
+}
+
+
+fun Activity.bitUrl(bitmap: Bitmap, title: String): Uri? {
+    val byteArray = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArray)
+    val path = MediaStore.Images.Media.insertImage(
+        contentResolver,
+        bitmap,
+        "IMG_$title",
+        null
+    )
+    return Uri.parse(path)
+}
+
+
+@RequiresApi(Build.VERSION_CODES.Q)
+fun Activity.putVideo(url: String, fileName: String, format: String): Uri? {
+    val contentValues = ContentValues().apply {
+        put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+        put(MediaStore.MediaColumns.MIME_TYPE, format)
+        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+    }
+    val resolver = contentResolver
+    val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+    if (uri != null) {
+        URL(url).openStream().use { input ->
+            resolver.openOutputStream(uri).use { output ->
+                input.copyTo(output!!, DEFAULT_BUFFER_SIZE)
+            }
+        }
+    }
+    return uri
+}
 
 
 val createdCurrentTimeData: String

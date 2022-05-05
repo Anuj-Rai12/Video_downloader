@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                                 file.toUri().toString(),
                                 this@MainActivity.videoDuration(file),
                                 res.format,
-                                DownloadProgressLiveData.getMb(file.length()).toLong()
+                                file.length()
                             ).also { value ->
                                 Log.i(TAG, "onReceive: Download Save Item $value")
                                 lifecycleScope.launchWhenCreated {
