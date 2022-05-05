@@ -1,9 +1,19 @@
 package com.example.videodownloadingline.utils
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.Settings
+import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.videodownloadingline.BuildConfig
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.utils.Permission.Companion.from
 import java.lang.ref.WeakReference
@@ -20,6 +30,19 @@ class PermissionManager private constructor(private val fragment: WeakReference<
         fragment.get()?.registerForActivityResult(RequestMultiplePermissions()) { grantResults ->
             sendResultAndCleanUp(grantResults)
         }
+
+    private val android11PermissionCheck = fragment.get()
+        ?.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                if (Build.VERSION.SDK_INT >= 30) {
+                    val map =
+                        mapOf(Manifest.permission.MANAGE_EXTERNAL_STORAGE to Environment.isExternalStorageManager())
+                    Log.i(TAG, "testing Manifest permission: $map")
+                    sendResultAndCleanUp(map)
+                }
+            }
+        }
+
 
     companion object {
         fun from(fragment: Fragment) = PermissionManager(WeakReference(fragment))
@@ -79,7 +102,19 @@ class PermissionManager private constructor(private val fragment: WeakReference<
     }
 
     private fun requestPermissions() {
-        permissionCheck?.launch(getPermissionList())
+        if (Build.VERSION.SDK_INT >= 30) {
+            try {
+                val intend = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                intend.addCategory("android.intent.category.DEFAULT")
+                intend.data = Uri.parse(String.format("package:%s", BuildConfig.APPLICATION_ID))
+                android11PermissionCheck?.launch(intend)
+            } catch (e: Exception) {
+                val intent = Intent()
+                intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+                android11PermissionCheck?.launch(intent)
+            }
+        } else
+            permissionCheck?.launch(getPermissionList())
     }
 
     private fun areAllPermissionsGranted(fragment: Fragment) =
@@ -92,7 +127,12 @@ class PermissionManager private constructor(private val fragment: WeakReference<
         requiredPermissions.flatMap { it.permissions.toList() }.toTypedArray()
 
     private fun Permission.isGranted(fragment: Fragment) =
-        permissions.all { hasPermission(fragment, it) }
+        permissions.all {
+            if (Build.VERSION.SDK_INT >= 30) {
+                Environment.isExternalStorageManager()
+            } else
+                hasPermission(fragment, it)
+        }
 
     private fun Permission.requiresRationale(fragment: Fragment) =
         permissions.any { fragment.shouldShowRequestPermissionRationale(it) }

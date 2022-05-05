@@ -1,9 +1,7 @@
 package com.example.videodownloadingline.ui.whatsapp
 
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
@@ -49,22 +47,25 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
             }
         }
         permissionManager?.checkPermission {
-            if (it) {
-                val res =
-                    getWhatsappStoryPath(WhatsappActivity.Companion.WhatsappClick.valueOf(type))
-                /*if (res.isEmpty() && !checkPermissionManger() && Build.VERSION.SDK_INT >= 30) {
-                    showErrorDialog()
-                }*/
-                when (WhatsappActivity.Companion.WhatsappClick.valueOf(type)) {
-                    WhatsappActivity.Companion.WhatsappClick.IsImage -> {
-                        setData(res)
-                        adaptorGird.submitList(list)
-                    }
-                    WhatsappActivity.Companion.WhatsappClick.IsVideo -> {
-                        Log.i(TAG, "onViewCreated: $type and $res")
-                        setData(res)
-                        adaptorGird.submitList(list)
-                    }
+            addWhatsApp(it)
+        }
+    }
+
+    private fun addWhatsApp(flag:Boolean) {
+        if (flag) {
+            val res =
+                getWhatsappStoryPath(WhatsappActivity.Companion.WhatsappClick.valueOf(type))
+            when (WhatsappActivity.Companion.WhatsappClick.valueOf(type)) {
+                WhatsappActivity.Companion.WhatsappClick.IsImage -> {
+                    list.clear()
+                    setData(res)
+                    adaptorGird.submitList(list)
+                }
+                WhatsappActivity.Companion.WhatsappClick.IsVideo -> {
+                    list.clear()
+                    Log.i(TAG, "onViewCreated: $type and $res")
+                    setData(res)
+                    adaptorGird.submitList(list)
                 }
             }
         }
@@ -166,7 +167,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
     override fun onResume() {
         super.onResume()
         permissionManager?.checkPermission {
-            Log.i(TAG, "onResume: Permission $it")
+            addWhatsApp(it)
         }
     }
 
