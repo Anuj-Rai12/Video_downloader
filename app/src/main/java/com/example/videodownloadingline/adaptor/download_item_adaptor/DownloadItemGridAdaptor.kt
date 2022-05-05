@@ -21,6 +21,7 @@ import com.example.videodownloadingline.databinding.DownloadFileItemGridLayoutBi
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.example.videodownloadingline.ui.whatsapp.WhatsappActivity
+import com.example.videodownloadingline.utils.DownloadProgressLiveData
 import com.example.videodownloadingline.utils.hide
 import java.io.File
 
@@ -71,7 +72,8 @@ class DownloadItemGridAdaptor(
             when (WhatsappActivity.Companion.WhatsappClick.valueOf(type)) {
                 WhatsappActivity.Companion.WhatsappClick.IsImage -> {
                     binding.fileThumbNail.apply {
-                        scaleType=ImageView.ScaleType.FIT_XY
+                        setPadding(0, 0, 0, 0)
+                        scaleType = ImageView.ScaleType.FIT_XY
                         setImageURI(data.fileLoc.toUri())
                     }
                 }
@@ -89,17 +91,22 @@ class DownloadItemGridAdaptor(
                         )
                     }
                     binding.fileThumbNail.apply {
-                        scaleType=ImageView.ScaleType.FIT_XY
+                        scaleType = ImageView.ScaleType.FIT_XY
                         setImageBitmap(bm)
                     }
                 }
             }
 
-
+            var size = DownloadProgressLiveData.getMb(data.fileSize)
+            var str = "${size}MB"
+            if (size >= 0) {
+                size = DownloadProgressLiveData.getKb(data.fileSize)
+                str = "${size}KB"
+            }
             binding.titleTxt.apply {
                 text = this.context.getString(
                     R.string.total_vid_view,
-                    "${data.fileSize}MB\n\n${data.createdCurrentTimeData}"
+                    "${str}\n\n${data.createdCurrentTimeData}"
                 )
             }
         }

@@ -69,6 +69,10 @@ class DownloadProgressLiveData(
             return (bytesDownloadedSoFar / 1048576).toDouble().roundToInt()
         }
 
+
+        fun getKb(bytesDownloadedSoFar: Long): Int {
+            return (bytesDownloadedSoFar / 1024).toDouble().roundToInt()
+        }
         fun getStatus(status: Int): String {
             return when (status) {
                 DownloadManager.STATUS_SUCCESSFUL -> "Success"

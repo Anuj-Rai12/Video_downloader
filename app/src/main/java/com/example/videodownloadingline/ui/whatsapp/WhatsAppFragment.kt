@@ -64,8 +64,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
                 file.toUri().toString(),
                 getFormat(file),
                 format,
-                fileSize = DownloadProgressLiveData.getMb(file.length())
-                    .toLong()
+                fileSize = file.length()
             ).also { res ->
                 list.add(res)
             }
