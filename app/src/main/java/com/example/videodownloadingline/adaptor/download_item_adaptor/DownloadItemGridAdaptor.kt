@@ -68,16 +68,17 @@ class DownloadItemGridAdaptor(
         @SuppressLint("StringFormatMatches")
         fun whatsAppDownloadData(data: DownloadItems, itemClicked: ItemClickedListener) {
             binding.menuBtn.hide()
+            binding.fileThumbNail.apply {
+                setPadding(0, 0, 0, 0)
+                scaleType = ImageView.ScaleType.FIT_XY
+            }
+
             binding.root.setOnClickListener {
                 itemClicked.invoke(data, (binding.fileThumbNail.drawable as BitmapDrawable).bitmap)
             }
             when (WhatsappActivity.Companion.WhatsappClick.valueOf(type)) {
                 WhatsappActivity.Companion.WhatsappClick.IsImage -> {
-                    binding.fileThumbNail.apply {
-                        setPadding(0, 0, 0, 0)
-                        scaleType = ImageView.ScaleType.FIT_XY
-                        setImageURI(data.fileLoc.toUri())
-                    }
+                    binding.fileThumbNail.setImageURI(data.fileLoc.toUri())
                 }
                 WhatsappActivity.Companion.WhatsappClick.IsVideo -> {
                     val bm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -92,10 +93,7 @@ class DownloadItemGridAdaptor(
                             MediaStore.Images.Thumbnails.MINI_KIND
                         )
                     }
-                    binding.fileThumbNail.apply {
-                        scaleType = ImageView.ScaleType.FIT_XY
-                        setImageBitmap(bm)
-                    }
+                    binding.fileThumbNail.setImageBitmap(bm)
                 }
             }
 
