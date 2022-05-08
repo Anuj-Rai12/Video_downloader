@@ -3,6 +3,7 @@ package com.example.videodownloadingline.ui
 import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
@@ -40,7 +41,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class WebViewFragments(private val title: String, private val url: String) :
+class WebViewFragments(private val title: String, private var url: String) :
     Fragment(R.layout.web_site_fragment_layout), OnBottomSheetClick {
 
     private lateinit var binding: WebSiteFragmentLayoutBinding
@@ -294,6 +295,7 @@ class WebViewFragments(private val title: String, private val url: String) :
                 javaScriptCanOpenWindowsAutomatically = true
                 addJavascriptInterface(MyJavaScriptInterface(), "HtmlViewer")
                 loadsImagesAutomatically = true
+                setSupportMultipleWindows(true)
             }
             webViewClient = object : WebViewClient() {
                 override fun shouldInterceptRequest(
@@ -338,7 +340,16 @@ class WebViewFragments(private val title: String, private val url: String) :
                     view: WebView?,
                     request: WebResourceRequest?
                 ): Boolean {
-                    return false
+                    return request?.let { req ->
+                        if (req.url != null && this@WebViewFragments.url.contains(req.url.host!!)
+                        ) {
+                            false
+                        } else {
+                            val intent = Intent(Intent.ACTION_VIEW, req.url)
+                            startActivity(intent)
+                            true
+                        }
+                    } ?: false
                 }
 
             }
@@ -358,7 +369,8 @@ class WebViewFragments(private val title: String, private val url: String) :
                     setHasOptionsMenu(true)
                     binding.progressbar.progress = 0
                     isWebLoaded = true
-                    getAllTab(binding.mainWebView.url ?: url)
+                    url = binding.mainWebView.url ?: url
+                    getAllTab(url)
                     hideImage()
                 }
                 super.onProgressChanged(view, newProgress)
@@ -383,7 +395,8 @@ class WebViewFragments(private val title: String, private val url: String) :
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
         (requireActivity() as MainActivity).supportActionBar!!.title = title
         if (isWebLoaded) {
-            getAllTab(binding.mainWebView.url ?: url)
+            url = binding.mainWebView.url ?: url
+            getAllTab(url)
         }
     }
 
