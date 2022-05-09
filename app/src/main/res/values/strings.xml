@@ -19,7 +19,7 @@
     <string name="cancel_txt">Cancel</string>
     <!-- Video Sample File -->
     <string name="sample_txt">Lorem ipsum dolor sit amet, consectetur ad</string>
-    <string name="value_sample_txt">%s MB/%s MB</string>
+    <string name="value_sample_txt">%s /%s </string>
     <string name="pause_txt">Pause</string>
     <string name="vid_file">Video File</string>
     <string name="close_file">Close</string>

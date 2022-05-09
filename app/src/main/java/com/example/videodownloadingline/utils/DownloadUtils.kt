@@ -12,7 +12,7 @@ fun requestDownload(
 ): DownloadManager.Request {
     return request.setDescription("Please Wait video is Downloading")
         .setTitle(title)
-        .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+        .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE or DownloadManager.Request.NETWORK_WIFI)
         .setDestinationUri(Uri.fromFile(getFileDir(title, context = context)))
         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 }

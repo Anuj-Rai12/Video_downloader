@@ -128,13 +128,7 @@ class DownloadItemGridAdaptor(
         }
 
         fun getSizeKbOrMb(len: Long): Pair<String, Int> {
-            var size = DownloadProgressLiveData.getMb(len)
-            var str = "${size}MB"
-            if (size <= 0) {
-                size = DownloadProgressLiveData.getKb(len)
-                str = "${size}KB"
-            }
-            return Pair(str, size)
+            return DownloadProgressLiveData.getMb(len)
         }
 
     }

@@ -164,9 +164,13 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
 
         binding.downloadFloatingBtn.setOnClickListener {
             if (info != null) {
+                if (!info!!.startsWith("blob:")){
+                    info!!.substring(5)
+                }
                 if (!info!!.contains("http")) {
                     info = "https:$info"
                 }
+                Log.i(TAG, "setData: check Video quality $info")
                 requireActivity().toastMsg("Please Wait while checking Video Quality..")
             } else {
                 requireActivity().toastMsg("Could not find download url")
@@ -186,7 +190,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
 
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun urlResolution(url: String, getRes: (Int, Int, String, Int) -> Unit) {
+    private fun urlResolution(url: String, getRes: (Int, Int, String, Long) -> Unit) {
         val trackGroupsFuture: ListenableFuture<TrackGroupArray> =
             MetadataRetriever.retrieveMetadata(
                 requireActivity(), MediaItem.fromUri(url)

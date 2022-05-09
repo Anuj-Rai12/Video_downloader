@@ -65,13 +65,14 @@ class DownloadProgressLiveData(
     }
 
     companion object {
-        fun getMb(bytesDownloadedSoFar: Long): Int {
-            return (bytesDownloadedSoFar / 1048576).toDouble().roundToInt()
-        }
-
-
-        fun getKb(bytesDownloadedSoFar: Long): Int {
-            return (bytesDownloadedSoFar / 1024).toDouble().roundToInt()
+        fun getMb(bytesDownloadedSoFar: Long): Pair<String, Int> {
+            var size = (bytesDownloadedSoFar / 1048576).toDouble().roundToInt()
+            var str = "${size}MB"
+            if (size <= 0) {
+                size = (bytesDownloadedSoFar / 1024).toDouble().roundToInt()
+                str = "${size}KB"
+            }
+            return Pair(str, size)
         }
         fun getStatus(status: Int): String {
             return when (status) {
