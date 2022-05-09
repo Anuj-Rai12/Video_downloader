@@ -39,14 +39,16 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.net.URL
 
 
-class WebViewFragments(private val title: String, private var url: String) :
+class WebViewFragments(private val title: String, private val mainUrl: String) :
     Fragment(R.layout.web_site_fragment_layout), OnBottomSheetClick {
 
     private lateinit var binding: WebSiteFragmentLayoutBinding
     private var mainViewModel: MainViewModel? = null
     private var isWebLoaded = false
+    private var url = mainUrl
     private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
     private var downloadManager: DownloadManager? = null
 
@@ -341,7 +343,13 @@ class WebViewFragments(private val title: String, private var url: String) :
                     request: WebResourceRequest?
                 ): Boolean {
                     return request?.let { req ->
-                        if (req.url != null && this@WebViewFragments.url.contains(req.url.host!!)
+                        val domain = getHostDomainName(req.url.host!!)
+                        if (req.url.toString() == mainUrl || domain == getHostDomainName(URL(mainUrl).host)) {
+                            return@let false
+                        }
+                        return@let if (req.url != null && this@WebViewFragments.url.contains(req.url.host!!) || domain == getHostDomainName(
+                                URL(this@WebViewFragments.url).host
+                            )
                         ) {
                             false
                         } else {

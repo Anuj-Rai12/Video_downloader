@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.videodownloadingline.model.downloadlink.WebViewDownloadUrl
+import com.google.common.net.InternetDomainName
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import java.net.HttpURLConnection
@@ -225,4 +226,9 @@ fun Activity.isValidUrl(url: String?): Boolean {
         Toast.makeText(this, "Please Enter valid Url", Toast.LENGTH_SHORT).show()
         false
     }
+}
+
+
+fun getHostDomainName(host: String): String {
+    return InternetDomainName.from(host).topPrivateDomain().toString()
 }

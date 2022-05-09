@@ -31,7 +31,9 @@ class ProgressFragment : Fragment(R.layout.progress_fragment_layout) {
             requireActivity().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         setRecycle()
         viewModel?.downloadId?.observe(viewLifecycleOwner) {
-            setData(it)
+            if (!it.isNullOrEmpty()) {
+                setData(it)
+            }
         }
     }
 
