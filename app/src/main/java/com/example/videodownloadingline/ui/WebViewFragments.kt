@@ -3,7 +3,6 @@ package com.example.videodownloadingline.ui
 import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
@@ -357,8 +356,15 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                         ) {
                             false
                         } else {
-                            val intent = Intent(Intent.ACTION_VIEW, req.url)
-                            startActivity(intent)
+                            mainViewModel?.addMoreTab()
+                            val size = (parentFragment as BrowserFragment).setFragment(
+                                WebViewFragments(
+                                    "Loading...",
+                                    req.url.toString()
+                                )
+                            )
+                            Log.i(TAG, "shouldOverrideUrlLoading: $size")
+                            BrowserFragment.viewPager?.currentItem = size!! - 1
                             true
                         }
                     } ?: false

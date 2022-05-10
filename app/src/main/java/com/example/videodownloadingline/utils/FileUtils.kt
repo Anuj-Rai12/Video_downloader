@@ -105,17 +105,19 @@ private fun getWhatsAppPath(): File {
 
 private fun checkFile(flag: Boolean, imgFile: File): File? {
     return if (flag) {
-        if (imgFile.name.endsWith(".jpg") || imgFile.name.endsWith(".jpeg") || imgFile.name.endsWith(
-                ".png"
-            )
+        if (imgFile.name.endsWith(".jpg") || imgFile.name.endsWith(".jpeg")
+            || imgFile.name.endsWith(".png") || imgFile.name.endsWith(".gif")
         ) {
             imgFile
         } else
             null
     } else if (!flag) {
-        if (imgFile.name.endsWith(".mp4") || imgFile.name.endsWith(".gif") || imgFile.name.endsWith(
-                ".mkv"
-            )
+        if (imgFile.name.endsWith(".mp4") || imgFile.name.endsWith(".mkv")
+            || imgFile.name.endsWith(".mpeg4") || imgFile.name.endsWith(".h264")
+            || imgFile.name.endsWith(".aac") || imgFile.name.endsWith(".ac3")
+            || imgFile.name.endsWith(".avi") || imgFile.name.endsWith(".mkv")
+            || imgFile.name.endsWith(".mov") || imgFile.name.endsWith(".flv")
+            || imgFile.name.endsWith(".3gp")
         ) {
             imgFile
         } else
