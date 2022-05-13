@@ -163,10 +163,11 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
 
         binding.downloadFloatingBtn.setOnClickListener {
             if (info != null) {
-                if (!info!!.startsWith("blob:")){
-                    info!!.substring(5)
+                if (info!!.startsWith("blob:")) {
+                    info = info!!.substring(5)
+                    //Log.i(TAG, "setData: $info for testing value")
                 }
-                if (!info!!.contains("http")) {
+                if (info!!.contains("http", true) && !info!!.contains("https", true)) {
                     info = "https:$info"
                 }
                 Log.i(TAG, "setData: check Video quality $info")
@@ -346,7 +347,13 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                     request: WebResourceRequest?
                 ): Boolean {
                     return request?.let { req ->
-                        val domain = getHostDomainName(req.url.host!!)
+                        val domain:String?
+                        try {
+                            domain=getHostDomainName(req.url.host!!)
+                        } catch (e: Exception) {
+                            return@let false
+                        }
+
                         if (req.url.toString() == mainUrl || domain == getHostDomainName(URL(mainUrl).host)) {
                             return@let false
                         }

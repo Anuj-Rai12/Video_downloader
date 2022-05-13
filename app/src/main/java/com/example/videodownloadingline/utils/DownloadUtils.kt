@@ -13,6 +13,8 @@ fun requestDownload(
     return request.setDescription("Please Wait video is Downloading")
         .setTitle(title)
         .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE or DownloadManager.Request.NETWORK_WIFI)
+        .setAllowedOverRoaming(false)
+        .setAllowedOverMetered(true)
         .setDestinationUri(Uri.fromFile(getFileDir(title, context = context)))
         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 }
