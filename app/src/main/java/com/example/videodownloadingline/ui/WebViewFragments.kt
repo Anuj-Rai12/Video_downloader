@@ -442,6 +442,11 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             ActionBar.DISPLAY_SHOW_TITLE
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
         (requireActivity() as MainActivity).supportActionBar!!.title = title
+        mainViewModel?.currentNumTab?.let {
+            Log.i(TAG, "onResume: Current Tab--$it")
+            BrowserFragment.viewPager?.currentItem = it
+            mainViewModel?.currentNumTab=null
+        }
         if (isWebLoaded) {
             url = binding.mainWebView.url ?: url
             getAllTab(url)

@@ -10,6 +10,7 @@ import com.example.videodownloadingline.adaptor.view_tab_open_adaptor.ViewTabOpe
 import com.example.videodownloadingline.databinding.ActivityViewTabBinding
 import com.example.videodownloadingline.model.tabitem.TabItem
 import com.example.videodownloadingline.utils.TAG
+import com.example.videodownloadingline.view_model.MainViewModel
 
 
 class ViewTabActivity : AppCompatActivity() {
@@ -20,9 +21,12 @@ class ViewTabActivity : AppCompatActivity() {
 
     private lateinit var viewTabAdaptor: ViewTabOpenAdaptor
 
+    private var mainViewModel: MainViewModel? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        mainViewModel = MainViewModel.getInstance()
         val extras = intent.extras
         if (extras != null) {
             val value = extras.getParcelableArrayList<TabItem>("TabItem")
@@ -35,6 +39,8 @@ class ViewTabActivity : AppCompatActivity() {
         binding.recycleViewForTab.apply {
             viewTabAdaptor = ViewTabOpenAdaptor {
                 Log.i(TAG, "setRecycleView: $it")
+                mainViewModel?.currentNumTab = it.id - 1
+                onBackPressed()
             }
             adapter = viewTabAdaptor
         }

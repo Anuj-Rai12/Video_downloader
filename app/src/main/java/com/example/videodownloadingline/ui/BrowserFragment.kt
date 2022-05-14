@@ -32,12 +32,14 @@ class BrowserFragment : Fragment(R.layout.activity_web) {
 
     fun setFragment(fr: Fragment, url: String?): Int? {
         viewPagerAdapter?.setFragment(fr)
-        viewPagerAdapter?.addTab(url)
+        if (url != null) {
+            viewPagerAdapter?.addTab(url)
+        }
         binding.mainWebViewViewPager.adapter = viewPagerAdapter
         return viewPagerAdapter?.getSize()
     }
 
-    fun getTbList()=viewPagerAdapter?.getTabList()
+    fun getTbList() = viewPagerAdapter?.getTabList()
 
 
     override fun onResume() {

@@ -33,6 +33,7 @@ class MainViewModel : ViewModel() {
     val downloadVid: LiveData<MutableList<VideoType>>
         get() = _downloadVid
 
+    var currentNumTab: Int? = null
 
     companion object {
         @Volatile
@@ -124,7 +125,7 @@ class MainViewModel : ViewModel() {
             it.removeAt(index)
             _downloadId.postValue(it)
         }
-        if (_downloadId.value.isNullOrEmpty()){
+        if (_downloadId.value.isNullOrEmpty()) {
             _downloadId.postValue(mutableListOf())
         }
     }
@@ -140,7 +141,7 @@ class MainViewModel : ViewModel() {
             it.clear()
             _downloadId.postValue(it)
         }
-        if (_downloadId.value.isNullOrEmpty()){
+        if (_downloadId.value.isNullOrEmpty()) {
             _downloadId.postValue(mutableListOf())
         }
     }
@@ -152,7 +153,7 @@ class MainViewModel : ViewModel() {
             it.removeAt(index)
             _downloadVid.postValue(it)
         }
-        if (_downloadVid.value.isNullOrEmpty()){
+        if (_downloadVid.value.isNullOrEmpty()) {
             _downloadVid.postValue(mutableListOf())
         }
     }
@@ -172,7 +173,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun getVideoDataByIndex(index: Int)=_downloadVid.value?.get(index)
+    fun getVideoDataByIndex(index: Int) = _downloadVid.value?.get(index)
 
     override fun onCleared() {
         viewModelScope.cancel()
