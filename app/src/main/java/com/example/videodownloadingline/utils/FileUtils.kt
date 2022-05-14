@@ -23,13 +23,14 @@ import java.util.*
 
 
 fun getFileDir(fileName: String, context: Context): File {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+    return File(
+        Environment.getExternalStoragePublicDirectory
+            (Environment.DIRECTORY_DOWNLOADS), fileName
+    )
+/*    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
         File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
     else
-        File(
-            Environment.getExternalStoragePublicDirectory
-                (Environment.DIRECTORY_DOWNLOADS), fileName
-        )
+        */
 }
 
 fun getFileUrl(file: File, context: Context): Uri? {

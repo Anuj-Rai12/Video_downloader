@@ -3,6 +3,8 @@ package com.example.videodownloadingline.utils
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
+import android.util.Log
+import androidx.core.net.toUri
 
 
 fun requestDownload(
@@ -10,12 +12,15 @@ fun requestDownload(
     request: DownloadManager.Request,
     title: String,
 ): DownloadManager.Request {
+    val res = getFileDir(title, context = context)
+    Log.i(TAG, "requestDownload: $res")
+    Log.i(TAG, "requestDownload: ${res.toUri()}")
     return request.setDescription("Please Wait video is Downloading")
         .setTitle(title)
         .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE or DownloadManager.Request.NETWORK_WIFI)
         .setAllowedOverRoaming(false)
         .setAllowedOverMetered(true)
-        .setDestinationUri(Uri.fromFile(getFileDir(title, context = context)))
+        .setDestinationUri(Uri.fromFile(res))
         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
 }
 
