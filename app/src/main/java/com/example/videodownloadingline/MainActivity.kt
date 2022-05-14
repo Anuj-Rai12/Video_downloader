@@ -83,7 +83,8 @@ class MainActivity : AppCompatActivity() {
         totalTab: Int,
         url: String = "",
         listenForSearch: (txt: String) -> Unit,
-        goTo: () -> Unit
+        goTo: () -> Unit,
+        viewTab:()->Unit
     ) {
         val toolbarBinding: CustomToolbarLayoutBinding =
             CustomToolbarLayoutBinding.inflate(layoutInflater)
@@ -123,6 +124,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             true
+        }
+        toolbarBinding.totalTabOp.setOnClickListener {
+            Log.i(TAG, "changeToolbar: item Clicked")
+            viewTab()
         }
         toolbarBinding.totalTabOp.text = String.format(
             Locale.getDefault(),

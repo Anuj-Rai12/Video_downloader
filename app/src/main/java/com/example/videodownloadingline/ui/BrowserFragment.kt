@@ -26,19 +26,24 @@ class BrowserFragment : Fragment(R.layout.activity_web) {
         super.onViewCreated(view, savedInstanceState)
         binding = ActivityWebBinding.bind(view)
         viewPager = binding.mainWebViewViewPager
-        viewPagerAdapter = ViewPagerAdapter(childFragmentManager,lifecycle)
-        setFragment(WebViewFragments(args.name, args.url))
+        viewPagerAdapter = ViewPagerAdapter(childFragmentManager, lifecycle)
+        setFragment(WebViewFragments(args.name, args.url), args.url)
     }
 
-    fun setFragment(fr: Fragment): Int? {
+    fun setFragment(fr: Fragment, url: String?): Int? {
         viewPagerAdapter?.setFragment(fr)
+        viewPagerAdapter?.addTab(url)
         binding.mainWebViewViewPager.adapter = viewPagerAdapter
         return viewPagerAdapter?.getSize()
     }
 
+    fun getTbList()=viewPagerAdapter?.getTabList()
+
+
     override fun onResume() {
         super.onResume()
         mainViewModel = MainViewModel.getInstance()
+        //viewPagerAdapter = ViewPagerAdapter(childFragmentManager, lifecycle)
         (activity as MainActivity).hideBottomNav(true)
         (activity as MainActivity).supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_TITLE
         (activity as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
@@ -52,5 +57,8 @@ class BrowserFragment : Fragment(R.layout.activity_web) {
     override fun onPause() {
         super.onPause()
         (activity as MainActivity).hideBottomNav(false)
+//        binding.run {
+//            mainWebViewViewPager.adapter = null
+//        }
     }
 }

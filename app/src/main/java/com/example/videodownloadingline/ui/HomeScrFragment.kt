@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.iconadaptor.HomeSrcAdaptor
+import com.example.videodownloadingline.adaptor.viewpager_adaptor.ViewPagerAdapter
 import com.example.videodownloadingline.databinding.HomeSrcFragmentBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
@@ -71,7 +72,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                         WebViewFragments(
                             "Searching..",
                             url
-                        )
+                        ), url
                     )?.also { size ->
                         BrowserFragment.viewPager?.currentItem = size - 1
                     }
@@ -85,7 +86,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                 }
             }, goTo = {
                 findNavController().popBackStack()
-            })
+            }, viewTab = {})
         }
     }
 
@@ -110,7 +111,8 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
 
             newTab?.setOnMenuItemClickListener {
                 mainViewModel?.addMoreTab()
-                val size = (parentFragment as BrowserFragment).setFragment(HomeScrFragment(true))
+                val size =
+                    (parentFragment as BrowserFragment).setFragment(HomeScrFragment(true), null)
                 Log.i(TAG, "onCreateOptionsMenu: $size")
                 BrowserFragment.viewPager?.currentItem = size!! - 1
                 return@setOnMenuItemClickListener true
@@ -155,8 +157,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             homeSrcAdaptor = HomeSrcAdaptor { data: HomeSrcIcon, isAddIcon: Boolean ->
                 if (isAddIcon) {
                     showDialogBox()
-                }
-                else if (data.name?.equals(getString(R.string.whatsapp_name))!!) {
+                } else if (data.name?.equals(getString(R.string.whatsapp_name))!!) {
                     requireActivity().goToNextActivity<WhatsappActivity>()
                 } else {
                     if (!isInWebView) {
@@ -167,7 +168,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                             WebViewFragments(
                                 data.name,
                                 data.url!!
-                            )
+                            ), data.url
                         )?.also { size ->
                             BrowserFragment.viewPager?.currentItem = size - 1
                         }

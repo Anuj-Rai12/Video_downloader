@@ -3,6 +3,7 @@ package com.example.videodownloadingline.ui
 import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
@@ -25,6 +26,7 @@ import com.example.videodownloadingline.bottom_sheets.BottomSheetDialogForDownlo
 import com.example.videodownloadingline.databinding.WebSiteFragmentLayoutBinding
 import com.example.videodownloadingline.model.downloadlink.VideoType
 import com.example.videodownloadingline.model.downloadlink.WebViewDownloadUrl
+import com.example.videodownloadingline.model.tabitem.TabItem
 import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.MainViewModel
 import com.google.android.exoplayer2.MediaItem
@@ -114,7 +116,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
         newTab?.setOnMenuItemClickListener {
             mainViewModel?.addMoreTab()
             val size = (parentFragment as BrowserFragment).setFragment(
-                HomeScrFragment(true)
+                HomeScrFragment(true), null
             )
             Log.i(TAG, "onCreateOptionsMenu: $size")
             BrowserFragment.viewPager?.currentItem = size!! - 1
@@ -143,6 +145,18 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             val item = it ?: 0
             (requireActivity() as MainActivity).changeToolbar(item, url, { _ -> }, {
                 findNavController().popBackStack()
+            }, viewTab = {
+                val intent = Intent(requireActivity(), ViewTabActivity::class.java)
+                val op = (parentFragment as BrowserFragment).getTbList()
+                val arrayList = ArrayList<TabItem>(op?.size ?: 0)
+                if (op != null) {
+                    arrayList.addAll(op)
+                }
+                intent.putParcelableArrayListExtra(
+                    "TabItem",
+                    arrayList
+                )
+                startActivity(intent)
             })
         }
     }
@@ -369,7 +383,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                                 WebViewFragments(
                                     "Loading...",
                                     req.url.toString()
-                                )
+                                ), req.url.toString()
                             )
                             Log.i(TAG, "shouldOverrideUrlLoading: $size")
                             BrowserFragment.viewPager?.currentItem = size!! - 1
@@ -412,11 +426,11 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             binding.tapToDownloadIcon.hide()
             if (isShowDialogOnce) {
                 isShowDialogOnce = false
-                showDialogBox(
+                /*showDialogBox(
                     title = getString(R.string.download_msg_title),
                     desc = getString(R.string.download_msg_desc),
                     flag = true
-                ) {}
+                ) {}*/
             }
         }
     }

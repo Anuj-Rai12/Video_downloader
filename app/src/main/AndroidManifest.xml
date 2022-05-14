@@ -39,6 +39,9 @@
         </provider>
 
         <activity
+            android:name=".ui.ViewTabActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.whatsapp.WhatsappActivity"
             android:screenOrientation="portrait" />
         <activity
