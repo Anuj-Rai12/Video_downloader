@@ -121,7 +121,8 @@ class PermissionManager private constructor(private val fragment: WeakReference<
                 cancelButton = "Deny",
                 isCancelBtnEnable = true
             ) {
-                getPermissionForAndroid11()
+                if (!Environment.isExternalStorageManager())
+                    getPermissionForAndroid11()
             }
         }
     }
