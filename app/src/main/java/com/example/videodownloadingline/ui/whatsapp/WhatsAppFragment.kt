@@ -46,12 +46,13 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
                 binding.root.showSandbar(string, color = Color.GREEN)
             }
         }
+        permissionManager?.getDialogInstance()?.dismiss()
         permissionManager?.checkPermission {
             addWhatsApp(it)
         }
     }
 
-    private fun addWhatsApp(flag:Boolean) {
+    private fun addWhatsApp(flag: Boolean) {
         if (flag) {
             val res =
                 getWhatsappStoryPath(WhatsappActivity.Companion.WhatsappClick.valueOf(type))

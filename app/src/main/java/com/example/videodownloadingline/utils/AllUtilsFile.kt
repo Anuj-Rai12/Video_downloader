@@ -9,6 +9,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -154,9 +155,11 @@ fun Fragment.showDialogBox(
     desc: String = getString(R.string.permission_desc, "Storage"),
     btn: String = getString(R.string.permission_btn),
     flag: Boolean = false,
+    isCancelBtnEnable: Boolean = false,
+    cancelButton: String = "Cancel",
     callback: () -> Unit
-) {
-    MaterialAlertDialogBuilder(
+): AlertDialog? {
+    val material = MaterialAlertDialogBuilder(
         requireContext(),
         R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
     )
@@ -165,9 +168,16 @@ fun Fragment.showDialogBox(
         .setCancelable(flag)
         .setBackground(resources.getDrawable(R.drawable.dialog_box_shape, null))
         .setPositiveButton(btn) { dialog, _ ->
-            callback.invoke()
             dialog.dismiss()
-        }.show()
+            callback.invoke()
+        }
+
+    if (isCancelBtnEnable) {
+        material.setNegativeButton(cancelButton) { dialog, _ ->
+            dialog.dismiss()
+        }
+    }
+    return material.show()
 }
 
 

@@ -11,6 +11,8 @@ import android.provider.Settings
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.videodownloadingline.BuildConfig
@@ -25,6 +27,7 @@ class PermissionManager private constructor(private val fragment: WeakReference<
     private var rationale: String? = null
     private var callback: (Boolean) -> Unit = {}
     private var detailedCallback: (Map<Permission, Boolean>) -> Unit = {}
+    private var dialogInstance: AlertDialog? = null
 
     private val permissionCheck =
         fragment.get()?.registerForActivityResult(RequestMultiplePermissions()) { grantResults ->
@@ -53,6 +56,7 @@ class PermissionManager private constructor(private val fragment: WeakReference<
         return this
     }
 
+    fun getDialogInstance() = dialogInstance
     fun request(vararg permission: Permission): PermissionManager {
         requiredPermissions.addAll(permission)
         return this
@@ -103,19 +107,39 @@ class PermissionManager private constructor(private val fragment: WeakReference<
 
     private fun requestPermissions() {
         if (Build.VERSION.SDK_INT >= 30) {
-            try {
-                val intend = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
-                intend.addCategory("android.intent.category.DEFAULT")
-                intend.data = Uri.parse(String.format("package:%s", BuildConfig.APPLICATION_ID))
-                android11PermissionCheck?.launch(intend)
-            } catch (e: Exception) {
-                val intent = Intent()
-                intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
-                android11PermissionCheck?.launch(intent)
-            }
+            checkForAndroid11()
         } else
             permissionCheck?.launch(getPermissionList())
     }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun checkForAndroid11() {
+        fragment.get()?.let {
+            dialogInstance = it.showDialogBox(
+                btn = "Accept",
+                flag = true,
+                cancelButton = "Deny",
+                isCancelBtnEnable = true
+            ) {
+                getPermissionForAndroid11()
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun getPermissionForAndroid11() {
+        try {
+            val intend = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+            intend.addCategory("android.intent.category.DEFAULT")
+            intend.data = Uri.parse(String.format("package:%s", BuildConfig.APPLICATION_ID))
+            android11PermissionCheck?.launch(intend)
+        } catch (e: Exception) {
+            val intent = Intent()
+            intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+            android11PermissionCheck?.launch(intent)
+        }
+    }
+
 
     private fun areAllPermissionsGranted(fragment: Fragment) =
         requiredPermissions.all { it.isGranted(fragment) }
