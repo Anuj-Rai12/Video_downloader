@@ -50,6 +50,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
     private var url = mainUrl
     private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
     private var downloadManager: DownloadManager? = null
+    private var isShowDialogOnce: Boolean = true
 
     inner class MyJavaScriptInterface {
         @JavascriptInterface
@@ -347,9 +348,9 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                     request: WebResourceRequest?
                 ): Boolean {
                     return request?.let { req ->
-                        val domain:String?
+                        val domain: String?
                         try {
-                            domain=getHostDomainName(req.url.host!!)
+                            domain = getHostDomainName(req.url.host!!)
                         } catch (e: Exception) {
                             return@let false
                         }
@@ -409,6 +410,14 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             binding.tapToDownloadIcon.show()
             delay(2000)
             binding.tapToDownloadIcon.hide()
+            if (isShowDialogOnce) {
+                isShowDialogOnce = false
+                showDialogBox(
+                    title = getString(R.string.download_msg_title),
+                    desc = getString(R.string.download_msg_desc),
+                    flag = true
+                ) {}
+            }
         }
     }
 

@@ -75,6 +75,8 @@
     </string-array>
     <!-- Dialog For Permission -->
     <string name="permission_title">Permission Needed!!</string>
+    <string name="download_msg_desc">Play Video to get Download link</string>
+    <string name="download_msg_title">Attention!!</string>
     <string name="permission_desc">Kindly Give us %s permission,otherwise application may not work Properly.</string>
     <string name="permission_btn">Ok got,it</string>
 
