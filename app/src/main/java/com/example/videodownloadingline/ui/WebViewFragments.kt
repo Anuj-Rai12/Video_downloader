@@ -8,6 +8,8 @@ import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -114,15 +116,19 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
         val newTab = menu.findItem(R.id.new_tab_option_mnu)
 
         newTab?.setOnMenuItemClickListener {
-            mainViewModel?.addMoreTab()
-            val size = (parentFragment as BrowserFragment).setFragment(
-                HomeScrFragment(true), null
-            )
-            Log.i(TAG, "onCreateOptionsMenu: $size")
-            BrowserFragment.viewPager?.currentItem = size!! - 1
+            createNewTB(HomeScrFragment(true), null)
             return@setOnMenuItemClickListener true
         }
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun createNewTB(fragment: Fragment, url: String?) {
+        mainViewModel?.addMoreTab()
+        val size = (parentFragment as BrowserFragment).setFragment(
+            fragment, url
+        )
+        Log.i(TAG, "onCreateOptionsMenu: $size")
+        BrowserFragment.viewPager?.currentItem = size!! - 1
     }
 
 
@@ -378,7 +384,11 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                         ) {
                             false
                         } else {
-                            mainViewModel?.addMoreTab()
+                            createNewTB(
+                                WebViewFragments("Loading...", req.url.toString()),
+                                req.url.toString()
+                            )
+                            /*mainViewModel?.addMoreTab()
                             val size = (parentFragment as BrowserFragment).setFragment(
                                 WebViewFragments(
                                     "Loading...",
@@ -386,7 +396,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                                 ), req.url.toString()
                             )
                             Log.i(TAG, "shouldOverrideUrlLoading: $size")
-                            BrowserFragment.viewPager?.currentItem = size!! - 1
+                            BrowserFragment.viewPager?.currentItem = size!! - 1*/
                             true
                         }
                     } ?: false
@@ -442,11 +452,38 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             ActionBar.DISPLAY_SHOW_TITLE
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
         (requireActivity() as MainActivity).supportActionBar!!.title = title
+
         mainViewModel?.currentNumTab?.let {
-            Log.i(TAG, "onResume: Current Tab--$it")
+            Log.i(TAG, "onResume: Current Tab --> $it")
             BrowserFragment.viewPager?.currentItem = it
-            mainViewModel?.currentNumTab=null
+            mainViewModel?.currentNumTab = null
         }
+
+        if (mainViewModel?.removeTab?.first == true) {
+            mainViewModel?.removeTab?.second?.let {
+                (parentFragment as BrowserFragment).removeFragment(it, true)
+            }
+            mainViewModel?.removeTab = Pair(false, null)
+        }
+
+        var parent = parentFragment
+        val uiHandler = Handler(Looper.getMainLooper())
+        uiHandler.post {
+            parent?.let {
+                val flag = mainViewModel?.createNewTab?.value
+                Log.i(TAG, "onViewCreated: Main View Model ---> $flag")
+                if (flag == true) {
+                    mainViewModel?.addMoreTab()
+                    val size = (it as BrowserFragment).setFragment(HomeScrFragment(true), null)
+                    Log.i(TAG, "onCreateOptionsMenu: $size")
+                    BrowserFragment.viewPager?.currentItem = size!! - 1
+                    parent = null
+                    mainViewModel?.changeStateForCreateNewTB(false)
+                }
+            }
+        }
+
+
         if (isWebLoaded) {
             url = binding.mainWebView.url ?: url
             getAllTab(url)

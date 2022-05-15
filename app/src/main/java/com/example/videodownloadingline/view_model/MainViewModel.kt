@@ -35,6 +35,11 @@ class MainViewModel : ViewModel() {
 
     var currentNumTab: Int? = null
 
+    private val _createNewTab = MutableLiveData<Boolean>()
+    val createNewTab: LiveData<Boolean>
+        get() = _createNewTab
+    var removeTab: Pair<Boolean, Int?> = Pair(false, null)
+
     companion object {
         @Volatile
         private var INSTANCE: MainViewModel? = null
@@ -56,8 +61,12 @@ class MainViewModel : ViewModel() {
         _noOfTab.postValue(1)
         _downloadId.postValue(mutableListOf())
         _downloadVid.postValue(mutableListOf())
+        _createNewTab.postValue(false)
     }
 
+    fun changeStateForCreateNewTB(flag: Boolean) {
+        _createNewTab.postValue(flag)
+    }
 
     fun daisyChainDownload(data: String?) {
         viewModelScope.launch {

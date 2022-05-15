@@ -3,6 +3,7 @@ package com.example.videodownloadingline.adaptor.view_tab_open_adaptor
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.videodownloadingline.R
-import com.example.videodownloadingline.databinding.DownloadFileItemLinearLayoutBinding
+import com.example.videodownloadingline.databinding.DownloadFileItemGridLayoutBinding
 import com.example.videodownloadingline.model.tabitem.TabItem
 import com.example.videodownloadingline.utils.RoundedCornersTransformation
 import com.example.videodownloadingline.utils.getIconBgLis
@@ -22,22 +23,30 @@ import com.example.videodownloadingline.utils.hide
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
-typealias ListenerItem = (data: TabItem) -> Unit
+typealias ListenerItem = (data: TabItem, flag: Boolean) -> Unit
 
 class ViewTabOpenAdaptor(private val itemClicked: ListenerItem) :
     ListAdapter<TabItem, ViewTabOpenAdaptor.ListenerViewTabViewHolder>(diffUtil) {
-    inner class ListenerViewTabViewHolder(private val binding: DownloadFileItemLinearLayoutBinding) :
+    inner class ListenerViewTabViewHolder(private val binding: DownloadFileItemGridLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @RequiresApi(Build.VERSION_CODES.M)
         fun makeData(data: TabItem, itemClicked: ListenerItem) {
-            binding.dataTxtInfo.hide()
-            binding.menuIcBtn.hide()
-            binding.mainTxtFile.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                bottomToBottom = binding.fileThumbNail.id
+            binding.menuBtn.hide()
+            binding.titleTxt.maxLines = 3
+            binding.fileThumbNail.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                topToBottom = binding.closeBtn.id
             }
-            binding.mainTxtFile.text = data.url
-            binding.root.setOnClickListener {
-                itemClicked(data)
+            binding.titleTxt.ellipsize = TextUtils.TruncateAt.END
+            binding.titleTxt.text = data.url
+
+            binding.closeBtn.setOnClickListener {
+                itemClicked(data, true)
+            }
+            binding.fileThumbNail.setOnClickListener {
+                itemClicked(data, false)
+            }
+            binding.titleTxt.setOnClickListener {
+                itemClicked(data, false)
             }
             if (data.url == null) {
                 binding.fileThumbNail.apply {
@@ -66,6 +75,7 @@ class ViewTabOpenAdaptor(private val itemClicked: ListenerItem) :
                             }
                         }
                     })
+
         }
     }
 
@@ -99,7 +109,7 @@ class ViewTabOpenAdaptor(private val itemClicked: ListenerItem) :
         parent: ViewGroup,
         viewType: Int
     ): ListenerViewTabViewHolder {
-        val binding = DownloadFileItemLinearLayoutBinding.inflate(
+        val binding = DownloadFileItemGridLayoutBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false

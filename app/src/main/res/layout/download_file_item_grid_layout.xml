@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp">
 
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/file_thumb_nail"
         android:layout_width="168dp"
@@ -17,6 +16,19 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_viedoapplogo" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/close_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:paddingBottom="5dp"
+        android:src="@drawable/ic_close"
+        android:visibility="gone"
+        android:tint="@color/Alizarin_Crimson_color"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <LinearLayout
         android:layout_width="0dp"

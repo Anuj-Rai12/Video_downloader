@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.view_tab_open_adaptor.ViewTabOpenAdaptor
 import com.example.videodownloadingline.databinding.ActivityViewTabBinding
@@ -30,6 +31,7 @@ class ViewTabActivity : AppCompatActivity() {
         val extras = intent.extras
         if (extras != null) {
             val value = extras.getParcelableArrayList<TabItem>("TabItem")
+            Log.i(TAG, "onCreate: $value")
             setRecycleView()
             viewTabAdaptor.submitList(value)
         }
@@ -37,9 +39,15 @@ class ViewTabActivity : AppCompatActivity() {
 
     private fun setRecycleView() {
         binding.recycleViewForTab.apply {
-            viewTabAdaptor = ViewTabOpenAdaptor {
-                Log.i(TAG, "setRecycleView: $it")
-                mainViewModel?.currentNumTab = it.id - 1
+            layoutManager = GridLayoutManager(this@ViewTabActivity, 2)
+            setHasFixedSize(true)
+            viewTabAdaptor = ViewTabOpenAdaptor { data, flag ->
+                Log.i(TAG, "setRecycleView: $data and $flag")
+                if (!flag)
+                    mainViewModel?.currentNumTab = data.id - 1
+                else
+                    mainViewModel?.removeTab = Pair(true, data.id - 1)
+
                 onBackPressed()
             }
             adapter = viewTabAdaptor
@@ -51,10 +59,12 @@ class ViewTabActivity : AppCompatActivity() {
         supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_TITLE
         supportActionBar!!.setDisplayShowCustomEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
+        supportActionBar!!.title = "New Tab"
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_add)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        mainViewModel?.changeStateForCreateNewTB(flag = true)
         onBackPressed()
         return super.onOptionsItemSelected(item)
     }

@@ -51,11 +51,12 @@ class ViewPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
 
     fun getTabList() = getTabList.toList()
 
-    fun removedFragment(position: Int) {
+    fun removedFragment(position: Int,isRemove:Boolean) {
         getTotalFragment.removeAt(position)
+        if (isRemove)
+        getTabList.removeAt(position)
         Log.i(TAG, "removedFragment: $getTotalFragment")
     }
-
 
     fun getSize(): Int {
         Log.i(TAG, "getSize: ${getTotalFragment.size}")
