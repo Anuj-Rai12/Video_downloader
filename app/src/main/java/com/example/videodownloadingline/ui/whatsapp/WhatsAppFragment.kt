@@ -82,7 +82,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
                 "",
                 "",
                 file.toUri().toString(),
-                getFileDuration(file),
+                getFileDuration(file)?:"",
                 getMimeType(file.toUri(), requireContext()) ?: "",
                 fileSize = file.length()
             ).also { res ->

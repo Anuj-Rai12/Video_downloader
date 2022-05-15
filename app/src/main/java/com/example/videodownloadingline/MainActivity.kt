@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         url: String = "",
         listenForSearch: (txt: String) -> Unit,
         goTo: () -> Unit,
-        viewTab:()->Unit
+        viewTab: () -> Unit
     ) {
         val toolbarBinding: CustomToolbarLayoutBinding =
             CustomToolbarLayoutBinding.inflate(layoutInflater)
@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
     fun setBroadcastReceiver(mainViewModel: MainViewModel?) {
         val downloadReceiver = object : BroadcastReceiver() {
             @SuppressLint("Range")
-            @RequiresApi(Build.VERSION_CODES.M)
+            @RequiresApi(Build.VERSION_CODES.Q)
             override fun onReceive(context: Context?, intent: Intent?) {
                 val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
                 mainViewModel?.let {
@@ -149,32 +149,34 @@ class MainActivity : AppCompatActivity() {
                     Log.i(TAG, "onReceive: this index  for id is -> $index")
                     if (index != -1) {
                         it.getVideoDataByIndex(index)?.let { res ->
-                            val title = res.webViewDownloadUrl.videotitle ?: ""
-                            val file = getFileDir(
-                                title,
-                                this@MainActivity
-                            )
-                            DownloadItems(
-                                0, title, "",
-                                file.toUri().toString(),
-                                this@MainActivity.videoDuration(file),
-                                res.format,
-                                file.length()
-                            ).also { value ->
-                                Log.i(TAG, "onReceive: Download Save Item $value")
-                                lifecycleScope.launchWhenCreated {
-                                    val saveDownloadItem = async(Dispatchers.IO) {
-                                        DownloadFragmentRepo(
-                                            RoomDataBaseInstance.getInstance(
-                                                applicationContext
+                            Log.i(TAG, "onReceive: Download List --->  $res")
+                            var title = res.webViewDownloadUrl.videotitle ?: ""
+                            val file = getFileDir(title, this@MainActivity)
+                            /*val type = getMimeType(file.toUri(), this@MainActivity) ?: ""
+                            Log.i(TAG, "onReceive:file Type $type")*/
+                            val time = this@MainActivity.videoDuration(file) ?: ""
+                            val len = file.length()
+                            title = if (res.format.contains(".m3u8")) {
+                                "$title.m3u8"
+                            } else
+                                "$title.mp4"
+                            val newUrl = putVideo(file.toUri().toString(), title, res.format)
+                            DownloadItems(0, title, "", newUrl.toString(), time, res.format, len)
+                                .also { value ->
+                                    Log.i(TAG, "onReceive: Download Save Item $value")
+                                    lifecycleScope.launchWhenCreated {
+                                        val saveDownloadItem = async(Dispatchers.IO) {
+                                            DownloadFragmentRepo(
+                                                RoomDataBaseInstance.getInstance(
+                                                    applicationContext
+                                                )
+                                            ).addDownload(
+                                                value
                                             )
-                                        ).addDownload(
-                                            value
-                                        )
+                                        }
+                                        saveDownloadItem.await()
                                     }
-                                    saveDownloadItem.await()
                                 }
-                            }
                         }
                         it.removeID(index)
                         it.removeVideo(index)

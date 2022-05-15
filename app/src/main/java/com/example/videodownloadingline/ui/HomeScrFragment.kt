@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.iconadaptor.HomeSrcAdaptor
-import com.example.videodownloadingline.adaptor.viewpager_adaptor.ViewPagerAdapter
 import com.example.videodownloadingline.databinding.HomeSrcFragmentBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
@@ -43,7 +42,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         mainViewModel = MainViewModel.getInstance()
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = HomeSrcFragmentBinding.bind(view)
@@ -86,7 +85,11 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                 }
             }, goTo = {
                 findNavController().popBackStack()
-            }, viewTab = {})
+            }, viewTab = {
+                if (isInWebView) {
+                    requireActivity().goToTbActivity<ViewTabActivity>((parentFragment as BrowserFragment).getTbList())
+                }
+            })
         }
     }
 

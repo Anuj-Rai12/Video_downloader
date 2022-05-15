@@ -27,17 +27,17 @@ class ProgressAdaptor(private val itemClicked: itemClicked) :
             binding.titleDownload.text = data.title
 
             binding.btnPauseOrPlay.setOnClickListener { view ->
-                val image=view as ImageView
+                val image = view as ImageView
                 val id: Int? = (image.tag as String?)?.toInt()
                 id?.let {
                     when (it) {
                         1 -> {
                             binding.btnPauseOrPlay.setImageResource(R.drawable.ic_play)
-                            binding.btnPauseOrPlay.tag="2"
+                            binding.btnPauseOrPlay.tag = "2"
                         }
                         2 -> {
                             binding.btnPauseOrPlay.setImageResource(R.drawable.ic_pause)
-                            binding.btnPauseOrPlay.tag="1"
+                            binding.btnPauseOrPlay.tag = "1"
                         }
                     }
                 }
@@ -56,7 +56,7 @@ class ProgressAdaptor(private val itemClicked: itemClicked) :
                 binding.totalSize.text = binding.totalSize.context.getString(
                     R.string.value_sample_txt,
                     getMb(data.bytesDownloadedSoFar).first,
-                    getMb(data.totalSizeBytes).first
+                    "${getMb(data.totalSizeBytes).first} ${binding.progressBar.progress}%"
                 )
             }
             binding.totalSize.append("\n\n${DownloadProgressLiveData.getStatus(data.status)}\n")

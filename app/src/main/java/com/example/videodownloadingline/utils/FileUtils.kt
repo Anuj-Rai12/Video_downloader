@@ -15,22 +15,25 @@ import android.webkit.MimeTypeMap
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import com.example.videodownloadingline.ui.whatsapp.WhatsappActivity
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.net.URL
 import java.text.DateFormat
 import java.util.*
+import javax.net.ssl.HttpsURLConnection
 
 
 fun getFileDir(fileName: String, context: Context): File {
-    return File(
-        Environment.getExternalStoragePublicDirectory
-            (Environment.DIRECTORY_DOWNLOADS), fileName
-    )
-/*    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
         File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
     else
-        */
+        File(
+            Environment.getExternalStoragePublicDirectory
+                (Environment.DIRECTORY_DOWNLOADS), fileName
+        )
 }
 
 fun getFileUrl(file: File, context: Context): Uri? {
@@ -141,13 +144,19 @@ private fun convertMillieToHMmSs(millie: Long): String {
 }
 
 
-fun Context.videoDuration(file: File): String {
-    val retriever = MediaMetadataRetriever()
-    retriever.setDataSource(this, getFileUrl(file, this))
-    val time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong()
-    Log.i(TAG, "videoDuration: $time")
-    retriever.release()
-    return convertMillieToHMmSs(time ?: 0)
+fun Context.videoDuration(file: File): String? {
+    return try {
+        val retriever = MediaMetadataRetriever()
+        retriever.setDataSource(this, getFileUrl(file, this))
+        val time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong()
+        Log.i(TAG, "videoDuration: $time")
+        retriever.release()
+        convertMillieToHMmSs(time ?: 0)
+    } catch (e: Exception) {
+        Log.i(TAG, "videoDuration: got error while getting viedo Duration ${e.message}")
+        null
+    }
+
 }
 
 
@@ -184,7 +193,10 @@ fun Activity.putVideo(url: String, fileName: String, format: String): Uri? {
     val contentValues = ContentValues().apply {
         put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
         put(MediaStore.MediaColumns.MIME_TYPE, format)
-        put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+        put(
+            MediaStore.MediaColumns.RELATIVE_PATH,
+            Environment.DIRECTORY_DOWNLOADS + "/VideoDownload"
+        )
     }
     val resolver = contentResolver
     val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
@@ -196,6 +208,63 @@ fun Activity.putVideo(url: String, fileName: String, format: String): Uri? {
         }
     }
     return uri
+}
+
+
+@RequiresApi(Build.VERSION_CODES.N)
+private fun findSizeImgM3u8(m3u8: String): Pair<String, Long> {
+    return try {
+        val url = URL(m3u8)
+        val httpsConnection = url.openConnection() as HttpsURLConnection
+        httpsConnection.requestMethod = "GET"
+        httpsConnection.connect()
+        val inputString = httpsConnection.inputStream
+        val outputStream = ByteArrayOutputStream()
+        val buffer = ByteArray(1024)
+        inputString.read(buffer)
+        outputStream.write(buffer)
+        Pair(outputStream.toString(), httpsConnection.contentLengthLong)
+    } catch (e: Exception) {
+        Log.i(TAG, "findSizeImgM3u8: ${e.message}")
+        Pair("", 0)
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.N)
+fun findWidthAndHeight(url: String): Pair<Long, List<Int>> {
+    val value = runBlocking {
+        val string = async(IO) {
+            findSizeImgM3u8(url)
+        }
+        string.await()
+    }
+    val sampleString = "RESOLUTION="
+    val string = value.first
+    val size = value.second
+    return if (string.isNotEmpty()) {
+        val index = string.indexOf(sampleString)
+        Log.i(TAG, "findWidthAndHeight: $index")
+        if (index != -1) {
+            val startingIndex = index + (sampleString.length)
+            var testString = string.substring(startingIndex)
+            Log.i(TAG, "findWidthAndHeight: String Testing $testString")
+            val builder = StringBuilder()
+            while (testString.isNotEmpty() && testString[0] != ',') {
+                builder.append(testString[0])
+                testString = testString.substring(1)
+            }
+            val list = builder.toString().split("x").map { it.toInt() }
+            Log.i(TAG, "findWidthAndHeight: $list")
+            //Main res
+            Pair(size, list)
+        } else {
+            //Sample Result
+            Pair(size, listOf(240))
+        }
+    } else {
+        //Sample Result
+        Pair(size, listOf(360))
+    }
 }
 
 

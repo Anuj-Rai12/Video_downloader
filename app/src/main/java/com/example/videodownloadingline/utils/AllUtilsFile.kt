@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
+import com.example.videodownloadingline.model.tabitem.TabItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.Executors
@@ -138,6 +139,20 @@ fun Activity.toastMsg(msg: String, duration: Int = Toast.LENGTH_LONG) {
 
 inline fun <reified T> Activity.goToNextActivity() {
     val intent = Intent(this, T::class.java)
+    startActivity(intent)
+}
+
+
+inline fun <reified T> Activity.goToTbActivity(op: List<TabItem>?) {
+    val intent = Intent(this, T::class.java)
+    val arrayList = ArrayList<TabItem>(op?.size ?: 0)
+    if (op != null) {
+        arrayList.addAll(op)
+    }
+    intent.putParcelableArrayListExtra(
+        "TabItem",
+        arrayList
+    )
     startActivity(intent)
 }
 
