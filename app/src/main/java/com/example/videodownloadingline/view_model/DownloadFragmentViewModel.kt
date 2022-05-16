@@ -13,6 +13,7 @@ import com.example.videodownloadingline.utils.RemoteResponse
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class DownloadFragmentViewModel(application: Application) : AndroidViewModel(application) {
@@ -30,8 +31,12 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
 
     init {
         repo = DownloadFragmentRepo(RoomDataBaseInstance.getInstance(application))
+        fetch()
+    }
+
+    private fun fetch() {
         viewModelScope.launch {
-            repo?.getDownloadItem()?.collect {
+            repo?.getDownloadItem()?.collectLatest {
                 _downloadItem.postValue(it)
             }
         }
@@ -44,6 +49,18 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
             }
             async.await()
             _event.postValue(Event("File is Saved"))
+        }
+    }
+
+
+    fun deleteDownload(downloadItems: DownloadItems) {
+        viewModelScope.launch {
+            val async = async(IO) {
+                repo?.deleteDownload(downloadItems)
+            }
+            async.await()
+            _event.postValue(Event("File is Deleted"))
+            fetch()
         }
     }
 

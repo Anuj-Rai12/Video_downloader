@@ -156,20 +156,24 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
 
 
     override fun <T> onItemClicked(type: T) {
-        val response=type as Pair<*, *>
+        val response = type as Pair<*, *>
+        openBottomSheetDialog?.dismiss()
         try {
             when (BottomType.valueOf(response.first.toString())) {
-                BottomType.Delete -> Log.i(TAG, "onItemClicked: working on it")
+                BottomType.Delete -> {
+                    (response.second as DownloadItems?)?.let { downloadItems: DownloadItems ->
+                        viewModel.deleteDownload(downloadItems)
+                    }
+                }
                 BottomType.MoveTo -> Log.i(TAG, "onItemClicked: working on it")
                 BottomType.SetPin -> {
-                    openBottomSheetDialog?.dismiss()
                     (parentFragment as MainDownloadFragment).goToSetPin()
                 }
             }
-        }catch (e:Exception){
-            activity?.let { act->
-                (response.second as DownloadItems?)?.let {items->
-                    act.playVideo(items.fileLoc,items.fileExtensionType)
+        } catch (e: Exception) {
+            activity?.let { act ->
+                (response.second as DownloadItems?)?.let { items ->
+                    act.playVideo(items.fileLoc, items.fileExtensionType)
                 }
             }
         }

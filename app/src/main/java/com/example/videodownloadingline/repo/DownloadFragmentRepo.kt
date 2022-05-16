@@ -23,11 +23,16 @@ class DownloadFragmentRepo(private val roomDataBaseInstance: RoomDataBaseInstanc
     }.flowOn(IO)
 
 
-     fun addDownload(downloadItems: DownloadItems) {
+    fun addDownload(downloadItems: DownloadItems) {
         Log.i(TAG, "addDownload: file is getting saved")
         roomDataBaseInstance.getDownloadItemDao().insertDownloadItem(
             downloadItems
         )
+    }
+
+
+    fun deleteDownload(downloadItems: DownloadItems) {
+        roomDataBaseInstance.getDownloadItemDao().deleteItem(downloadItems)
     }
 
 }

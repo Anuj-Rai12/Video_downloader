@@ -133,7 +133,7 @@ class BottomSheetDialogForDownloadFrag(
             deleteDialogBox?.dismiss()
         }, listenerYesBtn = {
             onBottomIconClicked?.onItemClicked(
-                binding.deleteOfVideo.text.toString().replace("\\s".toRegex(), "")
+                Pair(getString(binding.deleteOfVideo), video)
             )
             deleteDialogBox?.dismiss()
         })
