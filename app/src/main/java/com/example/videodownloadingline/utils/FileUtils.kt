@@ -28,8 +28,8 @@ import java.util.*
 import javax.net.ssl.HttpsURLConnection
 
 
-fun getFileDir(fileName: String, context: Context): File {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+fun getFileDir(fileName: String, context: Context, flag: Boolean = true): File {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && flag)
         File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
     else
         File(

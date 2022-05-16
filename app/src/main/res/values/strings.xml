@@ -79,5 +79,7 @@
     <string name="download_msg_title">Attention!!</string>
     <string name="permission_desc">Kindly Give us %s permission,otherwise application may not work Properly.</string>
     <string name="permission_btn">Ok got,it</string>
+    <string name="file_path_2">/VideoDownload/User</string>
+    <string name="file_path_1">/VideoDownload</string>
 
 </resources>

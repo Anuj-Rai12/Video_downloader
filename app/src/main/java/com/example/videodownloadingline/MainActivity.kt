@@ -42,6 +42,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        getFileDir(getString(R.string.file_path_2),this,false).also {
+            if (!it.exists()){
+                it.mkdirs()
+            }
+        }
         val navHost =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navHostFragment = navHost.findNavController()

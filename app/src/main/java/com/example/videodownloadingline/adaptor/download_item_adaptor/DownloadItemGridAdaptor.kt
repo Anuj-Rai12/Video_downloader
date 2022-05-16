@@ -47,7 +47,9 @@ class DownloadItemGridAdaptor(
             }
             when (TypeOfDownload.valueOf(type)) {
                 TypeOfDownload.IsFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
-                TypeOfDownload.IsFiles -> binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
+                TypeOfDownload.IsFiles -> {
+
+                }//binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
                 TypeOfDownload.SecureFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_video_pin)
             }
             binding.titleTxt.apply {

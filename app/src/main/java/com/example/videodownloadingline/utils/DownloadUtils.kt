@@ -11,8 +11,8 @@ fun requestDownload(
     title: String,
     url: String,
 ): DownloadManager.Request {
-    val extraHeaders: MutableMap<String, String> = HashMap()
-    extraHeaders["Referer"] = url
+//    val extraHeaders: MutableMap<String, String> = HashMap()
+//    extraHeaders["Referer"] = url
     return request.setDescription("Please Wait video is Downloading")
         .setTitle(title)
         .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE or DownloadManager.Request.NETWORK_WIFI)
