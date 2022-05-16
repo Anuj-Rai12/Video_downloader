@@ -9,10 +9,14 @@ fun requestDownload(
     context: Context,
     request: DownloadManager.Request,
     title: String,
+    url: String,
 ): DownloadManager.Request {
+    val extraHeaders: MutableMap<String, String> = HashMap()
+    extraHeaders["Referer"] = url
     return request.setDescription("Please Wait video is Downloading")
         .setTitle(title)
         .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE or DownloadManager.Request.NETWORK_WIFI)
+        .addRequestHeader("Referer", url)
         .setAllowedOverRoaming(true)
         .setAllowedOverMetered(true)
         .setDestinationUri(Uri.fromFile(getFileDir(title, context = context)))

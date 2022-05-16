@@ -528,7 +528,8 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                 requestDownload(
                     requireContext(),
                     DownloadManager.Request(Uri.parse(response.url)),
-                    title = response.webViewDownloadUrl.videotitle!!
+                    title = response.webViewDownloadUrl.videotitle!!,
+                    response.url
                 )
             )
             Log.i(TAG, "onItemClicked: $id and $response")
