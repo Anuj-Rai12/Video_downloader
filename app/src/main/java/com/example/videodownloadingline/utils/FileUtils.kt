@@ -213,15 +213,13 @@ fun Activity.putVideo(url: String, fileName: String, format: String): Uri? {
 }
 
 fun Activity.playVideo(uri: String, format: String) {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-    intent.setDataAndType(Uri.parse(uri), format)
-    startActivity(intent)
-    /*//val videoPath = File(Environment.getExternalStorageDirectory(), "video_folder")
-    val url = getFileUrl(uri.toFile(), context = applicationContext)//FileProvider.getUriForFile(this, "com.example.provider", newFile)
-    val viewIntent = Intent(Intent.ACTION_VIEW, url)
-    viewIntent.type = contentResolver.getType(url?:uri)
-    viewIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    startActivity(viewIntent)*/
+    try {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        intent.setDataAndType(Uri.parse(uri), format)
+        startActivity(intent)
+    }catch (e:Exception){
+        toastMsg("Can not Play the Video!!")
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -279,6 +277,7 @@ fun findWidthAndHeight(url: String): Pair<Long, List<Int>> {
         Pair(size, listOf(360))
     }
 }
+
 
 
 val createdCurrentTimeData: String

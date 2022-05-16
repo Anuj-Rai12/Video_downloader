@@ -17,6 +17,7 @@ import android.webkit.*
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -53,6 +54,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
     private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
     private var downloadManager: DownloadManager? = null
     private var isShowDialogOnce: Boolean = true
+    private var showVideoPlayDialog: AlertDialog? = null
 
     inner class MyJavaScriptInterface {
         @JavascriptInterface
@@ -112,11 +114,29 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             menu.setOptionalIconsVisible(true)
         }
         val newTab = menu.findItem(R.id.new_tab_option_mnu)
+        val closeTab = menu.findItem(R.id.close_tab_mnu)
 
         newTab?.setOnMenuItemClickListener {
             createNewTB(HomeScrFragment(true), null)
             return@setOnMenuItemClickListener true
         }
+        closeTab?.setOnMenuItemClickListener {
+            val way = (parentFragment as BrowserFragment)
+            if (way.getTbList().isNullOrEmpty()) {
+                findNavController().popBackStack()
+            }
+            way.getTbList()?.let {
+                mainViewModel?.removeTab()
+                val index = it.last().id - 1
+                way.removeFragment(index, true)
+                BrowserFragment.viewPager?.currentItem = index
+            }
+            if (way.getTbList().isNullOrEmpty()) {
+                findNavController().popBackStack()
+            }
+            return@setOnMenuItemClickListener true
+        }
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -310,7 +330,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setWebSiteData(url: String, flag: Boolean) {
-        var onlyOnce=true
+        var onlyOnce = true
         val extraHeaders: MutableMap<String, String> = HashMap()
         if (flag) extraHeaders["Referer"] = url
 
@@ -334,7 +354,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                     when {
                         request!!.url.toString().contains(".m3u8") -> {
                             if (onlyOnce) {
-                                onlyOnce= mainViewModel?.getM3U8Url(request.url.toString())!!
+                                onlyOnce = mainViewModel?.getM3U8Url(request.url.toString())!!
                             }
                         }
                     }
@@ -426,7 +446,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             if (isShowDialogOnce) {
                 isShowDialogOnce = false
                 parentFragment?.let {
-                    showDialogBox(
+                    showVideoPlayDialog = showDialogBox(
                         title = getString(R.string.download_msg_title),
                         desc = getString(R.string.download_msg_desc),
                         flag = true
@@ -484,6 +504,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
     override fun onPause() {
         super.onPause()
         openBottomSheetDialog?.dismiss()
+        showVideoPlayDialog?.dismiss()
     }
 
     override fun <T> onItemClicked(type: T) {

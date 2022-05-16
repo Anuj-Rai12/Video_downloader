@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.core.net.toFile
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -162,7 +164,8 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
             when (BottomType.valueOf(response.first.toString())) {
                 BottomType.Delete -> {
                     (response.second as DownloadItems?)?.let { downloadItems: DownloadItems ->
-                        viewModel.deleteDownload(downloadItems)
+                        //viewModel.deleteDownload(downloadItems)
+                        //downloadItems.fileLoc.toUri().toFile().delete()
                     }
                 }
                 BottomType.MoveTo -> Log.i(TAG, "onItemClicked: working on it")
