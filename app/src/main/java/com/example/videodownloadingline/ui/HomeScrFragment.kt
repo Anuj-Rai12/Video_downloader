@@ -95,8 +95,8 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             if (menu is MenuBuilder) {
                 menu.setOptionalIconsVisible(true)
             }
-            val optionOne = menu.findItem(R.id.new_tab_option)
-            optionOne.setOnMenuItemClickListener {
+            val openPrivateTb = menu.findItem(R.id.private_tab)
+            openPrivateTb.setOnMenuItemClickListener {
                 //mainViewModel?.addMoreTab()
                 return@setOnMenuItemClickListener true
             }
@@ -106,6 +106,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                 menu.setOptionalIconsVisible(true)
             }
             val newTab = menu.findItem(R.id.new_tab_option_mnu)
+            val closeTab = menu.findItem(R.id.close_tab_mnu)
 
             newTab?.setOnMenuItemClickListener {
                 mainViewModel?.addMoreTab()
@@ -114,6 +115,24 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                 BrowserFragment.viewPager?.currentItem = size!! - 1
                 return@setOnMenuItemClickListener true
             }
+
+            closeTab?.setOnMenuItemClickListener {
+                val way = (parentFragment as BrowserFragment)
+                if (way.getTbList().isNullOrEmpty()) {
+                    findNavController().popBackStack()
+                }
+                way.getTbList()?.let {
+                    mainViewModel?.removeTab()
+                    val index = it.last().id - 1
+                    way.removeFragment(index, true)
+                    BrowserFragment.viewPager?.currentItem = index
+                }
+                if (way.getTbList().isNullOrEmpty()) {
+                    findNavController().popBackStack()
+                }
+                return@setOnMenuItemClickListener true
+            }
+
         }
         super.onCreateOptionsMenu(menu, inflater)
     }
@@ -167,8 +186,8 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                                 data.url!!
                             ), data.url
                         )?.also { size ->
-                                BrowserFragment.viewPager?.currentItem = size - 1
-                            }
+                            BrowserFragment.viewPager?.currentItem = size - 1
+                        }
                     }
                 }
             }
