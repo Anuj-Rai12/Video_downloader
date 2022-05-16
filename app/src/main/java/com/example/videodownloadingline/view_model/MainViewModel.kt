@@ -119,6 +119,20 @@ class MainViewModel : ViewModel() {
         }
     }
 
+
+    fun getM3U8Url(url: String):Boolean {
+        _daisyChannelVideoDownloadLink.postValue(
+            Event(
+                WebViewDownloadUrl(
+                    sdurl = url,
+                    videotype = "video/.m3u8"
+                )
+            )
+        )
+        return false
+    }
+
+
     // ID Manipulation --------------------------
 
     fun addID(id: Long) {

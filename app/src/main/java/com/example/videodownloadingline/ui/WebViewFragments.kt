@@ -310,6 +310,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setWebSiteData(url: String, flag: Boolean) {
+        var onlyOnce=true
         val extraHeaders: MutableMap<String, String> = HashMap()
         if (flag) extraHeaders["Referer"] = url
 
@@ -332,13 +333,9 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                 ): WebResourceResponse? {
                     when {
                         request!!.url.toString().contains(".m3u8") -> {
-                            Log.d(TAG, request.url.toString())
-                        }
-                        request.url.toString().contains(".mp4") -> {
-                            Log.d(TAG, request.url.toString())
-                        }
-                        else -> {
-                            Log.d(TAG, request.url.toString())
+                            if (onlyOnce) {
+                                onlyOnce= mainViewModel?.getM3U8Url(request.url.toString())!!
+                            }
                         }
                     }
                     return super.shouldInterceptRequest(view, request)
