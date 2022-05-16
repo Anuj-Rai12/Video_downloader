@@ -245,7 +245,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
         (requireActivity() as MainActivity).supportActionBar!!.title =
             getString(R.string.app_name)
-        Log.i(TAG, "onResume: Home Frage Create NEW Tab ${mainViewModel?.createNewTab?.value}")
+        Log.i(TAG, "onResume: Home Fragment Create NEW Tab ${mainViewModel?.createNewTab?.value}")
         mainViewModel?.changeStateForCreateNewTB(false)
     }
 

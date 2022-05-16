@@ -1,5 +1,6 @@
 package com.example.videodownloadingline.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentValues
@@ -216,10 +217,35 @@ fun Activity.playVideo(uri: String, format: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         intent.setDataAndType(Uri.parse(uri), format)
         startActivity(intent)
-    }catch (e:Exception){
+    } catch (e: Exception) {
         toastMsg("Can not Play the Video!!")
     }
 }
+
+@SuppressLint("Range")
+fun Activity.deleteVideo(videoName: String) {
+    try {
+        val fDelete = File(
+            Environment.getExternalStoragePublicDirectory
+                (Environment.DIRECTORY_DOWNLOADS),
+            "/VideoDownload/$videoName"//May 15, 2022 9_17_37 PM.mp4"
+        )
+
+        if (fDelete.exists()) {
+            if (fDelete.delete()) {
+                toastMsg("File is Deleted Successfully")
+            } else {
+                toastMsg("Cannot delete File")
+            }
+        } else {
+            toastMsg("File not found")
+        }
+    } catch (e: Exception) {
+        Log.i(TAG, "deleteVideo: Error while deleting file ${e.localizedMessage}")
+        toastMsg("Cannot delete File")
+    }
+}
+
 
 @RequiresApi(Build.VERSION_CODES.N)
 private fun findSizeImgM3u8(m3u8: String): Pair<String, Long> {
@@ -276,7 +302,6 @@ fun findWidthAndHeight(url: String): Pair<Long, List<Int>> {
         Pair(size, listOf(360))
     }
 }
-
 
 
 val createdCurrentTimeData: String
