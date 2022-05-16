@@ -67,12 +67,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         mainViewModel?.noOfOpenTab?.observe(viewLifecycleOwner) {
             (requireActivity() as MainActivity).changeToolbar(it!!, listenForSearch = { url ->
                 if (isInWebView) {
-                    (parentFragment as BrowserFragment).setFragment(
-                        WebViewFragments(
-                            "Searching..",
-                            url
-                        ), url
-                    )?.also { size ->
+                    createNewTB(WebViewFragments("Searching..", url), url)?.also { size ->
                         BrowserFragment.viewPager?.currentItem = size - 1
                     }
                 } else {
@@ -114,8 +109,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
 
             newTab?.setOnMenuItemClickListener {
                 mainViewModel?.addMoreTab()
-                val size =
-                    (parentFragment as BrowserFragment).setFragment(HomeScrFragment(true), null)
+                val size = createNewTB(HomeScrFragment(true), null)
                 Log.i(TAG, "onCreateOptionsMenu: $size")
                 BrowserFragment.viewPager?.currentItem = size!! - 1
                 return@setOnMenuItemClickListener true
@@ -167,14 +161,14 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                         openWebDialogBox(data)
                     } else {
                         isNewTab = true
-                        (parentFragment as BrowserFragment).setFragment(
+                        createNewTB(
                             WebViewFragments(
                                 data.name,
                                 data.url!!
                             ), data.url
                         )?.also { size ->
-                            BrowserFragment.viewPager?.currentItem = size - 1
-                        }
+                                BrowserFragment.viewPager?.currentItem = size - 1
+                            }
                     }
                 }
             }
@@ -190,6 +184,14 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             )
         findNavController().navigate(action)
     }
+
+
+    private fun createNewTB(fragment: Fragment, url: String?): Int? {
+        return (parentFragment as BrowserFragment).setFragment(
+            fragment, url
+        )
+    }
+
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setData() {
@@ -224,6 +226,8 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
         (requireActivity() as MainActivity).supportActionBar!!.title =
             getString(R.string.app_name)
+        Log.i(TAG, "onResume: Home Frage Create NEW Tab ${mainViewModel?.createNewTab?.value}")
+        mainViewModel?.changeStateForCreateNewTB(false)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
