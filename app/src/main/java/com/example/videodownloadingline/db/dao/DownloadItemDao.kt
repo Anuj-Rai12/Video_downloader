@@ -2,6 +2,7 @@ package com.example.videodownloadingline.db.dao
 
 import androidx.room.*
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DownloadItemDao {
@@ -20,5 +21,12 @@ interface DownloadItemDao {
 
     @Query("delete from Download_Items")
     fun deleteItem()
+
+
+    @Query("Select *From Download_Items where fileTitle Like:src")
+    fun searchDownloadFile(src: String): Flow<List<DownloadItems>>
+
+//or itemDescription Like:searchQuery or itemCategory Like :searchQuery
+//or salePrice Like :searchQuery order by salePrice desc
 
 }

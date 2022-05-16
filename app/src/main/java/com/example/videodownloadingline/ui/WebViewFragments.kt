@@ -207,7 +207,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             }
             if (!click) {
                 click = true
-                if (info!!.endsWith(".m3u8")) {
+                if (info!!.endsWith(".m3u8")||webViewDownloadUrl.videotype=="video/.m3u8") {
                     findWidthAndHeight(info!!).also {
                         VideoType(
                             it.second.last(),
@@ -236,40 +236,52 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun urlResolution(url: String, getRes: (Int, Int, String, Long) -> Unit) {
-        val trackGroupsFuture: ListenableFuture<TrackGroupArray> =
-            MetadataRetriever.retrieveMetadata(
-                requireActivity(), MediaItem.fromUri(url)
-            )
-        Futures.addCallback(
-            trackGroupsFuture,
-            object : FutureCallback<TrackGroupArray?> {
-                override fun onSuccess(trackGroups: TrackGroupArray?) {
-                    trackGroups?.let {
-                        lifecycleScope.launchWhenCreated {
-                            val size = async(IO) {
-                                getVideoFileSize(url)
+        try {
+            val trackGroupsFuture: ListenableFuture<TrackGroupArray> =
+                MetadataRetriever.retrieveMetadata(
+                    requireActivity(), MediaItem.fromUri(url)
+                )
+            Futures.addCallback(
+                trackGroupsFuture,
+                object : FutureCallback<TrackGroupArray?> {
+                    override fun onSuccess(trackGroups: TrackGroupArray?) {
+                        trackGroups?.let {
+                            lifecycleScope.launchWhenCreated {
+                                val size = async(IO) {
+                                    getVideoFileSize(url)
+                                }
+                                val gHW = async {
+                                    getHeightAndWidth(it)
+                                }
+                                val gHWRes = gHW.await()
+                                getRes(
+                                    gHWRes.first.first,
+                                    gHWRes.first.second,
+                                    gHWRes.second,
+                                    size.await()
+                                )
                             }
-                            val gHW = async {
-                                getHeightAndWidth(it)
-                            }
-                            val gHWRes = gHW.await()
-                            getRes(
-                                gHWRes.first.first,
-                                gHWRes.first.second,
-                                gHWRes.second,
-                                size.await()
-                            )
                         }
+
                     }
 
-                }
+                    override fun onFailure(t: Throwable) {
+                        Log.i(TAG, "onFailure: ${t.message}")
+                    }
+                },
+                Runnable::run
+            )
+        } catch (e: Exception) {
+            findWidthAndHeight(url).also {
+                getRes(
+                    it.second.last(),
+                    it.second.first(),
+                    "video/.m3u8",
+                    it.first
+                )
 
-                override fun onFailure(t: Throwable) {
-                    Log.i(TAG, "onFailure: ${t.message}")
-                }
-            },
-            Runnable::run
-        )
+            }
+        }
     }
 
     private fun getHeightAndWidth(trackGroups: TrackGroupArray): Pair<Pair<Int, Int>, String> {

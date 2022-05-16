@@ -8,7 +8,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.videodownloadingline.R
@@ -31,7 +31,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     private var isDialogBoxIsVisible: Boolean = false
     private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
 
-    private val viewModel: DownloadFragmentViewModel by viewModels()
+    private val viewModel: DownloadFragmentViewModel by activityViewModels()
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,12 +88,16 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                 is RemoteResponse.Error -> Log.i(TAG, "setUpData: ${it.exception}")
                 is RemoteResponse.Loading -> Log.i(TAG, "setUpData: ${it.data}")
                 is RemoteResponse.Success -> {
-                    val list = it.data as List<DownloadItems>
-                    binding.totalVidTxt.text = getString(R.string.total_vid, list.size)
-                    gridAdaptor?.notifyDataSetChanged()
-                    gridAdaptor?.submitList(list)
-                    linearAdaptor?.notifyDataSetChanged()
-                    linearAdaptor?.submitList(list)
+                    if (it.data is Boolean) {
+                        Log.i(TAG, "setUpData: List is Empty")
+                    } else {
+                        val list = it.data as List<DownloadItems>
+                        binding.totalVidTxt.text = getString(R.string.total_vid, list.size)
+                        gridAdaptor?.notifyDataSetChanged()
+                        gridAdaptor?.submitList(list)
+                        linearAdaptor?.notifyDataSetChanged()
+                        linearAdaptor?.submitList(list)
+                    }
                 }
             }
         }

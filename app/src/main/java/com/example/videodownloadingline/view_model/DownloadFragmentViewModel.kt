@@ -34,7 +34,7 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
         fetch()
     }
 
-    private fun fetch() {
+    fun fetch() {
         viewModelScope.launch {
             repo?.getDownloadItem()?.collectLatest {
                 _downloadItem.postValue(it)
@@ -49,6 +49,19 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
             }
             async.await()
             _event.postValue(Event("File is Saved"))
+        }
+    }
+
+
+    fun searchQuery(src: String) {
+        viewModelScope.launch {
+            repo?.searchFileWithFileName(src)?.collect { res ->
+                if (res.data?.isNullOrEmpty() == true) {
+                    fetch()
+                } else {
+                    _downloadItem.postValue(res)
+                }
+            }
         }
     }
 

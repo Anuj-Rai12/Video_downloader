@@ -141,7 +141,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
                     WhatsappActivity.Companion.WhatsappClick.IsVideo -> {
                         val url = requireActivity().putVideo(
                             data.fileLoc,
-                            "Video_$title.mp4",
+                            "WhatsApp_Video_$title.mp4",
                             data.fileExtensionType
                         )
                         val item = getDownloadData(data, title, url = url)
