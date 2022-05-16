@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatTextView
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.videoquality.VideoQualityAdaptor
 import com.example.videodownloadingline.databinding.ViewBottomSheetDialogBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
+import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloadlink.VideoType
 import com.example.videodownloadingline.utils.OnBottomSheetClick
 import com.example.videodownloadingline.utils.hide
@@ -17,7 +19,7 @@ import com.example.videodownloadingline.utils.show
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class BottomSheetDialogForDownloadFrag(
-    private val videoTitle: String,
+    private val video: DownloadItems? = null,
     private val enum: Bottom = Bottom.DOWNLOAD_FRAG
 ) :
     BottomSheetDialogFragment() {
@@ -37,7 +39,7 @@ class BottomSheetDialogForDownloadFrag(
         binding = ViewBottomSheetDialogBinding.inflate(inflater)
         when (enum) {
             Bottom.DOWNLOAD_FRAG -> {
-                binding.titleOfVideo.text = videoTitle
+                binding.titleOfVideo.text = video?.fileTitle
                 downloadFrag()
             }
             Bottom.WEB_VIEW_FRAGMENT -> {
@@ -104,18 +106,25 @@ class BottomSheetDialogForDownloadFrag(
             openDialogBox()
         }
 
-        binding.moveTheVideo.setOnClickListener {
-            onBottomIconClicked?.onItemClicked(
-                binding.moveTheVideo.text.toString().replace("\\s".toRegex(), "")
-            )
+        binding.titleOfVideo.setOnClickListener {
+            onBottomIconClicked?.onItemClicked(Pair(binding.titleOfVideo.text.toString(), video))
         }
 
+        binding.moveTheVideo.setOnClickListener {
+            onBottomIconClicked?.onItemClicked(
+                Pair(getString(binding.moveTheVideo), video)
+            )
+        }
 
         binding.setVideoPin.setOnClickListener {
             onBottomIconClicked?.onItemClicked(
-                binding.setVideoPin.text.toString().replace("\\s".toRegex(), "")
+                Pair(getString(binding.setVideoPin), video)
             )
         }
+    }
+
+    private fun getString(videoPin: AppCompatTextView): String {
+        return videoPin.text.toString().replace("\\s".toRegex(), "")
     }
 
     private fun openDialogBox() {

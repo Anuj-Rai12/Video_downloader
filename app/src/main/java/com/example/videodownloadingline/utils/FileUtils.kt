@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.net.Uri
@@ -13,6 +14,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.example.videodownloadingline.ui.whatsapp.WhatsappActivity
 import kotlinx.coroutines.Dispatchers.IO
@@ -210,6 +212,17 @@ fun Activity.putVideo(url: String, fileName: String, format: String): Uri? {
     return uri
 }
 
+fun Activity.playVideo(uri: String, format: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+    intent.setDataAndType(Uri.parse(uri), format)
+    startActivity(intent)
+    /*//val videoPath = File(Environment.getExternalStorageDirectory(), "video_folder")
+    val url = getFileUrl(uri.toFile(), context = applicationContext)//FileProvider.getUriForFile(this, "com.example.provider", newFile)
+    val viewIntent = Intent(Intent.ACTION_VIEW, url)
+    viewIntent.type = contentResolver.getType(url?:uri)
+    viewIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    startActivity(viewIntent)*/
+}
 
 @RequiresApi(Build.VERSION_CODES.N)
 private fun findSizeImgM3u8(m3u8: String): Pair<String, Long> {

@@ -18,10 +18,7 @@ import com.example.videodownloadingline.bottom_sheets.BottomSheetDialogForDownlo
 import com.example.videodownloadingline.databinding.DownloadFragmentLayoutBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
-import com.example.videodownloadingline.utils.BottomType
-import com.example.videodownloadingline.utils.OnBottomSheetClick
-import com.example.videodownloadingline.utils.RemoteResponse
-import com.example.videodownloadingline.utils.TAG
+import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
 
 
@@ -109,13 +106,13 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
             setHasFixedSize(true)
             this.layoutManager = layoutManager
             gridAdaptor = DownloadItemGridAdaptor(type = type) { data, _ ->
-                openBottomSheet(data.fileTitle)
+                openBottomSheet(data)
             }
             adapter = gridAdaptor
         }
     }
 
-    private fun openBottomSheet(video: String) {
+    private fun openBottomSheet(video: DownloadItems) {
         openBottomSheetDialog = BottomSheetDialogForDownloadFrag(video)
         openBottomSheetDialog?.onBottomIconClicked = this
         openBottomSheetDialog?.show(childFragmentManager, "Open Bottom Sheet")
@@ -126,7 +123,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         binding.recycleView.apply {
             setHasFixedSize(true)
             linearAdaptor = DownloadItemLinearAdaptor(type = type) {
-                openBottomSheet(it.fileTitle)
+                openBottomSheet(it)
             }
             this.layoutManager = layoutManager
             adapter = linearAdaptor
@@ -159,15 +156,22 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
 
 
     override fun <T> onItemClicked(type: T) {
-        when (BottomType.valueOf(type as String)) {
-            BottomType.Delete -> Log.i(TAG, "onItemClicked: working on it")
-            BottomType.MoveTo -> Log.i(TAG, "onItemClicked: working on it")
-            BottomType.SetPin -> {
-                openBottomSheetDialog?.dismiss()
-                (parentFragment as MainDownloadFragment).goToSetPin()
+        val response=type as Pair<*, *>
+        try {
+            when (BottomType.valueOf(response.first.toString())) {
+                BottomType.Delete -> Log.i(TAG, "onItemClicked: working on it")
+                BottomType.MoveTo -> Log.i(TAG, "onItemClicked: working on it")
+                BottomType.SetPin -> {
+                    openBottomSheetDialog?.dismiss()
+                    (parentFragment as MainDownloadFragment).goToSetPin()
+                }
+            }
+        }catch (e:Exception){
+            activity?.let { act->
+                (response.second as DownloadItems?)?.let {items->
+                    act.playVideo(items.fileLoc,items.fileExtensionType)
+                }
             }
         }
     }
-
-
 }

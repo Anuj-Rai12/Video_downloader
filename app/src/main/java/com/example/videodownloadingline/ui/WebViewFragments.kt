@@ -302,10 +302,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
 
     private fun openBottomSheet(list: List<VideoType>) {
         openBottomSheetDialog =
-            BottomSheetDialogForDownloadFrag(
-                "",
-                BottomSheetDialogForDownloadFrag.Companion.Bottom.WEB_VIEW_FRAGMENT
-            )
+            BottomSheetDialogForDownloadFrag(enum = BottomSheetDialogForDownloadFrag.Companion.Bottom.WEB_VIEW_FRAGMENT)
         BottomSheetDialogForDownloadFrag.list = list
         openBottomSheetDialog?.onBottomIconClicked = this
         openBottomSheetDialog?.show(childFragmentManager, "Open Bottom Sheet For Choose Download")
