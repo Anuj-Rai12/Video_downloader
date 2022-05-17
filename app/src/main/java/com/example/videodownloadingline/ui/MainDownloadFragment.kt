@@ -45,6 +45,7 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment),
 
     override fun onResume() {
         super.onResume()
+        downloadViewModel.fetch()
         (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
             ActionBar.DISPLAY_SHOW_TITLE
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)

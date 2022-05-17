@@ -55,7 +55,7 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
 
     fun searchQuery(src: String) {
         viewModelScope.launch {
-            repo?.searchFileWithFileName(src)?.collect { res ->
+            repo?.searchFileWithFileName(src)?.collectLatest { res ->
                 if (res.data?.isNullOrEmpty() == true) {
                     fetch()
                 } else {

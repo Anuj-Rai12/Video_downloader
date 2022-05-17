@@ -7,6 +7,7 @@ import com.example.videodownloadingline.utils.RemoteResponse
 import com.example.videodownloadingline.utils.TAG
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
@@ -38,7 +39,7 @@ class DownloadFragmentRepo(private val roomDataBaseInstance: RoomDataBaseInstanc
 
 
     fun searchFileWithFileName(query: String) = channelFlow {
-        roomDataBaseInstance.getDownloadItemDao().searchDownloadFile(query).collect {
+        roomDataBaseInstance.getDownloadItemDao().searchDownloadFile(query).collectLatest {
             send(RemoteResponse.Success(it))
         }
     }

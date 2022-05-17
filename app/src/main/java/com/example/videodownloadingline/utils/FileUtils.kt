@@ -46,18 +46,6 @@ fun getFileUrl(file: File, context: Context): Uri? {
     )
 }
 
-/*
-@RequiresApi(Build.VERSION_CODES.R)
-fun getFileLocationInDownloadsFolder(title: String): File {
-    val file = File(Environment.getExternalStorageDirectory().absolutePath + title)
-    //file.createNewFile()
-    if (!file.exists()) {
-        Log.i(TAG, "getFileLocationInDownloadsFolder: ${file.mkdirs()}")
-    }
-    return file
-}*/
-
-
 // Whats App Stories
 
 
@@ -155,7 +143,7 @@ fun Context.videoDuration(file: File): String? {
         retriever.release()
         convertMillieToHMmSs(time ?: 0)
     } catch (e: Exception) {
-        Log.i(TAG, "videoDuration: got error while getting viedo Duration ${e.message}")
+        Log.i(TAG, "videoDuration: got error while getting video Duration ${e.message}")
         null
     }
 
@@ -225,6 +213,12 @@ fun Activity.playVideo(uri: String, format: String) {
 @SuppressLint("Range")
 fun Activity.deleteVideo(videoName: String) {
     try {
+
+        if (videoName.isEmpty() || videoName.isBlank()) {
+            toastMsg("Can't Find File Path")
+            return
+        }
+
         val fDelete = File(
             Environment.getExternalStoragePublicDirectory
                 (Environment.DIRECTORY_DOWNLOADS),

@@ -3,7 +3,15 @@ package com.example.videodownloadingline.utils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.media.ThumbnailUtils
 import android.os.Build
+import android.os.CancellationSignal
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Size
+import android.util.TypedValue
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -20,6 +28,7 @@ import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
 import com.example.videodownloadingline.model.tabitem.TabItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import java.io.File
 import java.util.concurrent.Executors
 
 const val TAG = "VIDEO_DOWNLOADER"
@@ -195,6 +204,39 @@ fun Fragment.showDialogBox(
     return material.show()
 }
 
+
+fun finPath(path: String) = Environment.getExternalStorageDirectory().absolutePath + path
+
+
+fun getThumbNail(path: String?): Bitmap? {
+    return try {
+        if (path == null)
+            return null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ThumbnailUtils.createVideoThumbnail(
+                File(path),
+                Size(200f.toPx(), 200f.toPx()),
+                CancellationSignal()
+            )
+        } else {
+            ThumbnailUtils.createVideoThumbnail(
+                path,
+                MediaStore.Images.Thumbnails.MINI_KIND
+            )
+        }
+    } catch (e: Exception) {
+        null
+    }
+}
+
+
+fun Float.toPx() =
+    TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this,
+        Resources.getSystem().displayMetrics
+    )
+        .toInt()
 
 val DOWNLOAD_ITEM = listOf(
     DownloadItems(

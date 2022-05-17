@@ -109,7 +109,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         binding.recycleView.apply {
             setHasFixedSize(true)
             this.layoutManager = layoutManager
-            gridAdaptor = DownloadItemGridAdaptor(type = type) { data, _ ->
+            gridAdaptor = DownloadItemGridAdaptor(type = type,requireContext()) { data, _ ->
                 openBottomSheet(data)
             }
             adapter = gridAdaptor
@@ -167,7 +167,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                 BottomType.Delete -> {
                     (response.second as DownloadItems?)?.let { downloadItems: DownloadItems ->
                         activity?.let {
-                            it.deleteVideo(downloadItems.fileTitle)
+                            it.deleteVideo(downloadItems.fileThumbLoc)
                             viewModel.deleteDownload(downloadItems)
                         }
                     }

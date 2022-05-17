@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        getFileDir(getString(R.string.file_path_2),this,false).also {
-            if (!it.exists()){
+        getFileDir(getString(R.string.file_path_2), this, false).also {
+            if (!it.exists()) {
                 it.mkdirs()
             }
         }
@@ -155,18 +155,24 @@ class MainActivity : AppCompatActivity() {
                     if (index != -1) {
                         it.getVideoDataByIndex(index)?.let { res ->
                             Log.i(TAG, "onReceive: Download List --->  $res")
-                            var title = res.webViewDownloadUrl.videotitle ?: ""
+                            val title = res.webViewDownloadUrl.videotitle ?: ""
                             val file = getFileDir(title, this@MainActivity)
-                            /*val type = getMimeType(file.toUri(), this@MainActivity) ?: ""
-                            Log.i(TAG, "onReceive:file Type $type")*/
                             val time = this@MainActivity.videoDuration(file) ?: ""
                             val len = file.length()
-                            title = if (res.format.contains(".m3u8")) {
-                                "$title.m3u8"
+                            val thumbnail = if (res.format.contains(".m3u8")) {
+                                "Video_${System.currentTimeMillis()}.m3u8"
                             } else
-                                "$title.mp4"
-                            val newUrl = putVideo(file.toUri().toString(), title, res.format)
-                            DownloadItems(0, title, "", newUrl.toString(), time, res.format, len)
+                                "Video_${System.currentTimeMillis()}.mp4"
+                            val newUrl = putVideo(file.toUri().toString(), thumbnail, res.format)
+                            DownloadItems(
+                                0,
+                                title,
+                                thumbnail,
+                                newUrl.toString(),
+                                time,
+                                res.format,
+                                len
+                            )
                                 .also { value ->
                                     Log.i(TAG, "onReceive: Download Save Item $value")
                                     lifecycleScope.launchWhenCreated {

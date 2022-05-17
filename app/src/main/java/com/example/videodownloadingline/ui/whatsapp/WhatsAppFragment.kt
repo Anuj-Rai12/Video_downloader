@@ -114,7 +114,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
         binding.mainRecycle.apply {
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(requireContext(), 2)
-            adaptorGird = DownloadItemGridAdaptor(type) { data, bm ->
+            adaptorGird = DownloadItemGridAdaptor(type, context = requireContext()) { data, bm ->
                 saveDialog(data, bm)
             }
             adapter = adaptorGird
