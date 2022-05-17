@@ -1,12 +1,12 @@
 package com.example.videodownloadingline.ui
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,6 +18,7 @@ import com.example.videodownloadingline.bottom_sheets.BottomSheetDialogForDownlo
 import com.example.videodownloadingline.databinding.DownloadFragmentLayoutBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
+import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
 
@@ -30,7 +31,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     private var newFolderDialogBox: AddIconsDialogBox? = null
     private var isDialogBoxIsVisible: Boolean = false
     private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
-
+    private var isOptionFilesFlag = true
     private val viewModel: DownloadFragmentViewModel by activityViewModels()
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -39,12 +40,43 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         binding = DownloadFragmentLayoutBinding.bind(view)
         binding.viewTxt.text = getString(R.string.total_vid_view, "View:")
         setUpRecycleView(GridLayoutManager(requireActivity(), 2))
-        setUpData()
         changeLayoutView()
+        soAllFileOrFolder()
         binding.addNewFolderBtn.setOnClickListener {
             createFolderDialog()
         }
 
+    }
+
+    private fun soAllFileOrFolder() {
+        when (TypeOfDownload.valueOf(type)) {
+            TypeOfDownload.IsFolder -> {
+                isOptionFilesFlag = false
+                fetchList()
+            }
+            TypeOfDownload.IsFiles -> {
+                isOptionFilesFlag = true
+                binding.addNewFolderBtn.hide()
+                setUpData()
+            }
+            TypeOfDownload.SecureFolder -> {
+                isOptionFilesFlag = false
+                fetchList()
+            }
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun fetchList() {
+        viewModel.folderItem.observe(viewLifecycleOwner) {
+            setSize(it.size)
+            if (!it.isNullOrEmpty()) {
+                gridAdaptor?.notifyDataSetChanged()
+                gridAdaptor?.submitList(it)
+                linearAdaptor?.notifyDataSetChanged()
+                linearAdaptor?.submitList(it)
+            }
+        }
     }
 
     override fun onPause() {
@@ -53,6 +85,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         openBottomSheetDialog?.dismiss()
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun createFolderDialog() {
         newFolderDialogBox = AddIconsDialogBox()
         newFolderDialogBox?.createNewFolder(context = requireActivity(), listenerForDismiss = {
@@ -66,6 +99,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         isDialogBoxIsVisible = true
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun selectPinOptionDialog(txt: String) {
         if (newFolderDialogBox == null)
             newFolderDialogBox = AddIconsDialogBox()
@@ -74,6 +108,31 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
             context = requireActivity(),
             text = txt,
             listenSetPin = {
+                if (it) {//WithOut Pin
+                    val targetPath = getFileDir(
+                        "${getString(R.string.file_path_2)}/${txt}",
+                        requireContext(),
+                        false
+                    )
+                    if (!targetPath.exists()) {
+                        targetPath.mkdirs()
+                        binding.root.showSandbar("File is Created", color = Color.GREEN)
+                        getFolderFromDownloads()
+                    } else {
+                        requireActivity().toastMsg("File is Already Created")
+                    }
+                    MainDownloadFragment.downloadViewPage?.currentItem = 1
+                } else {//With Pin
+                    val targetPath = getFileDir("/$txt", requireContext())
+                    if (!targetPath.exists()) {
+                        targetPath.mkdirs()
+                        binding.root.showSandbar("File is Created", color = Color.GREEN)
+                        getFolderFromSecure()
+                    } else {
+                        requireActivity().toastMsg("File is Already Created")
+                    }
+                    MainDownloadFragment.downloadViewPage?.currentItem = 2
+                }
                 newFolderDialogBox?.dismiss()
             }
         )
@@ -92,7 +151,8 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                         Log.i(TAG, "setUpData: List is Empty")
                     } else {
                         val list = it.data as List<DownloadItems>
-                        binding.totalVidTxt.text = getString(R.string.total_vid, list.size)
+                        Log.i(TAG, "setUpData: $list")
+                        setSize(list.size)
                         gridAdaptor?.notifyDataSetChanged()
                         gridAdaptor?.submitList(list)
                         linearAdaptor?.notifyDataSetChanged()
@@ -103,13 +163,42 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         }
     }
 
+    private fun setSize(size: Int) {
+        when (TypeOfDownload.valueOf(type)) {
+            TypeOfDownload.IsFolder -> binding.totalVidTxt.text =
+                getString(R.string.total_vid_view, "$size Folder")
+            TypeOfDownload.IsFiles -> binding.totalVidTxt.text = getString(R.string.total_vid, size)
+            TypeOfDownload.SecureFolder -> binding.totalVidTxt.text =
+                getString(R.string.total_vid_view, "$size Private Folder")
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        when (TypeOfDownload.valueOf(type)) {
+            TypeOfDownload.IsFolder -> getFolderFromDownloads()
+            TypeOfDownload.IsFiles -> viewModel.fetch()
+            TypeOfDownload.SecureFolder -> getFolderFromSecure()
+        }
+    }
+
+    private fun getFolderFromDownloads() {
+        val targetPath =
+            getFileDir(getString(R.string.file_path_2), requireContext(), false)
+        viewModel.getListOfFolder(targetPath)
+    }
+
+    private fun getFolderFromSecure() {
+        val filePath = getFileDir("", requireContext())
+        viewModel.getListOfFolder(filePath)
+    }
 
     private fun setUpRecycleView(layoutManager: GridLayoutManager) {
         linearAdaptor = null
         binding.recycleView.apply {
             setHasFixedSize(true)
             this.layoutManager = layoutManager
-            gridAdaptor = DownloadItemGridAdaptor(type = type,requireContext()) { data, _ ->
+            gridAdaptor = DownloadItemGridAdaptor(type = type, requireContext()) { data, _ ->
                 openBottomSheet(data)
             }
             adapter = gridAdaptor
@@ -117,6 +206,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     }
 
     private fun openBottomSheet(video: DownloadItems) {
+        if (!isOptionFilesFlag) return
         openBottomSheetDialog = BottomSheetDialogForDownloadFrag(video)
         openBottomSheetDialog?.onBottomIconClicked = this
         openBottomSheetDialog?.show(childFragmentManager, "Open Bottom Sheet")
@@ -137,25 +227,19 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     @RequiresApi(Build.VERSION_CODES.M)
     private fun changeLayoutView() {
         binding.btnForGridView.setOnClickListener {
-            setBtnColor(binding.btnForListView, R.color.white)
-            setBtnColor(binding.btnForGridView)
+            requireActivity().apply {
+                setBtnColor(binding.btnForListView, R.color.white)
+                setBtnColor(binding.btnForGridView)
+            }
             setUpRecycleView(GridLayoutManager(requireActivity(), 2))
-            setUpData()
+            soAllFileOrFolder()
         }
         binding.btnForListView.setOnClickListener {
-            setBtnColor(binding.btnForGridView, R.color.white)
-            setBtnColor(binding.btnForListView)
+            requireActivity().setBtnColor(binding.btnForGridView, R.color.white)
+            requireActivity().setBtnColor(binding.btnForListView)
             setUpRecycleView((LinearLayoutManager(requireActivity())))
-            setUpData()
+            soAllFileOrFolder()
         }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun setBtnColor(view: AppCompatImageButton, color: Int = R.color.Surfie_Green_color) {
-        view.setColorFilter(
-            requireActivity().getColor(color),
-            android.graphics.PorterDuff.Mode.MULTIPLY
-        )
     }
 
 
@@ -167,7 +251,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                 BottomType.Delete -> {
                     (response.second as DownloadItems?)?.let { downloadItems: DownloadItems ->
                         activity?.let {
-                            it.deleteVideo(downloadItems.fileThumbLoc)
+                            it.deleteVideo("/VideoDownload/${downloadItems.fileThumbLoc}")
                             viewModel.deleteDownload(downloadItems)
                         }
                     }

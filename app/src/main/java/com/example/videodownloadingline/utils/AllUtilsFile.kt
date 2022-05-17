@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.media.ThumbnailUtils
 import android.os.Build
 import android.os.CancellationSignal
@@ -19,7 +21,10 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.videodownloadingline.R
@@ -30,6 +35,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.util.concurrent.Executors
+
 
 const val TAG = "VIDEO_DOWNLOADER"
 
@@ -207,6 +213,31 @@ fun Fragment.showDialogBox(
 
 fun finPath(path: String) = Environment.getExternalStorageDirectory().absolutePath + path
 
+@RequiresApi(Build.VERSION_CODES.M)
+fun Activity.setBtnColor(view: AppCompatImageButton, color: Int = R.color.Surfie_Green_color) {
+    view.setColorFilter(
+        getColor(color),
+        PorterDuff.Mode.MULTIPLY
+    )
+}
+
+
+@RequiresApi(Build.VERSION_CODES.M)
+fun Activity.setColorForDrawableTextView(
+    view: AppCompatTextView,
+    color: Int = R.color.Surfie_Green_color
+) {
+    for (drawable in view.compoundDrawables) {
+        if (drawable != null) {
+            view.setTextColor(getColor(color))
+            drawable.colorFilter =
+                PorterDuffColorFilter(
+                    ContextCompat.getColor(view.context, color),
+                    PorterDuff.Mode.SRC_IN
+                )
+        }
+    }
+}
 
 fun getThumbNail(path: String?): Bitmap? {
     return try {

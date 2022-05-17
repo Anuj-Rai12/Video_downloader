@@ -10,11 +10,13 @@ import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.repo.DownloadFragmentRepo
 import com.example.videodownloadingline.utils.Event
 import com.example.videodownloadingline.utils.RemoteResponse
+import com.example.videodownloadingline.utils.getListOfFile
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.File
 
 class DownloadFragmentViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -29,9 +31,24 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
 
     private var repo: DownloadFragmentRepo? = null
 
+
+    private val _folderItem = MutableLiveData<List<DownloadItems>>()
+    val folderItem: LiveData<List<DownloadItems>>
+        get() = _folderItem
+
+
     init {
         repo = DownloadFragmentRepo(RoomDataBaseInstance.getInstance(application))
-        fetch()
+        //fetch()
+    }
+
+
+    fun getListOfFolder(file: File) {
+        viewModelScope.launch {
+            repo?.fetchAllFolder(file)?.collectLatest {
+                _folderItem.postValue(it)
+            }
+        }
     }
 
     fun fetch() {
@@ -41,6 +58,7 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
             }
         }
     }
+
 
     fun saveDownload(downloadItems: DownloadItems) {
         viewModelScope.launch {

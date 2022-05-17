@@ -174,6 +174,7 @@ class MainActivity : AppCompatActivity() {
                                 len
                             )
                                 .also { value ->
+                                    file.delete()
                                     Log.i(TAG, "onReceive: Download Save Item $value")
                                     lifecycleScope.launchWhenCreated {
                                         val saveDownloadItem = async(Dispatchers.IO) {
@@ -193,6 +194,7 @@ class MainActivity : AppCompatActivity() {
                         it.removeVideo(index)
                     }
                 }
+
                 Log.i(TAG, "onReceive: Download Completed")
             }
         }

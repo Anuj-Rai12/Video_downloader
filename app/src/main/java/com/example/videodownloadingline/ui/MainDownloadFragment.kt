@@ -8,6 +8,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.viewpager2.widget.ViewPager2
 import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.viewpager_adaptor.ViewPagerAdapter
@@ -33,9 +34,14 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment),
         resources.getStringArray(R.array.sorting_item)
     }
 
+    companion object {
+        var downloadViewPage: ViewPager2? = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = DownloadMainFragmentBinding.bind(view)
+        downloadViewPage = binding.viewPager
         setUpAdaptor()
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, pos ->
             tab.text = getTabArr[pos]
@@ -45,7 +51,6 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment),
 
     override fun onResume() {
         super.onResume()
-        downloadViewModel.fetch()
         (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
             ActionBar.DISPLAY_SHOW_TITLE
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
@@ -106,7 +111,7 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment),
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (query != null && query.isNotEmpty() && query.isNotBlank()) {
             downloadViewModel.searchQuery("%$query%")
-        }else{
+        } else {
             downloadViewModel.fetch()
         }
         return true
@@ -115,7 +120,7 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment),
     override fun onQueryTextChange(query: String?): Boolean {
         if (query != null && query.isNotEmpty() && query.isNotBlank()) {
             downloadViewModel.searchQuery("%$query%")
-        }else{
+        } else {
             downloadViewModel.fetch()
         }
         return true

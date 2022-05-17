@@ -16,6 +16,7 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
+import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.ui.whatsapp.WhatsappActivity
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
@@ -78,6 +79,30 @@ fun getWhatsappStoryPath(type: WhatsappActivity.Companion.WhatsappClick): ArrayL
     // return imgPath List
     return list
 }
+
+fun getListOfFile(file: File): ArrayList<DownloadItems> {
+    val list: ArrayList<DownloadItems> = ArrayList()
+    val fileList = file.listFiles()
+    if (!fileList.isNullOrEmpty()) {
+        Arrays.sort(fileList)
+        fileList.forEachIndexed { index, f ->
+            Log.i(TAG, "getListOfFile: $f")
+            list.add(
+                DownloadItems(
+                    id = index,
+                    fileTitle = f.name,
+                    fileThumbLoc = "",
+                    fileLength = "",
+                    fileExtensionType = "Folder",
+                    fileSize = f.length(),
+                    fileLoc = f.toString()
+                )
+            )
+        }
+    }
+    return list
+}
+
 
 private fun getWhatsAppPath(): File {
     return if (Build.VERSION.SDK_INT < 30) {
@@ -222,7 +247,7 @@ fun Activity.deleteVideo(videoName: String) {
         val fDelete = File(
             Environment.getExternalStoragePublicDirectory
                 (Environment.DIRECTORY_DOWNLOADS),
-            "/VideoDownload/$videoName"//May 15, 2022 9_17_37 PM.mp4"
+            videoName//May 15, 2022 9_17_37 PM.mp4"
         )
 
         if (fDelete.exists()) {

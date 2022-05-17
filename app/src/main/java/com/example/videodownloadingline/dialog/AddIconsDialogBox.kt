@@ -7,20 +7,19 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.util.TypedValue
 import android.view.View
 import android.widget.TableRow
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.sort_adptor.SortRecyclerAdaptor
 import com.example.videodownloadingline.databinding.AddIconToHomeSrcDialogLayoutBinding
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
-import com.example.videodownloadingline.utils.checkInputField
-import com.example.videodownloadingline.utils.hide
-import com.example.videodownloadingline.utils.isValidUrl
-import com.example.videodownloadingline.utils.show
+import com.example.videodownloadingline.utils.*
 
 private typealias ListerIcon = (bookmarks: HomeSrcIcon) -> Unit
 private typealias ListenDismiss = () -> Unit
@@ -186,12 +185,14 @@ class AddIconsDialogBox {
         this.alertDialog?.show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun showOptionForOptPin(
         context: Context,
         flag: Boolean = true,
         text: String,
         listenSetPin: ListenSetPin
     ) {
+        var selectColorFlag: Boolean? = null
         val con = (context as Activity)
         val alertDialog = AlertDialog.Builder(con)
         val inflater = (con).layoutInflater
@@ -204,20 +205,38 @@ class AddIconsDialogBox {
         binding.mainRecycleView.hide()
         binding.delBtn.hide()
         binding.doNotDelBtn.hide()
-        binding.selectWithOutPin.show()
-        binding.selectWithPin.show()
+        binding.selectWithOutPin.apply {
+            setOnClickListener {
+                selectColorFlag = true
+                con.setColorForDrawableTextView(binding.selectWithPin, R.color.white)
+                con.setColorForDrawableTextView(binding.selectWithOutPin)
+            }
+            show()
+        }
+        binding.selectWithPin.apply {
+            setOnClickListener {
+                selectColorFlag = false
+                con.setColorForDrawableTextView(binding.selectWithOutPin, R.color.white)
+                con.setColorForDrawableTextView(binding.selectWithPin)
+            }
+            show()
+        }
         binding.cancelBtn.text = binding.cancelBtn.context.getString(R.string.cancel_txt)
         binding.cancelBtn.show()
-        binding.textBoxTitle.text=text
+        binding.textBoxTitle.text = text
+
         binding.okBtn.apply {
             this.text = this.context.getString(R.string.create_folder_name)
             updateLayoutParams<ConstraintLayout.LayoutParams> {
                 topToBottom = binding.selectWithPin.id
-                rightToRight=binding.selectWithPin.id
+                rightToRight = binding.selectWithPin.id
             }
             show()
             setOnClickListener {
-                listenSetPin(true)
+                selectColorFlag?.let { flag ->
+                    listenSetPin(flag)
+                    return@let
+                } ?: con.toastMsg("Please Select Option")
             }
         }
         setUpDialogBox(alertDialog)

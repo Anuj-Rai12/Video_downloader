@@ -5,11 +5,13 @@ import com.example.videodownloadingline.db.RoomDataBaseInstance
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.utils.RemoteResponse
 import com.example.videodownloadingline.utils.TAG
+import com.example.videodownloadingline.utils.getListOfFile
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.io.File
 
 class DownloadFragmentRepo(private val roomDataBaseInstance: RoomDataBaseInstance) {
 
@@ -22,6 +24,11 @@ class DownloadFragmentRepo(private val roomDataBaseInstance: RoomDataBaseInstanc
             RemoteResponse.Error(null, e)
         }
         emit(data)
+    }.flowOn(IO)
+
+
+    fun fetchAllFolder(file: File) = flow {
+        emit(getListOfFile(file))
     }.flowOn(IO)
 
 
