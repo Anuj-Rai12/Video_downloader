@@ -369,6 +369,14 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                                 onlyOnce = mainViewModel?.getM3U8Url(request.url.toString())!!
                             }
                         }
+                        request.url.toString().contains(".mp4") -> {
+                            Log.i(TAG, "shouldInterceptRequest: the Url is -> ${request.url}")
+                            Log.i(TAG, "shouldInterceptRequest: the Url is -> ${request.requestHeaders}")
+                        }
+                        request.requestHeaders.containsValue("video/")->{
+                            Log.i(TAG, "shouldInterceptRequest: ${request.url}")
+                        }
+
                     }
                     return super.shouldInterceptRequest(view, request)
                 }
