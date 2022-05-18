@@ -5,13 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloadlink.VideoType
 import com.example.videodownloadingline.model.downloadlink.WebViewDownloadUrl
 import com.example.videodownloadingline.utils.*
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import java.io.File
 
 class MainViewModel : ViewModel() {
     private val _noOfTab = MutableLiveData<Int>()
@@ -39,6 +39,25 @@ class MainViewModel : ViewModel() {
     val createNewTab: LiveData<Boolean>
         get() = _createNewTab
     var removeTab: Pair<Boolean, Int?> = Pair(false, null)
+
+    private val _folderDir = MutableLiveData<List<DownloadItems>?>()
+    val folderDir: LiveData<List<DownloadItems>?>
+        get() = _folderDir
+
+
+    fun getFolderDir(file: File) {
+        viewModelScope.launch {
+            val res = withContext(IO) {
+                getListOfFile(file)
+            }
+            Log.i(TAG, "getFolderDir: Folder File -> $res")
+            _folderDir.postValue(res)
+        }
+    }
+
+    fun removeFolder() {
+        _folderDir.postValue(null)
+    }
 
     companion object {
         @Volatile
@@ -120,7 +139,7 @@ class MainViewModel : ViewModel() {
     }
 
 
-    fun getM3U8Url(url: String):Boolean {
+    fun getM3U8Url(url: String): Boolean {
         _daisyChannelVideoDownloadLink.postValue(
             Event(
                 WebViewDownloadUrl(

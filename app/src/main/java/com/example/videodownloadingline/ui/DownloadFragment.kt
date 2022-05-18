@@ -21,6 +21,7 @@ import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
+import com.example.videodownloadingline.view_model.MainViewModel
 
 
 class DownloadFragment(private val type: String) : Fragment(R.layout.download_fragment_layout),
@@ -32,6 +33,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     private var isDialogBoxIsVisible: Boolean = false
     private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
     private var isOptionFilesFlag = true
+
     private val viewModel: DownloadFragmentViewModel by activityViewModels()
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -182,14 +184,13 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         }
     }
 
-    private fun getFolderFromDownloads() {
-        val targetPath =
-            getFileDir(getString(R.string.file_path_2), requireContext(), false)
+    private fun getFolderFromDownloads(path: String = getString(R.string.file_path_2)) {
+        val targetPath = getFileDir(path, requireContext(), false)
         viewModel.getListOfFolder(targetPath)
     }
 
-    private fun getFolderFromSecure() {
-        val filePath = getFileDir("", requireContext())
+    private fun getFolderFromSecure(path: String = "") {
+        val filePath = getFileDir(path, requireContext())
         viewModel.getListOfFolder(filePath)
     }
 
@@ -256,7 +257,9 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                         }
                     }
                 }
-                BottomType.MoveTo -> Log.i(TAG, "onItemClicked: working on it")
+                BottomType.MoveTo -> {
+                    checkFolderDirDialog(listOf("Secure Folder", "Folder"))
+                }
                 BottomType.SetPin -> {
                     (parentFragment as MainDownloadFragment).goToSetPin()
                 }
@@ -266,6 +269,23 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                 (response.second as DownloadItems?)?.let { items ->
                     act.playVideo(items.fileLoc, items.fileExtensionType)
                 }
+            }
+        }
+    }
+
+    private fun checkFolderDirDialog(folder: List<String>) {
+        if (newFolderDialogBox == null) {
+            newFolderDialogBox = AddIconsDialogBox()
+        }
+        newFolderDialogBox?.displayFolderViewRecycle(
+            context = requireActivity(),
+            folder.toTypedArray(),
+            title = "Dir", lifecycleOwner = viewLifecycleOwner, required = requireContext()
+        ) { data, _, flag ->
+            if (!flag && data.isNotEmpty() || data.isNotBlank()) {
+                newFolderDialogBox?.dismiss()
+                activity?.toastMsg(data + flag)
+                MainViewModel.getInstance()?.removeFolder()
             }
         }
     }

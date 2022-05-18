@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.TableRow
@@ -15,16 +16,19 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.LifecycleOwner
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.sort_adptor.SortRecyclerAdaptor
 import com.example.videodownloadingline.databinding.AddIconToHomeSrcDialogLayoutBinding
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
 import com.example.videodownloadingline.utils.*
+import com.example.videodownloadingline.view_model.MainViewModel
 
 private typealias ListerIcon = (bookmarks: HomeSrcIcon) -> Unit
 private typealias ListenDismiss = () -> Unit
 private typealias ListenSetPin = (flag: Boolean) -> Unit
-private typealias ListenNewFolder = (folderName: String) -> Unit
+private typealias ListenNewFolder = (folderName: String, position: Int) -> Unit
+private typealias ListenNewFolder2 = (folderName: String, position: Int, flag: Boolean) -> Unit
 
 class AddIconsDialogBox {
     private var alertDialog: AlertDialog? = null
@@ -65,7 +69,7 @@ class AddIconsDialogBox {
         context: Context,
         flag: Boolean = true,
         listenerForDismiss: ListenDismiss,
-        listenerForNewFolder: ListenNewFolder
+        listenerForNewFolder: (folder: String) -> Unit
     ) {
         val con = (context as Activity)
         val alertDialog = AlertDialog.Builder(con)
@@ -107,14 +111,16 @@ class AddIconsDialogBox {
         context: Context,
         data: Array<String>,
         flag: Boolean = true,
+        title: String,
+        isFolder: Boolean = false,
         listenerForNewFolder: ListenNewFolder
     ) {
         val con = (context as Activity)
         val alertDialog = AlertDialog.Builder(con)
         val inflater = (con).layoutInflater
         val binding = AddIconToHomeSrcDialogLayoutBinding.inflate(inflater)
-        val adaptor = SortRecyclerAdaptor {
-            listenerForNewFolder(it)
+        val adaptor = SortRecyclerAdaptor { res, position ->
+            listenerForNewFolder(res, position)
         }
         alertDialog.setView(binding.root)
         alertDialog.setCancelable(flag)
@@ -124,10 +130,11 @@ class AddIconsDialogBox {
         binding.okBtn.hide()
         binding.cancelBtn.hide()
         binding.mainRecycleView.show()
-        binding.textBoxTitle.text = binding.textBoxTitle.context.getString(R.string.sorting_name)
+        binding.textBoxTitle.text = title
         binding.mainRecycleView.apply {
             adapter = adaptor
         }
+        adaptor.getPublicFolder(isFolder)
         adaptor.submitList(data.toList())
         setUpDialogBox(alertDialog)
     }
@@ -243,4 +250,78 @@ class AddIconsDialogBox {
     }
 
 
+    fun displayFolderViewRecycle(
+        context: Context,
+        data: Array<String>,
+        flag: Boolean = true,
+        title: String,
+        lifecycleOwner: LifecycleOwner,
+        required: Context,
+        listenerForNewFolder: ListenNewFolder2
+    ) {
+        val viewModel = MainViewModel.getInstance()
+        val list = mutableListOf<String>()
+        val name = mutableListOf<String>()
+        val con = (context as Activity)
+        var flagIdx: Boolean? = null
+        val alertDialog = AlertDialog.Builder(con)
+        val inflater = (con).layoutInflater
+        val binding = AddIconToHomeSrcDialogLayoutBinding.inflate(inflater)
+        val adaptor = SortRecyclerAdaptor { res, position ->
+            binding.textBoxTitle.text = res
+            val index = if (name.isEmpty()) data.indexOf(res) else name.indexOf(res)
+            if (index != -1) {
+                if (list.isNotEmpty()) {
+                    flagIdx?.let { listenerForNewFolder("/$res", position, it) }
+                        ?: con.toastMsg("Error Occur!!")
+                } else {
+                    if (index == 0) {
+                        flagIdx = false
+                        val filePath = getFileDir("", context)
+                        viewModel?.getFolderDir(filePath)
+                    } else {
+                        flagIdx = true
+                        val targetPath =
+                            getFileDir(con.getString(R.string.file_path_2), context, false)
+                        viewModel?.getFolderDir(targetPath)
+                    }
+                }
+            }
+        }
+        alertDialog.setView(binding.root)
+        alertDialog.setCancelable(flag)
+        binding.urlEdLayout.hide()
+        binding.nmeEdLayout.hide()
+        binding.folderNameLayout.hide()
+        binding.okBtn.hide()
+        binding.cancelBtn.hide()
+        binding.mainRecycleView.show()
+        binding.textBoxTitle.text = title
+        binding.mainRecycleView.apply {
+            adapter = adaptor
+        }
+        adaptor.getPublicFolder(true)
+        adaptor.submitList(data.toList())
+        viewModel?.folderDir?.observe(lifecycleOwner) {
+            if (it != null) {
+                if (it.isNotEmpty()) {
+                    list.clear()
+                    name.clear()
+                    it.forEach { file ->
+                        list.add(file.fileLoc)
+                        name.add(file.fileTitle)
+                    }
+                    adaptor.notifyDataSetChanged()
+                    adaptor.submitList(name)
+                } else {
+                    Log.i(TAG, "displayFolderViewRecycle: log it not null but empty")
+                    adaptor.submitList(data.toList())
+                }
+            } else {
+                Log.i(TAG, "displayFolderViewRecycle: it is Null")
+                adaptor.submitList(data.toList())
+            }
+        }
+        setUpDialogBox(alertDialog)
+    }
 }

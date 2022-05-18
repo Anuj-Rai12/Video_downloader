@@ -1,5 +1,6 @@
 package com.example.videodownloadingline.adaptor.sort_adptor
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.DiffUtil
@@ -8,17 +9,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.SortedItemLayoutBinding
 
-typealias ListenerSortItemClicked = (data: String) -> Unit
+typealias ListenerSortItemClicked = (data: String, position: Int) -> Unit
 
 class SortRecyclerAdaptor(private val itemClicked: ListenerSortItemClicked) :
     ListAdapter<String, SortRecyclerAdaptor.SortAdaptorViewHolder>(diffUtil) {
+    private var isFolder: Boolean = false
+
     inner class SortAdaptorViewHolder(private val binding: SortedItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun makeData(data: String, itemClicked: ListenerSortItemClicked) {
+        val btnClick=binding.btnClickCheck
+        fun makeData(data: String, itemClicked: ListenerSortItemClicked, position: Int) {
             binding.txtInfo.text = data
             binding.root.setOnClickListener {
                 binding.btnClickCheck.setImageResource(R.drawable.ic_check)
-                itemClicked(data)
+                itemClicked(data, position)
             }
         }
     }
@@ -43,10 +47,20 @@ class SortRecyclerAdaptor(private val itemClicked: ListenerSortItemClicked) :
         return SortAdaptorViewHolder(binding)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun getPublicFolder(flag: Boolean) {
+        isFolder = flag
+        notifyDataSetChanged()
+    }
+
+
     override fun onBindViewHolder(holder: SortAdaptorViewHolder, position: Int) {
         val currItem = getItem(position)
         currItem?.let {
-            holder.makeData(it, itemClicked)
+            if (isFolder){
+                holder.btnClick.setImageResource(R.drawable.ic_folder)
+            }
+            holder.makeData(it, itemClicked, position)
         }
     }
 

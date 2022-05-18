@@ -16,6 +16,7 @@ import com.example.videodownloadingline.model.downloadlink.VideoType
 import com.example.videodownloadingline.utils.OnBottomSheetClick
 import com.example.videodownloadingline.utils.hide
 import com.example.videodownloadingline.utils.show
+import com.example.videodownloadingline.view_model.MainViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class BottomSheetDialogForDownloadFrag(
@@ -145,6 +146,10 @@ class BottomSheetDialogForDownloadFrag(
     }
 
     override fun getTheme() = R.style.SheetDialog
+    override fun onResume() {
+        super.onResume()
+        MainViewModel.getInstance()?.removeFolder()
+    }
 
     companion object {
         var list: List<VideoType>? = null

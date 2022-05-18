@@ -80,8 +80,9 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment),
         newFolderDialogBox?.displaySortingViewRecycle(
             context = requireActivity(),
             getStringArray,
-            listenerForNewFolder = {
-                //newFolderDialogBox?.dismiss()
+            title = getString(R.string.sorting_name),
+            listenerForNewFolder = { data, _ ->
+                newFolderDialogBox?.dismiss()
             }
         )
     }
