@@ -51,4 +51,8 @@ class DownloadFragmentRepo(private val roomDataBaseInstance: RoomDataBaseInstanc
         }
     }
 
+    fun updateDownloadItem(data: DownloadItems) {
+        roomDataBaseInstance.getDownloadItemDao().updateItem(data)
+    }
+
 }

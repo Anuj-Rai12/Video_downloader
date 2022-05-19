@@ -141,12 +141,16 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
     }
 
     private fun createNewTB(fragment: Fragment, url: String?) {
-        mainViewModel?.addMoreTab()
-        val size = (parentFragment as BrowserFragment).setFragment(
+        val size = (parentFragment as BrowserFragment?)?.setFragment(
             fragment, url
         )
         Log.i(TAG, "onCreateOptionsMenu: $size")
-        BrowserFragment.viewPager?.currentItem = size!! - 1
+        size?.let {
+            mainViewModel?.addMoreTab()
+            BrowserFragment.viewPager?.currentItem = size - 1
+            return
+        }
+        Log.i(TAG, "createNewTB: error while creating")
     }
 
 
@@ -167,7 +171,10 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
     private fun getAllTab(url: String) {
         mainViewModel?.noOfOpenTab?.observe(this) {
             val item = it ?: 0
-            (requireActivity() as MainActivity).changeToolbar(item, url, { _ -> }, {
+            (requireActivity() as MainActivity).changeToolbar(item, url, { url ->
+                mainViewModel?.removeOldDownloadLink()
+                setWebSiteData(url, false)
+            }, {
                 findNavController().popBackStack()
             }, viewTab = {
                 requireActivity().goToTbActivity<ViewTabActivity>((parentFragment as BrowserFragment).getTbList())
@@ -207,7 +214,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             }
             if (!click) {
                 click = true
-                if (info!!.endsWith(".m3u8")||webViewDownloadUrl.videotype=="video/.m3u8") {
+                if (info!!.endsWith(".m3u8") || webViewDownloadUrl.videotype == "video/.m3u8") {
                     findWidthAndHeight(info!!).also {
                         VideoType(
                             it.second.last(),
@@ -371,9 +378,12 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                         }
                         request.url.toString().contains(".mp4") -> {
                             Log.i(TAG, "shouldInterceptRequest: the Url is -> ${request.url}")
-                            Log.i(TAG, "shouldInterceptRequest: the Url is -> ${request.requestHeaders}")
+                            Log.i(
+                                TAG,
+                                "shouldInterceptRequest: the Url is -> ${request.requestHeaders}"
+                            )
                         }
-                        request.requestHeaders.containsValue("video/")->{
+                        request.requestHeaders.containsValue("video/") -> {
                             Log.i(TAG, "shouldInterceptRequest: ${request.url}")
                         }
 
@@ -410,6 +420,10 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                         try {
                             domain = getHostDomainName(req.url.host!!)
                         } catch (e: Exception) {
+                            Log.i(
+                                TAG,
+                                "shouldOverrideUrlLoading: domain Exception ${e.localizedMessage}"
+                            )
                             return@let false
                         }
 
@@ -525,18 +539,24 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
         super.onPause()
         openBottomSheetDialog?.dismiss()
         showVideoPlayDialog?.dismiss()
+        mainViewModel?.removeOldDownloadLink()
     }
 
     override fun <T> onItemClicked(type: T) {
         (type as VideoType).also { response ->
             response.webViewDownloadUrl.videotitle =
                 response.webViewDownloadUrl.videotitle ?: createdCurrentTimeData
+            response.thumbnail = if (response.format == "video/.m3u8")
+                "Video_" + System.currentTimeMillis().toString() + ".m3u8"
+            else
+                "Video_" + System.currentTimeMillis().toString() + ".mp4"
+
             Log.i(TAG, "onItemClicked: ${response.webViewDownloadUrl.videotitle}")
             val id = downloadManager?.enqueue(
                 requestDownload(
                     requireContext(),
                     DownloadManager.Request(Uri.parse(response.url)),
-                    title = response.webViewDownloadUrl.videotitle!!,
+                    title = response.thumbnail,
                     response.url
                 )
             )

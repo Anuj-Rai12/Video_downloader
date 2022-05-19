@@ -16,6 +16,10 @@ interface DownloadItemDao {
     @Delete
     fun deleteItem(downloadItems: DownloadItems)
 
+
+    @Update
+    fun updateItem(downloadItems: DownloadItems)
+
     @Query("Select * from Download_Items")
     suspend fun getAllDownload(): List<DownloadItems>
 

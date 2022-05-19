@@ -1,7 +1,6 @@
 package com.example.videodownloadingline.view_model
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,12 +10,12 @@ import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.repo.DownloadFragmentRepo
 import com.example.videodownloadingline.utils.Event
 import com.example.videodownloadingline.utils.RemoteResponse
-import com.example.videodownloadingline.utils.TAG
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class DownloadFragmentViewModel(application: Application) : AndroidViewModel(application) {
@@ -75,7 +74,7 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
     fun searchQuery(src: String) {
         viewModelScope.launch {
             repo?.searchFileWithFileName(src)?.collectLatest { res ->
-                if (res.data?.isNullOrEmpty() == true) {
+                if (res.data?.isEmpty() == true) {
                     fetch()
                 } else {
                     _downloadItem.postValue(res)
@@ -99,6 +98,25 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
     override fun onCleared() {
         viewModelScope.cancel()
         super.onCleared()
+    }
+
+    fun updateDownloadItem(downloadItems: DownloadItems, filePath: String) {
+        DownloadItems(
+            downloadItems.id,
+            downloadItems.fileTitle,
+            downloadItems.fileThumbLoc,
+            filePath,
+            downloadItems.fileLength,
+            downloadItems.fileExtensionType,
+            downloadItems.fileSize,
+            downloadItems.downloadCreatedAt
+        ).also {
+            viewModelScope.launch {
+                withContext(IO) {
+                    repo?.updateDownloadItem(it)
+                }
+            }
+        }
     }
 
 }

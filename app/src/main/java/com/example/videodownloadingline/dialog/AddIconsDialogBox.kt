@@ -28,7 +28,7 @@ private typealias ListerIcon = (bookmarks: HomeSrcIcon) -> Unit
 private typealias ListenDismiss = () -> Unit
 private typealias ListenSetPin = (flag: Boolean) -> Unit
 private typealias ListenNewFolder = (folderName: String, position: Int) -> Unit
-private typealias ListenNewFolder2 = (folderName: String, position: Int, flag: Boolean) -> Unit
+private typealias ListenNewFolder2 = (folderName: String, filePath: String, position: Int, flag: Boolean) -> Unit
 
 class AddIconsDialogBox {
     private var alertDialog: AlertDialog? = null
@@ -256,8 +256,8 @@ class AddIconsDialogBox {
         flag: Boolean = true,
         title: String,
         lifecycleOwner: LifecycleOwner,
-        required: Context,
-        listenerForNewFolder: ListenNewFolder2
+        listenerForNewFolder: ListenNewFolder2,
+        listenEmpty: (data: Boolean?) -> Unit
     ) {
         val viewModel = MainViewModel.getInstance()
         val list = mutableListOf<String>()
@@ -272,7 +272,7 @@ class AddIconsDialogBox {
             val index = if (name.isEmpty()) data.indexOf(res) else name.indexOf(res)
             if (index != -1) {
                 if (list.isNotEmpty()) {
-                    flagIdx?.let { listenerForNewFolder("/$res", position, it) }
+                    flagIdx?.let { listenerForNewFolder("/$res", list[index], position, it) }
                         ?: con.toastMsg("Error Occur!!")
                 } else {
                     if (index == 0) {
@@ -286,6 +286,8 @@ class AddIconsDialogBox {
                         viewModel?.getFolderDir(targetPath)
                     }
                 }
+            }else if (res == "Add Folder"){
+                listenEmpty(flagIdx)
             }
         }
         alertDialog.setView(binding.root)
@@ -301,7 +303,6 @@ class AddIconsDialogBox {
             adapter = adaptor
         }
         adaptor.getPublicFolder(true)
-        adaptor.submitList(data.toList())
         viewModel?.folderDir?.observe(lifecycleOwner) {
             if (it != null) {
                 if (it.isNotEmpty()) {
@@ -311,11 +312,11 @@ class AddIconsDialogBox {
                         list.add(file.fileLoc)
                         name.add(file.fileTitle)
                     }
-                    adaptor.notifyDataSetChanged()
+                    //adaptor.notifyDataSetChanged()
                     adaptor.submitList(name)
                 } else {
                     Log.i(TAG, "displayFolderViewRecycle: log it not null but empty")
-                    adaptor.submitList(data.toList())
+                    adaptor.submitList(listOf("Add Folder"))
                 }
             } else {
                 Log.i(TAG, "displayFolderViewRecycle: it is Null")

@@ -20,7 +20,7 @@ fun requestDownload(
     return request.setDescription("Please Wait video is Downloading")
         .setTitle(title)
         .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE or DownloadManager.Request.NETWORK_WIFI)
-        .addRequestHeader("Referer", extraHeaders.toString())
+//        .addRequestHeader("Referer", extraHeaders.toString())
         .setAllowedOverRoaming(true)
         .setAllowedOverMetered(true)
         .setDestinationUri(Uri.fromFile(getFileDir(title, context = context)))

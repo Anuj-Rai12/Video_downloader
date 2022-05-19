@@ -24,6 +24,11 @@ class MainViewModel : ViewModel() {
         get() = _daisyChannelVideoDownloadLink
 
 
+    fun removeOldDownloadLink() {
+        _daisyChannelVideoDownloadLink.postValue(Event(null))
+    }
+
+
     private val _downloadId = MutableLiveData<MutableList<Long>>()
     val downloadId: LiveData<MutableList<Long>>
         get() = _downloadId
@@ -50,7 +55,6 @@ class MainViewModel : ViewModel() {
             val res = withContext(IO) {
                 getListOfFile(file)
             }
-            Log.i(TAG, "getFolderDir: Folder File -> $res")
             _folderDir.postValue(res)
         }
     }

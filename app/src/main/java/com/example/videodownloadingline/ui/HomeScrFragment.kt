@@ -65,17 +65,14 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
 
     private fun currentTab() {
         mainViewModel?.noOfOpenTab?.observe(viewLifecycleOwner) {
-            (requireActivity() as MainActivity).changeToolbar(it!!, listenForSearch = { url ->
+            (requireActivity() as MainActivity).changeToolbar(it!!, url = "", listenForSearch = { url ->
                 if (isInWebView) {
                     createNewTB(WebViewFragments("Searching..", url), url)?.also { size ->
                         BrowserFragment.viewPager?.currentItem = size - 1
                     }
                 } else {
                     val action =
-                        HomeScrFragmentDirections.actionHomeScrFragmentToBrowserFragment(
-                            "Searching..",
-                            url,
-                        )
+                        HomeScrFragmentDirections.actionHomeScrFragmentToBrowserFragment("Searching..", url)
                     findNavController().navigate(action)
                 }
             }, goTo = {

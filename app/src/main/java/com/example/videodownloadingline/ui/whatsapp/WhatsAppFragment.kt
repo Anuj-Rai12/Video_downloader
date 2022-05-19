@@ -73,7 +73,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
     }
 
     private fun setData(res: ArrayList<File>) {
-        if (res.isNullOrEmpty())
+        if (res.isEmpty())
             return
 
         res.forEachIndexed { index, file ->

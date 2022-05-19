@@ -1,10 +1,10 @@
 package com.example.videodownloadingline.adaptor.download_item_adaptor
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,16 +12,15 @@ import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.DownloadFileItemLinearLayoutBinding
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
-import com.example.videodownloadingline.utils.finPath
 import com.example.videodownloadingline.utils.getThumbNail
 import com.example.videodownloadingline.utils.hide
-import java.io.File
 
 
 typealias ItemForLinearLayoutListener = (data: DownloadItems) -> Unit
 
 class DownloadItemLinearAdaptor(
     private val type: String,
+    private val context: Context,
     private val itemClicked: ItemForLinearLayoutListener
 ) :
     ListAdapter<DownloadItems, DownloadItemLinearAdaptor.DownloadItemLinearViewHolder>(diffUtil) {
@@ -36,9 +35,7 @@ class DownloadItemLinearAdaptor(
             when (TypeOfDownload.valueOf(type)) {
                 TypeOfDownload.IsFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_folder)
                 TypeOfDownload.IsFiles -> {
-                    val targetPath = finPath("/Download/VideoDownload/${data.fileThumbLoc}")
-                    val path = File(targetPath).toString().toUri().path
-                    val bitmap = getThumbNail(path)
+                    val bitmap = getThumbNail(data.fileLoc)
                     bitmap?.let {
                         binding.fileThumbNail.apply {
                             setPadding(0, 0, 0, 0)

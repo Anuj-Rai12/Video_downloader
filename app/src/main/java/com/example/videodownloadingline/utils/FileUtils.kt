@@ -21,8 +21,7 @@ import com.example.videodownloadingline.ui.whatsapp.WhatsappActivity
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import java.io.ByteArrayOutputStream
-import java.io.File
+import java.io.*
 import java.net.URL
 import java.text.DateFormat
 import java.util.*
@@ -204,13 +203,18 @@ fun Activity.bitUrl(bitmap: Bitmap, title: String): Uri? {
 
 
 @RequiresApi(Build.VERSION_CODES.Q)
-fun Activity.putVideo(url: String, fileName: String, format: String): Uri? {
+fun Activity.putVideo(
+    url: String,
+    fileName: String,
+    format: String,
+    filePath: String = Environment.DIRECTORY_DOWNLOADS + "/VideoDownload"
+): Uri? {
     val contentValues = ContentValues().apply {
         put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
         put(MediaStore.MediaColumns.MIME_TYPE, format)
         put(
             MediaStore.MediaColumns.RELATIVE_PATH,
-            Environment.DIRECTORY_DOWNLOADS + "/VideoDownload"
+            filePath
         )
     }
     val resolver = contentResolver
@@ -236,20 +240,9 @@ fun Activity.playVideo(uri: String, format: String) {
 }
 
 @SuppressLint("Range")
-fun Activity.deleteVideo(videoName: String) {
+fun Activity.deleteVideo(filepath:String) {
     try {
-
-        if (videoName.isEmpty() || videoName.isBlank()) {
-            toastMsg("Can't Find File Path")
-            return
-        }
-
-        val fDelete = File(
-            Environment.getExternalStoragePublicDirectory
-                (Environment.DIRECTORY_DOWNLOADS),
-            videoName//May 15, 2022 9_17_37 PM.mp4"
-        )
-
+        val fDelete = File(filepath)
         if (fDelete.exists()) {
             if (fDelete.delete()) {
                 toastMsg("File is Deleted Successfully")
@@ -319,6 +312,42 @@ fun findWidthAndHeight(url: String): Pair<Long, List<Int>> {
     } else {
         //Sample Result
         Pair(size, listOf(360))
+    }
+}
+
+fun Activity.moveFile(inputPath: String, outputPath: String): Boolean {
+    Log.i(TAG, "moveFile: inputPath is ---> $inputPath")
+    Log.i(TAG, "moveFile: outputPath is --> $outputPath")
+    val inputStream: InputStream?
+    val outputStream: OutputStream?
+    return try {
+        //create output directory if it doesn't exist
+        val dir = File(outputPath)
+        if (!dir.exists()) {
+            dir.parentFile?.mkdirs()
+        }
+        inputStream = FileInputStream(inputPath)
+        outputStream = FileOutputStream(outputPath)
+        val buffer = ByteArray(1024)
+        var read: Int
+        while (inputStream.read(buffer).also { read = it } != -1) {
+            outputStream.write(buffer, 0, read)
+        }
+        inputStream.close()
+        // write the output file
+        outputStream.flush()
+        outputStream.close()
+        // delete the original file
+        File(inputPath).delete()
+        true
+    } catch (e: FileNotFoundException) {
+        Log.i(TAG, "moveFile: ${e.localizedMessage}")
+        toastMsg("File is Not Found!!")
+        false
+    } catch (e: Exception) {
+        Log.i(TAG, "moveFile: ${e.localizedMessage}")
+        toastMsg("File is Not Created Found!!")
+         false
     }
 }
 

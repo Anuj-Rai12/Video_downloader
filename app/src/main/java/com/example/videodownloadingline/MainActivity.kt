@@ -14,7 +14,6 @@ import android.view.KeyEvent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -30,6 +29,7 @@ import com.example.videodownloadingline.view_model.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import np.com.susanthapa.curved_bottom_navigation.CbnMenuItem
+import java.io.File
 import java.util.*
 
 
@@ -124,7 +124,8 @@ class MainActivity : AppCompatActivity() {
                         Log.i(TAG, "changeToolbar: $searchText")
                         if (!searchText.isNullOrEmpty() && isValidUrl(searchText)) {
                             listenForSearch(searchText!!)
-                        }
+                        } else
+                            toastMsg("Cannot Incited  Search!!")
                     }
                 }
             }
@@ -156,39 +157,35 @@ class MainActivity : AppCompatActivity() {
                         it.getVideoDataByIndex(index)?.let { res ->
                             Log.i(TAG, "onReceive: Download List --->  $res")
                             val title = res.webViewDownloadUrl.videotitle ?: ""
-                            val file = getFileDir(title, this@MainActivity)
+                            val file = getFileDir(res.thumbnail, this@MainActivity)
                             val time = this@MainActivity.videoDuration(file) ?: ""
                             val len = file.length()
-                            val thumbnail = if (res.format.contains(".m3u8")) {
-                                "Video_${System.currentTimeMillis()}.m3u8"
-                            } else
-                                "Video_${System.currentTimeMillis()}.mp4"
-                            val newUrl = putVideo(file.toUri().toString(), thumbnail, res.format)
+                            val newUrl = File(finPath("/Download/VideoDownload/${res.thumbnail}"))
+                            moveFile(file.absolutePath, newUrl.absolutePath)
                             DownloadItems(
                                 0,
                                 title,
-                                thumbnail,
-                                newUrl.toString(),
+                                res.thumbnail,
+                                newUrl.absolutePath,
                                 time,
                                 res.format,
                                 len
-                            )
-                                .also { value ->
-                                    file.delete()
-                                    Log.i(TAG, "onReceive: Download Save Item $value")
-                                    lifecycleScope.launchWhenCreated {
-                                        val saveDownloadItem = async(Dispatchers.IO) {
-                                            DownloadFragmentRepo(
-                                                RoomDataBaseInstance.getInstance(
-                                                    applicationContext
-                                                )
-                                            ).addDownload(
-                                                value
+                            ).also { value ->
+                                file.delete()
+                                Log.i(TAG, "onReceive: Download Save Item $value")
+                                lifecycleScope.launchWhenCreated {
+                                    val saveDownloadItem = async(Dispatchers.IO) {
+                                        DownloadFragmentRepo(
+                                            RoomDataBaseInstance.getInstance(
+                                                applicationContext
                                             )
-                                        }
-                                        saveDownloadItem.await()
+                                        ).addDownload(
+                                            value
+                                        )
                                     }
+                                    saveDownloadItem.await()
                                 }
+                            }
                         }
                         it.removeID(index)
                         it.removeVideo(index)

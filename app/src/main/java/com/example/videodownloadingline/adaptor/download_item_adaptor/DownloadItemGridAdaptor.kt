@@ -18,10 +18,8 @@ import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.example.videodownloadingline.ui.whatsapp.WhatsappActivity
 import com.example.videodownloadingline.utils.DownloadProgressLiveData
-import com.example.videodownloadingline.utils.finPath
 import com.example.videodownloadingline.utils.getThumbNail
 import com.example.videodownloadingline.utils.hide
-import java.io.File
 
 
 typealias ItemClickedListener = (data: DownloadItems, bitmap: Bitmap?) -> Unit
@@ -48,10 +46,8 @@ class DownloadItemGridAdaptor(
                     binding.fileThumbNail.setImageResource(R.drawable.ic_folder)
                 }
                 TypeOfDownload.IsFiles -> {
-                    val targetPath = finPath("/Download/VideoDownload/${data.fileThumbLoc}")
-                    val path = File(targetPath).toString().toUri().path
                     val bm =
-                        getThumbNail(path)
+                        getThumbNail(data.fileLoc)
                     bm?.let {
                         binding.fileThumbNail.apply {
                             setPadding(0, 0, 0, 0)

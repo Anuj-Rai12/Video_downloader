@@ -21,7 +21,6 @@ import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
-import com.example.videodownloadingline.view_model.MainViewModel
 
 
 class DownloadFragment(private val type: String) : Fragment(R.layout.download_fragment_layout),
@@ -72,12 +71,10 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     private fun fetchList() {
         viewModel.folderItem.observe(viewLifecycleOwner) {
             setSize(it.size)
-            if (!it.isNullOrEmpty()) {
-                gridAdaptor?.notifyDataSetChanged()
-                gridAdaptor?.submitList(it)
-                linearAdaptor?.notifyDataSetChanged()
-                linearAdaptor?.submitList(it)
-            }
+            gridAdaptor?.notifyDataSetChanged()
+            gridAdaptor?.submitList(it)
+            linearAdaptor?.notifyDataSetChanged()
+            linearAdaptor?.submitList(it)
         }
     }
 
@@ -217,7 +214,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         gridAdaptor = null
         binding.recycleView.apply {
             setHasFixedSize(true)
-            linearAdaptor = DownloadItemLinearAdaptor(type = type) {
+            linearAdaptor = DownloadItemLinearAdaptor(type = type, requireContext()) {
                 openBottomSheet(it)
             }
             this.layoutManager = layoutManager
@@ -244,6 +241,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun <T> onItemClicked(type: T) {
         val response = type as Pair<*, *>
         openBottomSheetDialog?.dismiss()
@@ -252,13 +250,16 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                 BottomType.Delete -> {
                     (response.second as DownloadItems?)?.let { downloadItems: DownloadItems ->
                         activity?.let {
-                            it.deleteVideo("/VideoDownload/${downloadItems.fileThumbLoc}")
+                            it.deleteVideo(downloadItems.fileLoc)
                             viewModel.deleteDownload(downloadItems)
                         }
                     }
                 }
                 BottomType.MoveTo -> {
-                    checkFolderDirDialog(listOf("Secure Folder", "Folder"))
+                    checkFolderDirDialog(
+                        listOf("Secure Folder", "Folder"),
+                        response.second as DownloadItems
+                    )
                 }
                 BottomType.SetPin -> {
                     (parentFragment as MainDownloadFragment).goToSetPin()
@@ -273,20 +274,49 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         }
     }
 
-    private fun checkFolderDirDialog(folder: List<String>) {
-        if (newFolderDialogBox == null) {
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun checkFolderDirDialog(folder: List<String>, response: DownloadItems) {
+        if (newFolderDialogBox == null)
             newFolderDialogBox = AddIconsDialogBox()
-        }
+
         newFolderDialogBox?.displayFolderViewRecycle(
             context = requireActivity(),
             folder.toTypedArray(),
-            title = "Dir", lifecycleOwner = viewLifecycleOwner, required = requireContext()
-        ) { data, _, flag ->
-            if (!flag && data.isNotEmpty() || data.isNotBlank()) {
+            title = "Dir",
+            lifecycleOwner = viewLifecycleOwner,
+            listenerForNewFolder = { data, filePath, _, flag ->
+                if (!flag && data.isNotEmpty() || data.isNotBlank()) {
+                    newFolderDialogBox?.dismiss()
+                    val targetPath = filePath + "/" + response.fileThumbLoc
+                    activity?.apply {
+                        if (flag) {
+                            moveFile(inputPath = response.fileLoc, outputPath = targetPath).also {
+                                nextProcess(it, response, targetPath)
+                            }
+                        } else {
+                            moveFile(inputPath = response.fileLoc, outputPath = targetPath).also {
+                                nextProcess(it, response, targetPath)
+                            }
+                        }
+                    }
+                }
+            }, listenEmpty = { flag ->
                 newFolderDialogBox?.dismiss()
-                activity?.toastMsg(data + flag)
-                MainViewModel.getInstance()?.removeFolder()
-            }
+                if (flag == true) {
+                    MainDownloadFragment.downloadViewPage?.currentItem = 1
+                } else {
+                    MainDownloadFragment.downloadViewPage?.currentItem = 2
+                }
+                activity?.toastMsg("Create a Folder to Move File")
+            })
+    }
+
+    private fun nextProcess(it: Boolean, response: DownloadItems, targetPath: String) {
+        if (it) {
+            binding.root.showSandbar("File is Moved", color = Color.GREEN)
+            viewModel.updateDownloadItem(response, targetPath)
+        } else {
+            binding.root.showSandbar("File is Not Moved", color = Color.RED)
         }
     }
 }
