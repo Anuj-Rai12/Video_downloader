@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.DownloadFileItemGridLayoutBinding
+import com.example.videodownloadingline.model.downloaditem.Category
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.example.videodownloadingline.ui.whatsapp.WhatsappActivity
@@ -46,16 +47,22 @@ class DownloadItemGridAdaptor(
                     binding.fileThumbNail.setImageResource(R.drawable.ic_folder)
                 }
                 TypeOfDownload.IsFiles -> {
-                    val bm =
-                        getThumbNail(data.fileLoc)
-                    bm?.let {
-                        binding.fileThumbNail.apply {
-                            setPadding(0, 0, 0, 0)
-                            scaleType = ImageView.ScaleType.FIT_XY
-                            setImageBitmap(it)
+                    when (Category.valueOf(data.category)) {
+                        Category.PinFolder -> {
+                            binding.fileThumbNail.setImageResource(R.drawable.ic_video_pin)
                         }
-                        return@let
-                    } ?: binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
+                        Category.NormalFolder -> {
+                            val bm = getThumbNail(data.fileLoc)
+                            bm?.let {
+                                binding.fileThumbNail.apply {
+                                    setPadding(0, 0, 0, 0)
+                                    scaleType = ImageView.ScaleType.FIT_XY
+                                    setImageBitmap(it)
+                                }
+                                return@let
+                            } ?: binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
+                        }
+                    }
                 }
                 TypeOfDownload.SecureFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_video_pin)
             }

@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.videodownloadingline.db.RoomDataBaseInstance
+import com.example.videodownloadingline.model.downloaditem.Category
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.repo.DownloadFragmentRepo
 import com.example.videodownloadingline.utils.Event
@@ -100,8 +101,8 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
         super.onCleared()
     }
 
-    fun updateDownloadItem(downloadItems: DownloadItems, filePath: String) {
-        DownloadItems(
+    fun updateDownloadItem(downloadItems: DownloadItems, filePath: String, category: Category) {
+        val download = DownloadItems(
             downloadItems.id,
             downloadItems.fileTitle,
             downloadItems.fileThumbLoc,
@@ -109,13 +110,15 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
             downloadItems.fileLength,
             downloadItems.fileExtensionType,
             downloadItems.fileSize,
-            downloadItems.downloadCreatedAt
-        ).also {
-            viewModelScope.launch {
-                withContext(IO) {
-                    repo?.updateDownloadItem(it)
-                }
+            downloadItems.downloadCreatedAt,
+            downloadItems.setPin,
+            category = category.name
+        )
+        viewModelScope.launch {
+            val res = async(IO) {
+                repo?.updateDownloadItem(download)
             }
+            res.await()
         }
     }
 

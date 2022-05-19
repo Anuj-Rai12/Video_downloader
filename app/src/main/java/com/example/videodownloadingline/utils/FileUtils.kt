@@ -316,8 +316,9 @@ fun findWidthAndHeight(url: String): Pair<Long, List<Int>> {
 }
 
 fun Activity.moveFile(inputPath: String, outputPath: String): Boolean {
-    Log.i(TAG, "moveFile: inputPath is ---> $inputPath")
-    Log.i(TAG, "moveFile: outputPath is --> $outputPath")
+    Log.i("moveFile", " inputPath is ---> $inputPath")
+    Log.i("moveFile", " outputPath is --> $outputPath")
+    Log.i("moveFile", " For input file is --> ${File(inputPath).exists()}")
     val inputStream: InputStream?
     val outputStream: OutputStream?
     return try {

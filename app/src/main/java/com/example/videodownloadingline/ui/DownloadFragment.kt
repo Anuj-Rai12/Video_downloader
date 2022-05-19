@@ -17,6 +17,7 @@ import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadIt
 import com.example.videodownloadingline.bottom_sheets.BottomSheetDialogForDownloadFrag
 import com.example.videodownloadingline.databinding.DownloadFragmentLayoutBinding
 import com.example.videodownloadingline.dialog.AddIconsDialogBox
+import com.example.videodownloadingline.model.downloaditem.Category
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.example.videodownloadingline.utils.*
@@ -46,7 +47,6 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         binding.addNewFolderBtn.setOnClickListener {
             createFolderDialog()
         }
-
     }
 
     private fun soAllFileOrFolder() {
@@ -284,20 +284,12 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
             folder.toTypedArray(),
             title = "Dir",
             lifecycleOwner = viewLifecycleOwner,
-            listenerForNewFolder = { data, filePath, _, flag ->
-                if (!flag && data.isNotEmpty() || data.isNotBlank()) {
-                    newFolderDialogBox?.dismiss()
-                    val targetPath = filePath + "/" + response.fileThumbLoc
-                    activity?.apply {
-                        if (flag) {
-                            moveFile(inputPath = response.fileLoc, outputPath = targetPath).also {
-                                nextProcess(it, response, targetPath)
-                            }
-                        } else {
-                            moveFile(inputPath = response.fileLoc, outputPath = targetPath).also {
-                                nextProcess(it, response, targetPath)
-                            }
-                        }
+            listenerForNewFolder = { _, filePath, _, flag ->
+                newFolderDialogBox?.dismiss()
+                val targetPath = filePath + "/" + response.fileThumbLoc
+                activity?.apply {
+                    moveFile(inputPath = response.fileLoc, outputPath = targetPath).also {
+                        nextProcess(it, response, targetPath, flag)
                     }
                 }
             }, listenEmpty = { flag ->
@@ -311,10 +303,21 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
             })
     }
 
-    private fun nextProcess(it: Boolean, response: DownloadItems, targetPath: String) {
+    private fun nextProcess(
+        it: Boolean,
+        response: DownloadItems,
+        targetPath: String,
+        flag: Boolean
+    ) {
+        val category = if (flag) {//Normal Folder
+            Category.NormalFolder
+        } else {//Secure Folder
+            Category.PinFolder
+        }
+        Log.i(TAG, "nextProcess: $category and Flag is ?  $flag")
         if (it) {
             binding.root.showSandbar("File is Moved", color = Color.GREEN)
-            viewModel.updateDownloadItem(response, targetPath)
+            viewModel.updateDownloadItem(response, targetPath, category)
         } else {
             binding.root.showSandbar("File is Not Moved", color = Color.RED)
         }
