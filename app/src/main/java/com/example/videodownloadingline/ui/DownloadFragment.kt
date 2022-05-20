@@ -123,15 +123,6 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                     }
                     MainDownloadFragment.downloadViewPage?.currentItem = 1
                 } else {//With Pin
-                    /*val targetPath = getFileDir("/$txt", requireContext())
-                    if (!targetPath.exists()) {
-                        targetPath.mkdirs()
-                        binding.root.showSandbar("File is Created", color = Color.GREEN)
-                        getFolderFromSecure()
-                    } else {
-                        requireActivity().toastMsg("File is Already Created")
-                    }
-                    MainDownloadFragment.downloadViewPage?.currentItem = 2*/
                     val secureFolderItem = SecureFolderItem(
                         0, folder = txt, src = getFileDir(
                             "/$txt",

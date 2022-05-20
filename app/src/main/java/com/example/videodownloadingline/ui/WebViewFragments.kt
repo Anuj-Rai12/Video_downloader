@@ -28,7 +28,6 @@ import com.example.videodownloadingline.bottom_sheets.BottomSheetDialogForDownlo
 import com.example.videodownloadingline.databinding.WebSiteFragmentLayoutBinding
 import com.example.videodownloadingline.model.downloadlink.VideoType
 import com.example.videodownloadingline.model.downloadlink.WebViewDownloadUrl
-import com.example.videodownloadingline.model.tabitem.TabItem
 import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.MainViewModel
 import com.google.android.exoplayer2.MediaItem
@@ -481,7 +480,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             if (isShowDialogOnce) {
                 isShowDialogOnce = false
                 parentFragment?.let {
-                    showVideoPlayDialog = showDialogBox(
+                    showVideoPlayDialog = activity?.showDialogBox(
                         title = getString(R.string.download_msg_title),
                         desc = getString(R.string.download_msg_desc),
                         flag = true

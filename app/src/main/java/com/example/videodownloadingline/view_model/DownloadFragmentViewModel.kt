@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.videodownloadingline.db.RoomDataBaseInstance
 import com.example.videodownloadingline.model.downloaditem.Category
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
+import com.example.videodownloadingline.model.securefolder.SecureFolderItem
 import com.example.videodownloadingline.repo.DownloadFragmentRepo
 import com.example.videodownloadingline.utils.Event
 import com.example.videodownloadingline.utils.RemoteResponse
@@ -37,6 +38,10 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
     val folderItem: LiveData<List<DownloadItems>>
         get() = _folderItem
 
+
+    private val _folderCreateId = MutableLiveData<Long>()
+    val folderCreateId: LiveData<Long>
+        get() = _folderCreateId
 
     init {
         repo = DownloadFragmentRepo(RoomDataBaseInstance.getInstance(application))
@@ -84,6 +89,15 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
         }
     }
 
+
+    fun addPinFolder(secureFolderItem: SecureFolderItem) {
+        viewModelScope.launch {
+            val res = async(IO) {
+                repo?.addPinFolder(secureFolderItem)
+            }
+            _folderCreateId.postValue(res.await())
+        }
+    }
 
     fun deleteDownload(downloadItems: DownloadItems) {
         viewModelScope.launch {

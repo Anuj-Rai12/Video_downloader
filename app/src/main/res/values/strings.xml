@@ -48,7 +48,7 @@
     <!--Download Lock Screen -->
     <string name="lock_src_title">Set a Lock Pin</string>
     <string name="lock_src_desc">For security ,set a PIN</string>
-    <string name="lock_src_suggestion">PIN must be 6 digits long</string>
+    <string name="lock_src_suggestion">PIN must be at least 6 digits long</string>
     <string name="nxt_btn">Next</string>
     <string name="clr_btn">Clear</string>
     <string name="with_pin_btn">With Pin</string>

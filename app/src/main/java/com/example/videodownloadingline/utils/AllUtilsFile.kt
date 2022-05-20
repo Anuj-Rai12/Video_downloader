@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.media.ThumbnailUtils
@@ -37,6 +38,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.util.concurrent.Executors
+import java.util.regex.Pattern.compile
 
 
 const val TAG = "VIDEO_DOWNLOADER"
@@ -141,10 +143,23 @@ interface OnBottomSheetClick {
     fun <T> onItemClicked(type: T)
 }
 
-fun View.showSandbar(msg: String, length: Int = Snackbar.LENGTH_SHORT, color: Int? = null) {
+fun View.showSandbar(
+    msg: String,
+    length: Int = Snackbar.LENGTH_SHORT,
+    color: Int? = null,
+    text: String? = null,
+    callback: (() -> Unit)? = null
+) {
     val snackBar = Snackbar.make(this, msg, length)
     color?.let {
         snackBar.view.setBackgroundColor(it)
+        snackBar.setTextColor(Color.WHITE)
+    }
+    text?.let {
+        snackBar.setAction(it) {
+            callback?.invoke()
+        }
+        snackBar.setActionTextColor(Color.GREEN)
     }
     snackBar.show()
 }
@@ -195,6 +210,30 @@ inline fun <reified T> Activity.goToTbActivity(op: List<TabItem>?) {
 }
 
 
+fun isValidPassword(password: String): Boolean {
+    val passwordREGEX = compile(
+        "^" +
+                "(?=.*[0-9])" +         //at least 1 digit
+                "(?=.*[a-z])" +         //at least 1 lower case letter
+                "(?=.*[A-Z])" +         //at least 1 upper case letter
+                "(?=.*[a-zA-Z])" +      //any letter
+                "(?=.*[@#$%^&+=])" +    //at least 1 special character
+                "(?=\\S+$)" +           //no white spaces
+                ".{6,}"                //at least 6 characters
+    )
+    return passwordREGEX.matcher(password).matches()
+}
+
+ fun msg() = "The Strong Password Must contain Following Properties :- \n\n" +
+        "1.At least 1 digit i.e [0-9]\n" +
+        "2.At least 1 lower case letter i.e [a-z]\n" +
+        "3.At least 1 upper case letter i.e [A-Z]\n" +
+        "4.Any letter i.e [A-Z,a-z]\n" +
+        "5.At least 1 special character i.e [%^*!&*|)(%#$%]\n" +
+        "6.No white spaces\n" +
+        "7.At Least 6 Character\n"
+
+
 fun getIconBgLis() = listOf(
     R.color.Dodger_Blue_color,
     R.color.Malachite_color,
@@ -203,7 +242,7 @@ fun getIconBgLis() = listOf(
 )
 
 @SuppressLint("UseCompatLoadingForDrawables")
-fun Fragment.showDialogBox(
+fun Activity.showDialogBox(
     title: String = getString(R.string.permission_title),
     desc: String = getString(R.string.permission_desc, "Storage"),
     btn: String = getString(R.string.permission_btn),
@@ -213,7 +252,7 @@ fun Fragment.showDialogBox(
     callback: () -> Unit
 ): AlertDialog {
     val material = MaterialAlertDialogBuilder(
-        requireContext(),
+        this,
         R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
     )
         .setTitle(title)

@@ -124,7 +124,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
     @RequiresApi(Build.VERSION_CODES.R)
     private fun saveDialog(data: DownloadItems, bm: Bitmap?) {
         bm?.let {
-            showDialogBox(
+            activity?.showDialogBox(
                 title = "Download!!",
                 desc = "Are you sure you want to download it!!",
                 flag = true
@@ -175,7 +175,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
     }
 
     private fun showErrorDialog() {
-        showDialogBox {     //For Request Permission
+        activity?.showDialogBox {     //For Request Permission
             // Open Setting Page
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

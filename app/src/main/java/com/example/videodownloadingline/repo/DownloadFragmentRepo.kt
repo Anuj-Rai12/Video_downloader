@@ -3,6 +3,7 @@ package com.example.videodownloadingline.repo
 import android.util.Log
 import com.example.videodownloadingline.db.RoomDataBaseInstance
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
+import com.example.videodownloadingline.model.securefolder.SecureFolderItem
 import com.example.videodownloadingline.utils.RemoteResponse
 import com.example.videodownloadingline.utils.TAG
 import com.example.videodownloadingline.utils.getListOfFile
@@ -54,5 +55,11 @@ class DownloadFragmentRepo(private val roomDataBaseInstance: RoomDataBaseInstanc
     fun updateDownloadItem(data: DownloadItems) {
         roomDataBaseInstance.getDownloadItemDao().updateItem(data)
     }
+
+
+    fun addPinFolder(secureFolderItem: SecureFolderItem): Long {
+        return roomDataBaseInstance.getSecureFolderDao().insertSecureFolder(secureFolderItem)
+    }
+
 
 }

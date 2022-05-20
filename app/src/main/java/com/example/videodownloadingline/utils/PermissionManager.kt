@@ -86,7 +86,7 @@ class PermissionManager private constructor(private val fragment: WeakReference<
     }
 
     private fun displayRationale(fragment: Fragment) {
-        fragment.showDialogBox(desc = rationale ?: fragment.getString(R.string.permission_desc)) {
+        fragment.requireActivity().showDialogBox(desc = rationale ?: fragment.getString(R.string.permission_desc)) {
             requestPermissions()
         }
     }
@@ -118,7 +118,7 @@ class PermissionManager private constructor(private val fragment: WeakReference<
     @RequiresApi(Build.VERSION_CODES.R)
     private fun checkForAndroid11() {
         fragment.get()?.let {
-            dialogInstance = it.showDialogBox(
+            dialogInstance = it.requireActivity().showDialogBox(
                 btn = "Accept",
                 flag = true,
                 cancelButton = "Deny",
