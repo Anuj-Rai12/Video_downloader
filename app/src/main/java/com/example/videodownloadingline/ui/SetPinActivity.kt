@@ -33,6 +33,7 @@ class SetPinActivity : AppCompatActivity() {
     private var category: String? = null
     private var extras: Bundle? = null
     private val viewModel: DownloadFragmentViewModel by viewModels()
+    private var isFlagClicked: Boolean = false
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,9 +47,29 @@ class SetPinActivity : AppCompatActivity() {
                 onBackPressed()
             }
         }
+
+        viewModel.event.observe(this) {
+            it.getContentIfNotHandled()?.let { res ->
+                when (res) {
+                    getString(R.string.folder_is_found) -> {
+
+                    }
+                    getString(R.string.folder_is_not_found) -> {
+                        binding.root.showSandbar("Wrong Pin", color = Color.RED)
+                    }
+                }
+            }
+        }
+
+
         extras = intent.extras
         if (extras != null) {
             val name = extras!!.getString(getString(R.string.set_pin_cat))
+            isFlagClicked = extras!!.getBoolean(getString(R.string.set_pin_click))
+            if (isFlagClicked) {
+                "Give PIN to access It!!".also { binding.lockTitle.text = it }
+                "For security ,give a PIN".also { binding.lockDesc.text = it }
+            }
             if (name != null) {
                 category = name
             }
@@ -90,7 +111,7 @@ class SetPinActivity : AppCompatActivity() {
                         }
                     }
                 }
-            } ?: binding.root.showSandbar("Please Create Strong Pin", Color.RED)
+            } ?: binding.root.showSandbar("Please Create Strong Pin", color = Color.RED)
         }
         binding.clrBtn.setOnClickListener {
             initUi()
@@ -115,7 +136,10 @@ class SetPinActivity : AppCompatActivity() {
             Category.PinFolder -> {//Set Pin for Secured Folder
                 val valueList =
                     extras!!.getParcelableArrayList<SecureFolderItem>(getString(R.string.set_pin_txt))
-                forPinFolder(valueList, pin)
+                if (isFlagClicked)
+                    checkPinToOpenFolder(valueList, pin)
+                else
+                    forPinFolder(valueList, pin)
             }
             Category.NormalFolder -> {//Set Pin of Normal File
                 val valueList =
@@ -123,6 +147,14 @@ class SetPinActivity : AppCompatActivity() {
 
             }
         }
+    }
+
+    private fun checkPinToOpenFolder(valueList: ArrayList<SecureFolderItem>?, pin: String) {
+        valueList?.first()?.let { res ->
+            Log.i(TAG, "checkPinToOpenFolder: Pin is -> ${res.src}")
+            Log.i(TAG, "checkPinToOpenFolder: Pin is -> $pin")
+            viewModel.checkPinToOpenFolder("%${res.src}%", "%$pin%")
+        } ?: binding.root.showSandbar("Cannot open Folder", color = Color.RED)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -145,7 +177,7 @@ class SetPinActivity : AppCompatActivity() {
     }
 
     private fun addFolderToDataBase(res: SecureFolderItem, pin: String) {
-        val secureFolderItem = SecureFolderItem(res.id, res.folder, res.folder, pin)
+        val secureFolderItem = SecureFolderItem(res.id, res.folder, res.src, pin)
         viewModel.addPinFolder(secureFolderItem)
     }
 

@@ -1,6 +1,7 @@
 package com.example.videodownloadingline.view_model
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,12 +13,12 @@ import com.example.videodownloadingline.model.securefolder.SecureFolderItem
 import com.example.videodownloadingline.repo.DownloadFragmentRepo
 import com.example.videodownloadingline.utils.Event
 import com.example.videodownloadingline.utils.RemoteResponse
+import com.example.videodownloadingline.utils.TAG
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 
 class DownloadFragmentViewModel(application: Application) : AndroidViewModel(application) {
@@ -133,6 +134,19 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
                 repo?.updateDownloadItem(download)
             }
             res.await()
+        }
+    }
+
+    fun checkPinToOpenFolder(src: String, pin: String) {
+        viewModelScope.launch {
+            repo?.checkPinToOpenFolder(src, pin)?.collectLatest {
+                Log.i(TAG, "checkPinToOpenFolder: Valid File in data Base $it")
+                if (it.isNotEmpty()) {
+                    _event.postValue(Event("folder_in_db_is_found"))
+                } else {
+                    _event.postValue(Event("folder_is_not_found"))
+                }
+            }
         }
     }
 

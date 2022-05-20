@@ -173,7 +173,8 @@ inline fun <reified T> Activity.goToNextActivity(
     forSetPin: Boolean = false,
     secureFolderItem: SecureFolderItem? = null,
     downloadItems: DownloadItems? = null,
-    category: String? = null
+    category: String? = null,
+    isClickToCheck: Boolean = false
 ) {
     val intent = Intent(this, T::class.java)
     if (forSetPin) {
@@ -191,6 +192,7 @@ inline fun <reified T> Activity.goToNextActivity(
             array
         )
         intent.putExtra(getString(R.string.set_pin_cat), category)
+        intent.putExtra(getString(R.string.set_pin_click), isClickToCheck)
     }
     startActivity(intent)
 }
@@ -224,7 +226,7 @@ fun isValidPassword(password: String): Boolean {
     return passwordREGEX.matcher(password).matches()
 }
 
- fun msg() = "The Strong Password Must contain Following Properties :- \n\n" +
+fun msg() = "The Strong Password Must contain Following Properties :- \n\n" +
         "1.At least 1 digit i.e [0-9]\n" +
         "2.At least 1 lower case letter i.e [a-z]\n" +
         "3.At least 1 upper case letter i.e [A-Z]\n" +

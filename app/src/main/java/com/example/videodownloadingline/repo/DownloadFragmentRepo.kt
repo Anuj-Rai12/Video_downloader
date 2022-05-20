@@ -61,5 +61,10 @@ class DownloadFragmentRepo(private val roomDataBaseInstance: RoomDataBaseInstanc
         return roomDataBaseInstance.getSecureFolderDao().insertSecureFolder(secureFolderItem)
     }
 
+    fun checkPinToOpenFolder(src: String, pin: String) = channelFlow {
+        roomDataBaseInstance.getSecureFolderDao().getSecureFolder(src, pin).collectLatest {
+            send(it)
+        }
+    }
 
 }

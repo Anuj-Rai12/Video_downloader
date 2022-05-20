@@ -84,5 +84,9 @@
     <string name="m3u8_format">video/.m3u8</string>
     <string name="set_pin_txt">set_pin_for_folder_or_file</string>
     <string name="set_pin_cat">set_pin_category</string>
+    <string name="set_pin_click">set_pin_isClick</string>
+
+    <string name="folder_is_found">folder_in_db_is_found</string>
+    <string name="folder_is_not_found">folder_is_not_found</string>
 
 </resources>

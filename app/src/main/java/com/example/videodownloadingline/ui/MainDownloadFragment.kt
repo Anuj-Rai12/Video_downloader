@@ -100,9 +100,16 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment),
     fun goToSetPin(
         downloadItems: DownloadItems? = null,
         secureFolderItem: SecureFolderItem? = null,
-        category: String
+        category: String,
+        isClickFlag: Boolean = false
     ) {
-        requireActivity().goToNextActivity<SetPinActivity>(true,secureFolderItem,downloadItems,category)
+        requireActivity().goToNextActivity<SetPinActivity>(
+            true,
+            secureFolderItem,
+            downloadItems,
+            category,
+            isClickFlag
+        )
     }
 
     override fun onPause() {

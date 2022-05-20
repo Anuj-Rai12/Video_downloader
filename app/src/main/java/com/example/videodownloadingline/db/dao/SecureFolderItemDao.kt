@@ -18,5 +18,4 @@ interface SecureFolderItemDao {
     @Query("select * from Secure_Folder_Item where src Like:filePath and pin Like:securePin")
     fun getSecureFolder(filePath: String, securePin: String): Flow<List<SecureFolderItem>>
 
-
 }

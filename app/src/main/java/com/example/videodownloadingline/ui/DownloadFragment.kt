@@ -33,7 +33,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     private var newFolderDialogBox: AddIconsDialogBox? = null
     private var isDialogBoxIsVisible: Boolean = false
     private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
-    private var isOptionFilesFlag = true
+
 
     private val viewModel: DownloadFragmentViewModel by activityViewModels()
 
@@ -53,16 +53,13 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     private fun soAllFileOrFolder() {
         when (TypeOfDownload.valueOf(type)) {
             TypeOfDownload.IsFolder -> {
-                isOptionFilesFlag = false
                 fetchList()
             }
             TypeOfDownload.IsFiles -> {
-                isOptionFilesFlag = true
                 binding.addNewFolderBtn.hide()
                 setUpData()
             }
             TypeOfDownload.SecureFolder -> {
-                isOptionFilesFlag = false
                 fetchList()
             }
         }
@@ -206,10 +203,24 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     }
 
     private fun openBottomSheet(video: DownloadItems) {
-        if (!isOptionFilesFlag) return
-        openBottomSheetDialog = BottomSheetDialogForDownloadFrag(video)
-        openBottomSheetDialog?.onBottomIconClicked = this
-        openBottomSheetDialog?.show(childFragmentManager, "Open Bottom Sheet")
+        when (TypeOfDownload.valueOf(type)) {
+            TypeOfDownload.IsFolder -> {
+
+            }
+            TypeOfDownload.IsFiles -> {
+                openBottomSheetDialog = BottomSheetDialogForDownloadFrag(video)
+                openBottomSheetDialog?.onBottomIconClicked = this
+                openBottomSheetDialog?.show(childFragmentManager, "Open Bottom Sheet")
+            }
+            TypeOfDownload.SecureFolder -> {
+                val secureFolderItem = SecureFolderItem(0, video.fileTitle, video.fileLoc, "")
+                (parentFragment as MainDownloadFragment).goToSetPin(
+                    secureFolderItem = secureFolderItem,
+                    category = Category.PinFolder.name,
+                    isClickFlag = true
+                )
+            }
+        }
     }
 
     private fun setUpRecycleView(layoutManager: LinearLayoutManager) {

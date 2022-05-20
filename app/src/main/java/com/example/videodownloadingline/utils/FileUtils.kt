@@ -94,7 +94,7 @@ fun getListOfFile(file: File): ArrayList<DownloadItems> {
                     fileLength = "",
                     fileExtensionType = "Folder",
                     fileSize = f.length(),
-                    fileLoc = f.toString()
+                    fileLoc = f.absolutePath
                 )
             )
         }
@@ -240,7 +240,7 @@ fun Activity.playVideo(uri: String, format: String) {
 }
 
 @SuppressLint("Range")
-fun Activity.deleteVideo(filepath:String) {
+fun Activity.deleteVideo(filepath: String) {
     try {
         val fDelete = File(filepath)
         if (fDelete.exists()) {
@@ -348,7 +348,7 @@ fun Activity.moveFile(inputPath: String, outputPath: String): Boolean {
     } catch (e: Exception) {
         Log.i(TAG, "moveFile: ${e.localizedMessage}")
         toastMsg("File is Not Created Found!!")
-         false
+        false
     }
 }
 
