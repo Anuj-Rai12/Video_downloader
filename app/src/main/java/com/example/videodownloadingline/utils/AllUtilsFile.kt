@@ -251,6 +251,7 @@ fun Activity.showDialogBox(
     flag: Boolean = false,
     isCancelBtnEnable: Boolean = false,
     cancelButton: String = "Cancel",
+    callDeny: (() -> Unit)? = null,
     callback: () -> Unit
 ): AlertDialog {
     val material = MaterialAlertDialogBuilder(
@@ -268,6 +269,9 @@ fun Activity.showDialogBox(
 
     if (isCancelBtnEnable) {
         material.setNegativeButton(cancelButton) { dialog, _ ->
+            if (callDeny != null) {
+                callDeny()
+            }
             dialog.dismiss()
         }
     }

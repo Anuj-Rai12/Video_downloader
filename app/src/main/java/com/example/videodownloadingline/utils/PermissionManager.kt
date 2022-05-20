@@ -86,9 +86,14 @@ class PermissionManager private constructor(private val fragment: WeakReference<
     }
 
     private fun displayRationale(fragment: Fragment) {
-        fragment.requireActivity().showDialogBox(desc = rationale ?: fragment.getString(R.string.permission_desc)) {
-            requestPermissions()
+        if (Build.VERSION.SDK_INT >= 30) {
+            checkForAndroid11()
+            return
         }
+        fragment.requireActivity()
+            .showDialogBox(desc = rationale ?: fragment.getString(R.string.permission_desc)) {
+                requestPermissions()
+            }
     }
 
     private fun sendPositiveResult() {
@@ -122,8 +127,9 @@ class PermissionManager private constructor(private val fragment: WeakReference<
                 btn = "Accept",
                 flag = true,
                 cancelButton = "Deny",
-                isCancelBtnEnable = true
-            ) {
+                isCancelBtnEnable = true, callDeny = {
+                    detailedCallback(mapOf(Permission.Storage to false))
+                }) {
                 if (!Environment.isExternalStorageManager())
                     getPermissionForAndroid11()
             }

@@ -2,8 +2,11 @@ package com.example.videodownloadingline.ui
 
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -15,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.videodownloadingline.BuildConfig
 import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.iconadaptor.HomeSrcAdaptor
@@ -34,12 +38,14 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
     private var iconsDialogBox: AddIconsDialogBox? = null
     private var isDialogBoxIsVisible: Boolean = false
     private var isNewTab: Boolean = false
+    private var permissionManager: PermissionManager? = null
     private val viewModel: HomeSrcFragmentViewModel by viewModels()
     private var mainViewModel: MainViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainViewModel = MainViewModel.getInstance()
+        permissionManager = PermissionManager.from(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -47,6 +53,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         super.onViewCreated(view, savedInstanceState)
         binding = HomeSrcFragmentBinding.bind(view)
         activity?.changeStatusBarColor()
+        requestPermission()
         savedInstanceState?.let {
             isDialogBoxIsVisible = it.getBoolean(getString(R.string.add_to_home_src))
         }
@@ -61,27 +68,61 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             setHasOptionsMenu(true)
             currentTab()
         }
+        permissionManager?.checkPermission {}
+    }
+
+    private fun requestPermission() {
+        permissionManager?.request(Permission.Storage)
+            ?.rationale(getString(R.string.permission_desc, "Storage"))
+            ?.checkDetailedPermission { result ->
+                if (!result.all { it.value }) {
+                    Log.i(TAG, "showErrorDialog: ${result.keys} and ${result.values}")
+                    showErrorDialog()
+                }
+            }
+    }
+
+    private fun showErrorDialog() {
+        activity?.showDialogBox(desc = "We need this Permission to Manger the Files and Folder") {     //For Request Permission
+            if (Build.VERSION.SDK_INT < 30) {
+                // Open Setting Page
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                val uri: Uri =
+                    Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
+                intent.data = uri
+                startActivity(intent)
+            }
+        }
     }
 
     private fun currentTab() {
         mainViewModel?.noOfOpenTab?.observe(viewLifecycleOwner) {
-            (requireActivity() as MainActivity).changeToolbar(it!!, url = "", listenForSearch = { url ->
-                if (isInWebView) {
-                    createNewTB(WebViewFragments("Searching..", url), url)?.also { size ->
-                        BrowserFragment.viewPager?.currentItem = size - 1
+            (requireActivity() as MainActivity).changeToolbar(
+                it!!,
+                url = "",
+                listenForSearch = { url ->
+                    if (isInWebView) {
+                        createNewTB(WebViewFragments("Searching..", url), url)?.also { size ->
+                            BrowserFragment.viewPager?.currentItem = size - 1
+                        }
+                    } else {
+                        val action =
+                            HomeScrFragmentDirections.actionHomeScrFragmentToBrowserFragment(
+                                "Searching..",
+                                url
+                            )
+                        findNavController().navigate(action)
                     }
-                } else {
-                    val action =
-                        HomeScrFragmentDirections.actionHomeScrFragmentToBrowserFragment("Searching..", url)
-                    findNavController().navigate(action)
-                }
-            }, goTo = {
-                findNavController().popBackStack()
-            }, viewTab = {
-                if (isInWebView) {
-                    requireActivity().goToTbActivity<ViewTabActivity>((parentFragment as BrowserFragment).getTbList())
-                }
-            })
+                },
+                goTo = {
+                    findNavController().popBackStack()
+                },
+                viewTab = {
+                    if (isInWebView) {
+                        requireActivity().goToTbActivity<ViewTabActivity>((parentFragment as BrowserFragment).getTbList())
+                    }
+                })
         }
     }
 
@@ -237,6 +278,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         super.onResume()
         setHasOptionsMenu(false)
         binding.srcTv.show()
+        permissionManager?.checkPermission {}
         (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
             ActionBar.DISPLAY_SHOW_TITLE
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
