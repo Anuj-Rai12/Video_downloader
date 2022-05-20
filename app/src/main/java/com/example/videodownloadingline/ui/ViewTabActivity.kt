@@ -54,11 +54,13 @@ class ViewTabActivity : AppCompatActivity() {
                 viewTabAdaptor.submitList(value)
             }
             normalFolder?.first()?.let { download ->
+                Log.i(TAG, "onCreate: At View TAB $download")
                 setRecycleView2()
                 viewModel.getListOfFolder(File(download.fileLoc))
             }
         }
         viewModel.folderItem.observe(this) {
+            Log.i(TAG, "onCreate: $it")
             gridAdaptor.submitList(it)
         }
     }
@@ -67,8 +69,7 @@ class ViewTabActivity : AppCompatActivity() {
         binding.recycleViewForTab.apply {
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(this@ViewTabActivity, 2)
-            gridAdaptor =
-                DownloadItemGridAdaptor(
+            gridAdaptor = DownloadItemGridAdaptor(
                     TypeOfDownload.IsFiles.name,
                     context = this@ViewTabActivity
                 ) { _, _ ->

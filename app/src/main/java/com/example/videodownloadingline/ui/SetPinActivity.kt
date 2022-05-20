@@ -48,11 +48,16 @@ class SetPinActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.event.observe(this) {
+        viewModel.eventSetPin.observe(this) {
             it.getContentIfNotHandled()?.let { res ->
-                when (res) {
+                when (res.second) {
                     getString(R.string.folder_is_found) -> {
-
+                        goToNextActivity<ViewTabActivity>(
+                            downloadItems = res.first,
+                            forSetPin = true,
+                            category = Category.PinFolder.name
+                        )
+                        finish()
                     }
                     getString(R.string.folder_is_not_found) -> {
                         binding.root.showSandbar("Wrong Pin", color = Color.RED)
@@ -153,7 +158,7 @@ class SetPinActivity : AppCompatActivity() {
         valueList?.first()?.let { res ->
             Log.i(TAG, "checkPinToOpenFolder: Pin is -> ${res.src}")
             Log.i(TAG, "checkPinToOpenFolder: Pin is -> $pin")
-            viewModel.checkPinToOpenFolder("%${res.src}%", "%$pin%")
+            viewModel.checkPinToOpenFolder("%${res.src}%", "%$pin%", res)
         } ?: binding.root.showSandbar("Cannot open Folder", color = Color.RED)
     }
 

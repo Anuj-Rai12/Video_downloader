@@ -27,6 +27,10 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
     val event: LiveData<Event<String>>
         get() = _event
 
+    private val _eventSetPin = MutableLiveData<Event<Pair<DownloadItems, String>>>()
+    val eventSetPin: LiveData<Event<Pair<DownloadItems, String>>>
+        get() = _eventSetPin
+
 
     private val _downloadItem = MutableLiveData<RemoteResponse<out Any>>()
     val downloadItemDb: LiveData<RemoteResponse<out Any>>
@@ -137,14 +141,19 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
         }
     }
 
-    fun checkPinToOpenFolder(src: String, pin: String) {
+    fun checkPinToOpenFolder(src: String, pin: String, res: SecureFolderItem) {
         viewModelScope.launch {
+            val downloadItems = DownloadItems(
+                0,
+                res.folder, "",
+                res.src, "", "", 21
+            )
             repo?.checkPinToOpenFolder(src, pin)?.collectLatest {
                 Log.i(TAG, "checkPinToOpenFolder: Valid File in data Base $it")
                 if (it.isNotEmpty()) {
-                    _event.postValue(Event("folder_in_db_is_found"))
+                    _eventSetPin.postValue(Event(Pair(downloadItems, "folder_in_db_is_found")))
                 } else {
-                    _event.postValue(Event("folder_is_not_found"))
+                    _eventSetPin.postValue(Event(Pair(downloadItems, "folder_is_not_found")))
                 }
             }
         }
