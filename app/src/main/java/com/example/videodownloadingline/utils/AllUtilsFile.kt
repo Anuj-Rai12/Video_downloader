@@ -11,6 +11,7 @@ import android.media.ThumbnailUtils
 import android.os.Build
 import android.os.CancellationSignal
 import android.os.Environment
+import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Size
 import android.util.TypedValue
@@ -30,6 +31,7 @@ import androidx.fragment.app.Fragment
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
+import com.example.videodownloadingline.model.securefolder.SecureFolderItem
 import com.example.videodownloadingline.model.tabitem.TabItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -152,8 +154,29 @@ fun Activity.toastMsg(msg: String, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, msg, duration).show()
 }
 
-inline fun <reified T> Activity.goToNextActivity() {
+inline fun <reified T> Activity.goToNextActivity(
+    forSetPin: Boolean = false,
+    secureFolderItem: SecureFolderItem? = null,
+    downloadItems: DownloadItems? = null,
+    category: String? = null
+) {
     val intent = Intent(this, T::class.java)
+    if (forSetPin) {
+        val array = if (secureFolderItem != null) {
+            val op = ArrayList<SecureFolderItem>()
+            op.add(secureFolderItem)
+            op
+        } else {
+            val op = ArrayList<DownloadItems>()
+            op.add(downloadItems!!)
+            op
+        }
+        intent.putParcelableArrayListExtra(
+            getString(R.string.set_pin_txt),
+            array
+        )
+        intent.putExtra(getString(R.string.set_pin_cat), category)
+    }
     startActivity(intent)
 }
 

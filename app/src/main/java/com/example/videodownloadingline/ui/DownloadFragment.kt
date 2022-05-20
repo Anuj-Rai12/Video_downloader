@@ -20,6 +20,7 @@ import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.downloaditem.Category
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
+import com.example.videodownloadingline.model.securefolder.SecureFolderItem
 import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
 
@@ -122,7 +123,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                     }
                     MainDownloadFragment.downloadViewPage?.currentItem = 1
                 } else {//With Pin
-                    val targetPath = getFileDir("/$txt", requireContext())
+                    /*val targetPath = getFileDir("/$txt", requireContext())
                     if (!targetPath.exists()) {
                         targetPath.mkdirs()
                         binding.root.showSandbar("File is Created", color = Color.GREEN)
@@ -130,7 +131,17 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                     } else {
                         requireActivity().toastMsg("File is Already Created")
                     }
-                    MainDownloadFragment.downloadViewPage?.currentItem = 2
+                    MainDownloadFragment.downloadViewPage?.currentItem = 2*/
+                    val secureFolderItem = SecureFolderItem(
+                        0, folder = txt, src = getFileDir(
+                            "/$txt",
+                            requireContext()
+                        ).absolutePath, pin = ""
+                    )
+                    (parentFragment as MainDownloadFragment).goToSetPin(
+                        secureFolderItem = secureFolderItem,
+                        category = Category.PinFolder.name
+                    )
                 }
                 newFolderDialogBox?.dismiss()
             }
@@ -262,7 +273,10 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                     )
                 }
                 BottomType.SetPin -> {
-                    (parentFragment as MainDownloadFragment).goToSetPin()
+                    (parentFragment as MainDownloadFragment).goToSetPin(
+                        downloadItems = response.second as DownloadItems?,
+                        category = Category.NormalFolder.name
+                    )
                 }
             }
         } catch (e: Exception) {

@@ -1,9 +1,12 @@
 package com.example.videodownloadingline.model.downloaditem
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 import java.text.DateFormat
 
+@Parcelize
 @Entity(tableName = "Download_Items")
 data class DownloadItems(
     @PrimaryKey(autoGenerate = true)
@@ -17,7 +20,7 @@ data class DownloadItems(
     val downloadCreatedAt: Long = System.currentTimeMillis(),
     val setPin: String = "",
     val category: String = Category.NormalFolder.name
-) {
+) : Parcelable {
     val createdCurrentTimeData: String
         get() = DateFormat.getDateTimeInstance().format(downloadCreatedAt)
 }

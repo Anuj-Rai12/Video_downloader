@@ -7,5 +7,4 @@ import kotlinx.android.parcel.Parcelize
 data class TabItem(
     val id: Int,
     val url: String? = null
-    //val title: String
 ) : Parcelable

@@ -82,5 +82,7 @@
     <string name="file_path_2">/VideoDownload/User</string>
     <string name="file_path_1">/VideoDownload</string>
     <string name="m3u8_format">video/.m3u8</string>
+    <string name="set_pin_txt">set_pin_for_folder_or_file</string>
+    <string name="set_pin_cat">set_pin_category</string>
 
 </resources>

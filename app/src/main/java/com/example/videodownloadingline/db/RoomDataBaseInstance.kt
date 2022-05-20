@@ -7,16 +7,23 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.videodownloadingline.db.dao.BookMarkItemDao
 import com.example.videodownloadingline.db.dao.DownloadItemDao
+import com.example.videodownloadingline.db.dao.SecureFolderItemDao
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
+import com.example.videodownloadingline.model.securefolder.SecureFolderItem
 import com.example.videodownloadingline.utils.BOOK_MARK_IC
 import com.example.videodownloadingline.utils.ioThread
 
 
-@Database(entities = [DownloadItems::class, HomeSrcIcon::class], version = 1, exportSchema = false)
+@Database(
+    entities = [DownloadItems::class, HomeSrcIcon::class, SecureFolderItem::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class RoomDataBaseInstance : RoomDatabase() {
     abstract fun getDownloadItemDao(): DownloadItemDao
     abstract fun getBookMarkItemDao(): BookMarkItemDao
+    abstract fun getSecureFolderDao(): SecureFolderItemDao
 
 
     companion object {

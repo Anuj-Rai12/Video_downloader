@@ -28,6 +28,7 @@ import com.example.videodownloadingline.bottom_sheets.BottomSheetDialogForDownlo
 import com.example.videodownloadingline.databinding.WebSiteFragmentLayoutBinding
 import com.example.videodownloadingline.model.downloadlink.VideoType
 import com.example.videodownloadingline.model.downloadlink.WebViewDownloadUrl
+import com.example.videodownloadingline.model.tabitem.TabItem
 import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.MainViewModel
 import com.google.android.exoplayer2.MediaItem
