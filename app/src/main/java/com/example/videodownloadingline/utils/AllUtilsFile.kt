@@ -188,7 +188,7 @@ fun Fragment.showDialogBox(
     isCancelBtnEnable: Boolean = false,
     cancelButton: String = "Cancel",
     callback: () -> Unit
-): AlertDialog? {
+): AlertDialog {
     val material = MaterialAlertDialogBuilder(
         requireContext(),
         R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
@@ -199,7 +199,7 @@ fun Fragment.showDialogBox(
         .setBackground(resources.getDrawable(R.drawable.dialog_box_shape, null))
         .setPositiveButton(btn) { dialog, _ ->
             dialog.dismiss()
-            callback.invoke()
+            callback()
         }
 
     if (isCancelBtnEnable) {
@@ -207,7 +207,9 @@ fun Fragment.showDialogBox(
             dialog.dismiss()
         }
     }
-    return material.show()
+    val alertDialog = material.create()
+    alertDialog.show()
+    return alertDialog
 }
 
 

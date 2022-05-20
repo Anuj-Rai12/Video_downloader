@@ -46,7 +46,6 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
                 binding.root.showSandbar(string, color = Color.GREEN)
             }
         }
-        permissionManager?.getDialogInstance()?.dismiss()
         permissionManager?.checkPermission {
             addWhatsApp(it)
         }
@@ -167,6 +166,9 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
 
     override fun onResume() {
         super.onResume()
+        val ins=permissionManager?.getDialogInstance()
+        Log.i(TAG, "onResume: Dialog $ins")
+        ins?.dismiss()
         permissionManager?.checkPermission {
             addWhatsApp(it)
         }

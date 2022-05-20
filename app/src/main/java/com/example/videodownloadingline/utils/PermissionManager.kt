@@ -36,8 +36,11 @@ class PermissionManager private constructor(private val fragment: WeakReference<
 
     private val android11PermissionCheck = fragment.get()
         ?.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            Log.i(TAG, "inActivity Result: file is Success ${it.resultCode}")
+            dialogInstance?.dismiss()
             if (it.resultCode == Activity.RESULT_OK) {
-                if (Build.VERSION.SDK_INT >= 30) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    Log.i(TAG, "inActivity Result: file is Success ${it.resultCode} Part 2")
                     val map =
                         mapOf(Manifest.permission.MANAGE_EXTERNAL_STORAGE to Environment.isExternalStorageManager())
                     Log.i(TAG, "testing Manifest permission: $map")
@@ -89,7 +92,7 @@ class PermissionManager private constructor(private val fragment: WeakReference<
     }
 
     private fun sendPositiveResult() {
-        sendResultAndCleanUp(getPermissionList().associate { it to true })
+        sendResultAndCleanUp(getPermissionList().associateWith { true })
     }
 
     private fun sendResultAndCleanUp(grantResults: Map<String, Boolean>) {
