@@ -112,6 +112,15 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment),
         )
     }
 
+
+    fun goToViewTab(downloadItems: DownloadItems, category: String) {
+        requireActivity().goToNextActivity<ViewTabActivity>(
+            downloadItems = downloadItems,
+            forSetPin = true,
+            category = category
+        )
+    }
+
     override fun onPause() {
         super.onPause()
         newFolderDialogBox?.dismiss()

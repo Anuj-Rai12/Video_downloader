@@ -205,7 +205,10 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     private fun openBottomSheet(video: DownloadItems) {
         when (TypeOfDownload.valueOf(type)) {
             TypeOfDownload.IsFolder -> {
-
+                (parentFragment as MainDownloadFragment).goToViewTab(
+                    downloadItems = video,
+                    Category.NormalFolder.name
+                )
             }
             TypeOfDownload.IsFiles -> {
                 openBottomSheetDialog = BottomSheetDialogForDownloadFrag(video)
