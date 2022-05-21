@@ -47,10 +47,6 @@ class MainActivity : AppCompatActivity() {
                 it.mkdirs()
             }
         }
-        val user="/storage/emulated/0/Download/VideoDownload/User/test one /Video_1653044919916.mp4"
-
-
-
 
         val navHost =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
