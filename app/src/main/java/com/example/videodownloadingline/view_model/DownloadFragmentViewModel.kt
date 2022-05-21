@@ -168,12 +168,26 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
         viewModelScope.launch {
             repo?.searchFileWithFileName(src, pin)?.collectLatest {
                 Log.i(TAG, "checkPinToOpenFolder: Valid File in data Base ${it.data}")
-                it.data?.let {list->
+                it.data?.let { list ->
                     if (list.isNotEmpty()) {
                         _eventSetPin.postValue(Event(Pair(res, "file_in_db_is_found")))
                     } else {
                         _eventSetPin.postValue(Event(Pair(res, "file_is_not_found")))
                     }
+                }
+            }
+        }
+    }
+
+
+    fun searchFileInNormalFolder(src: String, fileTitle: String, res: DownloadItems) {
+        viewModelScope.launch {
+            repo?.searchFileInNormalFolder(src, fileTitle)?.collectLatest { list ->
+                Log.i(TAG, "checkPinToOpenFolder: Valid File in data Base $list")
+                if (list.isNotEmpty()) {
+                    _eventSetPin.postValue(Event(Pair(list.first(), "file_in_db_is_found")))
+                } else {
+                    _eventSetPin.postValue(Event(Pair(res, "file_is_not_found")))
                 }
             }
         }

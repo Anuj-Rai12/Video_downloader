@@ -60,6 +60,14 @@ class DownloadFragmentRepo(private val roomDataBaseInstance: RoomDataBaseInstanc
     }
 
 
+    fun searchFileInNormalFolder(src: String, fileName: String) = channelFlow {
+        roomDataBaseInstance.getDownloadItemDao().searchDownloadInNormalFolder(src, fileName)
+            .collectLatest {
+                send(it)
+            }
+    }
+
+
     fun updateDownloadItem(data: DownloadItems): Long {
         return roomDataBaseInstance.getDownloadItemDao().updateItem(data).toLong()
     }

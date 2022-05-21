@@ -229,13 +229,14 @@ fun Activity.putVideo(
     return uri
 }
 
-fun Activity.playVideo(uri: String, format: String) {
+fun Activity.playVideo(uri: String, format: String="video/*") {
     try {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         intent.setDataAndType(Uri.parse(uri), format)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         startActivity(intent)
     } catch (e: Exception) {
+        Log.i(TAG, "playVideo: ${e.localizedMessage}")
         toastMsg("Can not Play the Video!!")
     }
 }

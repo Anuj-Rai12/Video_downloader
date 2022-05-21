@@ -1,5 +1,7 @@
 package com.example.videodownloadingline.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -11,10 +13,14 @@ import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadItemGridAdaptor
 import com.example.videodownloadingline.adaptor.view_tab_open_adaptor.ViewTabOpenAdaptor
 import com.example.videodownloadingline.databinding.ActivityViewTabBinding
+import com.example.videodownloadingline.model.downloaditem.Category
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.example.videodownloadingline.model.tabitem.TabItem
 import com.example.videodownloadingline.utils.TAG
+import com.example.videodownloadingline.utils.getFileUrl
+import com.example.videodownloadingline.utils.playVideo
+import com.example.videodownloadingline.utils.toastMsg
 import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
 import com.example.videodownloadingline.view_model.MainViewModel
 import java.io.File
@@ -45,6 +51,37 @@ class ViewTabActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         mainViewModel = MainViewModel.getInstance()
+
+        viewModel.eventSetPin.observe(this) {
+            it.getContentIfNotHandled()?.let { pair ->
+                when (pair.second) {
+                    getString(R.string.file_is_found) -> {
+                        if (pair.first.setPin.isNotEmpty()) {
+                            Intent(this@ViewTabActivity, SetPinActivity::class.java).apply {
+                                putParcelableArrayListExtra(
+                                    getString(R.string.set_pin_txt),
+                                    arrayListOf(pair.first)
+                                )
+                                putExtra(
+                                    getString(R.string.set_pin_cat),
+                                    Category.NormalFolder.name
+                                )
+                                putExtra(getString(R.string.set_pin_click), true)
+                            }.run {
+                                startActivity(this)
+                            }
+                        } else {
+                            playVideo(pair.first.fileLoc)
+                        }
+                    }
+                    getString(R.string.file_is_not_found) -> {
+                        Log.i(TAG, "onCreate: file is Not Found")
+                        playVideo(pair.first.fileLoc)
+                    }
+                }
+            }
+        }
+
         val extras = intent.extras
         if (extras != null) {
             tablist = extras.getParcelableArrayList("TabItem")
@@ -70,13 +107,36 @@ class ViewTabActivity : AppCompatActivity() {
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(this@ViewTabActivity, 2)
             gridAdaptor = DownloadItemGridAdaptor(
-                    TypeOfDownload.IsFiles.name,
-                    context = this@ViewTabActivity
-                ) { _, _ ->
-
-                }
+                TypeOfDownload.IsFiles.name,
+                context = this@ViewTabActivity
+            ) { data, _ ->
+                validData(data)
+            }
             adapter = gridAdaptor
         }
+    }
+
+    private fun validData(data: DownloadItems) {
+        if (category == null) {
+            toastMsg("Cannot Open File Something Went Wrong")
+            return
+        }
+        Log.i(TAG, "validData: $data")
+        when (Category.valueOf(category!!)) {
+            Category.PinFolder -> {
+                val url = getFileUrl(File(data.fileLoc), this)
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url.toString()))
+                intent.setDataAndType(Uri.parse(url.toString()), "video/*")
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                startActivity(intent)
+            }
+            Category.NormalFolder -> {
+                //Valid it by checking Pin File
+                viewModel.searchFileInNormalFolder(data.fileLoc, data.fileTitle, data)
+            }
+        }
+
+
     }
 
     private fun setRecycleView() {

@@ -65,7 +65,7 @@ class SetPinActivity : AppCompatActivity() {
 
                     getString(R.string.file_is_found) -> {
                         //Public Folder
-                        playVideo(res.first.fileLoc, "video/*")
+                        playVideo(res.first.fileLoc)
                         onBackPressed()
                     }
                     getString(R.string.file_is_not_found) -> {
