@@ -13,7 +13,9 @@ class WhatsappActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityWhatsappBinding.inflate(layoutInflater)
     }
+
     private var viewPagerAdaptor: ViewPagerAdapter? = null
+
     private val whatsAppTab by lazy {
         resources.getStringArray(R.array.whatsapp_tab_item)
     }

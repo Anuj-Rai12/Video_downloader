@@ -90,7 +90,7 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment),
     }
 
     private fun setUpAdaptor() {
-        viewPagerAdaptor = ViewPagerAdapter(childFragmentManager, lifecycle)
+        viewPagerAdaptor = ViewPagerAdapter(this)
         viewPagerAdaptor?.setFragment(DownloadFragment(TypeOfDownload.IsFiles.name))
         viewPagerAdaptor?.setFragment(DownloadFragment(TypeOfDownload.IsFolder.name))
         viewPagerAdaptor?.setFragment(DownloadFragment(TypeOfDownload.SecureFolder.name))

@@ -26,8 +26,9 @@ class BrowserFragment : Fragment(R.layout.activity_web) {
         super.onViewCreated(view, savedInstanceState)
         binding = ActivityWebBinding.bind(view)
         viewPager = binding.mainWebViewViewPager
-        binding.mainWebViewViewPager.isUserInputEnabled=false
-        viewPagerAdapter = ViewPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle)
+        binding.mainWebViewViewPager.isUserInputEnabled = false
+        viewPagerAdapter = ViewPagerAdapter(this)//ViewPagerAdapter.getInstance(this)
+        //ViewPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle)
         setFragment(WebViewFragments(args.name, args.url), args.url)
     }
 
@@ -52,8 +53,8 @@ class BrowserFragment : Fragment(R.layout.activity_web) {
         (activity as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
     }
 
-    fun removeFragment(position: Int,isRemove:Boolean=false): Int? {
-        viewPagerAdapter?.removedFragment(position,isRemove)
+    fun removeFragment(position: Int, isRemove: Boolean = false): Int? {
+        viewPagerAdapter?.removedFragment(position, isRemove)
         return viewPagerAdapter?.getSize()
     }
 

@@ -8,8 +8,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.videodownloadingline.model.tabitem.TabItem
 import com.example.videodownloadingline.utils.TAG
 
-class ViewPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
-    FragmentStateAdapter(fm, lifecycle) {
+class ViewPagerAdapter : FragmentStateAdapter {
+
+    constructor(fragment: Fragment) : super(fragment)
+
+    constructor(fragmentManager: FragmentManager, lifecycle: Lifecycle) : super(
+        fragmentManager,
+        lifecycle
+    )
 
     private val getTotalFragment: MutableList<Fragment> = mutableListOf()
     private val getTabList: MutableList<TabItem> = mutableListOf()
@@ -17,10 +23,11 @@ class ViewPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
     companion object {
 
         private var INSTANCE: ViewPagerAdapter? = null
-        fun getInstance(fm: FragmentManager, lifecycle: Lifecycle): ViewPagerAdapter? {
+        fun getInstance(fragment: Fragment): ViewPagerAdapter? {
+            //fm: FragmentManager, lifecycle: Lifecycle
             synchronized(this) {
                 if (INSTANCE == null) {
-                    INSTANCE = ViewPagerAdapter(fm, lifecycle)
+                    INSTANCE = ViewPagerAdapter(fragment)
                     Log.i(TAG, "getInstance: instance is Null $INSTANCE")
                     return INSTANCE
                 }
@@ -51,10 +58,10 @@ class ViewPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
 
     fun getTabList() = getTabList.toList()
 
-    fun removedFragment(position: Int,isRemove:Boolean) {
+    fun removedFragment(position: Int, isRemove: Boolean) {
         getTotalFragment.removeAt(position)
         if (isRemove)
-        getTabList.removeAt(position)
+            getTabList.removeAt(position)
         Log.i(TAG, "removedFragment: $getTotalFragment")
     }
 
