@@ -1,6 +1,8 @@
 package com.example.videodownloadingline.ui
 
+
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -8,19 +10,18 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ShareCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadItemGridAdaptor
 import com.example.videodownloadingline.adaptor.view_tab_open_adaptor.ViewTabOpenAdaptor
 import com.example.videodownloadingline.databinding.ActivityViewTabBinding
+import com.example.videodownloadingline.dialog.AddIconsDialogBox
 import com.example.videodownloadingline.model.downloaditem.Category
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.example.videodownloadingline.model.tabitem.TabItem
-import com.example.videodownloadingline.utils.TAG
-import com.example.videodownloadingline.utils.getFileUrl
-import com.example.videodownloadingline.utils.playVideo
-import com.example.videodownloadingline.utils.toastMsg
+import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
 import com.example.videodownloadingline.view_model.MainViewModel
 import java.io.File
@@ -34,6 +35,8 @@ class ViewTabActivity : AppCompatActivity() {
 
     private lateinit var viewTabAdaptor: ViewTabOpenAdaptor
 
+    private var newFolderDialogBox: AddIconsDialogBox? = null
+
     private lateinit var gridAdaptor: DownloadItemGridAdaptor
     private var mainViewModel: MainViewModel? = null
     private var tablist: ArrayList<TabItem>? = null
@@ -46,6 +49,7 @@ class ViewTabActivity : AppCompatActivity() {
     private val category by lazy {
         intent.extras?.getString(getString(R.string.set_pin_cat))
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,13 +114,55 @@ class ViewTabActivity : AppCompatActivity() {
                 TypeOfDownload.IsFiles.name,
                 context = this@ViewTabActivity
             ) { data, _ ->
-                validData(data)
+                showOptionDialog(data)
             }
             adapter = gridAdaptor
         }
     }
 
-    private fun validData(data: DownloadItems) {
+
+    private fun showOptionDialog(data: DownloadItems) {
+        if (newFolderDialogBox == null)
+            newFolderDialogBox = AddIconsDialogBox()
+
+        newFolderDialogBox?.displaySortingViewRecycle(
+            context = this,
+            data = arrayOf(FileOption.PlayVideo.name, FileOption.Share.name),
+            title = data.fileTitle,
+            listenerForNewFolder = { res, _ ->
+                newFolderDialogBox?.dismiss()
+                when (FileOption.valueOf(res)) {
+                    FileOption.PlayVideo -> {
+                        playVideoFile(data)
+                    }
+                    FileOption.Share -> {
+                        shareFile(data)
+                    }
+                }
+            }
+        )
+    }
+
+    private fun shareFile(data: DownloadItems) {
+        if (category == null) {
+            toastMsg("Cannot Open File Something Went Wrong")
+            return
+        }
+        when (Category.valueOf(category!!)) {
+            Category.PinFolder -> {
+                val url = getFileUrl(File(data.fileLoc), this)
+                url?.let { shareVideo(url) } ?: binding.root.showSandbar(
+                    "Cannot share the Video!!",
+                    color = Color.RED
+                )
+            }
+            Category.NormalFolder -> {
+                shareVideo(Uri.parse(data.fileLoc))
+            }
+        }
+    }
+
+    private fun playVideoFile(data: DownloadItems) {
         if (category == null) {
             toastMsg("Cannot Open File Something Went Wrong")
             return
@@ -176,5 +222,37 @@ class ViewTabActivity : AppCompatActivity() {
         }
         onBackPressed()
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        newFolderDialogBox?.dismiss()
+    }
+
+    enum class FileOption {
+        PlayVideo,
+        Share
+    }
+
+    private fun shareVideo(uri: Uri) {
+        ShareCompat.IntentBuilder(this)
+            .setStream(uri)
+            .setType("video/*")
+            .setChooserTitle("Share video...")
+            .setChooserTitle("Share Video")
+            .setSubject("Enjoy the Video")
+            .setText("Download By VideoDownload App 2022")
+            .startChooser()
+
+//        MediaScannerConnection.scanFile(this, arrayOf(pathFile), null) { _, uri ->
+//            val shareIntent = Intent(Intent.ACTION_SEND)
+//            shareIntent.type = "video/*"
+//            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Download By VideoDownload App 2022")
+//            shareIntent.putExtra(Intent.EXTRA_TITLE, "Enjoy the Video")
+//            shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+//            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//            shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
+//            startActivity(Intent.createChooser(shareIntent, "Share Video"))
+//        }
     }
 }
