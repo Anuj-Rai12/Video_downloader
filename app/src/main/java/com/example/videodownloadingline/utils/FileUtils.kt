@@ -233,6 +233,7 @@ fun Activity.playVideo(uri: String, format: String) {
     try {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         intent.setDataAndType(Uri.parse(uri), format)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         startActivity(intent)
     } catch (e: Exception) {
         toastMsg("Can not Play the Video!!")

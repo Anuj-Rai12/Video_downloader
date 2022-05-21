@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -47,6 +48,15 @@ class MainActivity : AppCompatActivity() {
                 it.mkdirs()
             }
         }
+//        val path="/storage/emulated/0/Android/data/com.example.videodownloadingline/files/Download/two/Video_1653044919916.mp4"
+//        val url= getFileUrl(File(path),this)
+//        val pathUrl=url?.path
+//        Log.i(TAG, "onCreate: $pathUrl and $url")
+//        val intent = Intent(Intent.ACTION_VIEW,Uri.parse(url.toString()))
+//        intent.setDataAndType(Uri.parse(url.toString()), "video/*")
+//        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//        startActivity(intent)
+
         val navHost =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navHostFragment = navHost.findNavController()

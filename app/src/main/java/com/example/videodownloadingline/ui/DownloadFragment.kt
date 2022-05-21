@@ -303,6 +303,21 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
             }
         } catch (e: Exception) {
             // if is Secure then Got To Secure Folder or Set Pin ?
+            if (data.category == Category.PinFolder.name) {
+                activity?.toastMsg("Open Folder To Access It!!")
+                MainDownloadFragment.downloadViewPage?.currentItem = 2
+                return
+            }
+
+            if (data.setPin.isNotEmpty()) {
+                (parentFragment as MainDownloadFragment).goToSetPin(
+                    downloadItems = data,
+                    category = Category.NormalFolder.name,
+                    isClickFlag = true
+                )
+                return
+            }
+
             activity?.let { act ->
                 (response.second as DownloadItems?)?.let { items ->
                     act.playVideo(items.fileLoc, items.fileExtensionType)

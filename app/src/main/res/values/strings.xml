@@ -89,4 +89,7 @@
     <string name="folder_is_found">folder_in_db_is_found</string>
     <string name="folder_is_not_found">folder_is_not_found</string>
 
+
+    <string name="file_is_found">file_in_db_is_found</string>
+    <string name="file_is_not_found">file_is_not_found</string>
 </resources>

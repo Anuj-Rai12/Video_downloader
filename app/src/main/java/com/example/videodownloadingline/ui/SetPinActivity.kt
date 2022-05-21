@@ -62,6 +62,15 @@ class SetPinActivity : AppCompatActivity() {
                     getString(R.string.folder_is_not_found) -> {
                         binding.root.showSandbar("Wrong Pin", color = Color.RED)
                     }
+
+                    getString(R.string.file_is_found) -> {
+                        //Public Folder
+                        playVideo(res.first.fileLoc, "video/*")
+                        onBackPressed()
+                    }
+                    getString(R.string.file_is_not_found) -> {
+                        binding.root.showSandbar("Wrong Pin File Cannot be Open", color = Color.RED)
+                    }
                 }
             }
         }
@@ -149,9 +158,42 @@ class SetPinActivity : AppCompatActivity() {
             Category.NormalFolder -> {//Set Pin of Normal File
                 val valueList =
                     extras!!.getParcelableArrayList<DownloadItems>(getString(R.string.set_pin_txt))
-
+                if (isFlagClicked) {
+                    //Valid Pin
+                    checkPinToOpenFile(valueList, pin)
+                } else {
+                    addPinToFile(valueList, pin)
+                }
             }
         }
+    }
+
+    private fun checkPinToOpenFile(valueList: ArrayList<DownloadItems>?, pin: String) {
+        valueList?.first()?.let { res ->
+            if (File(res.fileLoc).exists()) {
+                viewModel.checkPinToOpenFile(src = "%${res.fileLoc}%", pin = "%$pin%", res = res)
+            } else {
+                toastMsg("File not Found!!")
+                return
+            }
+        } ?: binding.root.showSandbar("Error Unknown is File Not Open")
+    }
+
+    private fun addPinToFile(valueList: ArrayList<DownloadItems>?, pin: String) {
+        valueList?.first()?.let { res ->
+            val file = File(res.fileLoc)
+            if (file.exists()) {
+                viewModel.updateDownloadItem(
+                    downloadItems = res,
+                    filePath = res.fileLoc,
+                    category = Category.valueOf(res.category),
+                    setPin = pin
+                )
+            } else {
+                toastMsg("File is Not Exits!!")
+                onBackPressed()
+            }
+        } ?: binding.root.showSandbar("Unknown Error cannot find File", color = Color.RED)
     }
 
     private fun checkPinToOpenFolder(valueList: ArrayList<SecureFolderItem>?, pin: String) {

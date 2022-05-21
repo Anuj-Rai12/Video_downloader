@@ -52,6 +52,14 @@ class DownloadFragmentRepo(private val roomDataBaseInstance: RoomDataBaseInstanc
         }
     }
 
+
+    fun searchFileWithFileName(src: String, pin: String) = channelFlow {
+        roomDataBaseInstance.getDownloadItemDao().searchDownloadFile(src, pin).collectLatest {
+            send(RemoteResponse.Success(it))
+        }
+    }
+
+
     fun updateDownloadItem(data: DownloadItems): Long {
         return roomDataBaseInstance.getDownloadItemDao().updateItem(data).toLong()
     }

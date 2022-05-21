@@ -164,6 +164,22 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
         }
     }
 
+    fun checkPinToOpenFile(src: String, pin: String, res: DownloadItems) {
+        viewModelScope.launch {
+            repo?.searchFileWithFileName(src, pin)?.collectLatest {
+                Log.i(TAG, "checkPinToOpenFolder: Valid File in data Base ${it.data}")
+                it.data?.let {list->
+                    if (list.isNotEmpty()) {
+                        _eventSetPin.postValue(Event(Pair(res, "file_in_db_is_found")))
+                    } else {
+                        _eventSetPin.postValue(Event(Pair(res, "file_is_not_found")))
+                    }
+                }
+            }
+        }
+    }
+
+
     fun makeFolderCreateIdNull() {
         _folderCreateId.postValue(Event(null))
     }

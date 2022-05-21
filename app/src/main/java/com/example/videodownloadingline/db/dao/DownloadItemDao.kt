@@ -30,6 +30,10 @@ interface DownloadItemDao {
     @Query("Select *From Download_Items where fileTitle Like:src")
     fun searchDownloadFile(src: String): Flow<List<DownloadItems>>
 
+
+    @Query("Select *From Download_Items where fileLoc Like:src and setPin Like:pin")
+    fun searchDownloadFile(src: String, pin: String): Flow<List<DownloadItems>>
+
 //or itemDescription Like:searchQuery or itemCategory Like :searchQuery
 //or salePrice Like :searchQuery order by salePrice desc
 
