@@ -44,8 +44,8 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
         get() = _folderItem
 
 
-    private val _folderCreateId = MutableLiveData<Long>()
-    val folderCreateId: LiveData<Long>
+    private val _folderCreateId = MutableLiveData<Event<Long?>>()
+    val folderCreateId: LiveData<Event<Long?>>
         get() = _folderCreateId
 
     init {
@@ -100,7 +100,7 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
             val res = async(IO) {
                 repo?.addPinFolder(secureFolderItem)
             }
-            _folderCreateId.postValue(res.await())
+            _folderCreateId.postValue(Event(res.await()))
         }
     }
 
@@ -120,7 +120,12 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
         super.onCleared()
     }
 
-    fun updateDownloadItem(downloadItems: DownloadItems, filePath: String, category: Category) {
+    fun updateDownloadItem(
+        downloadItems: DownloadItems,
+        filePath: String,
+        category: Category,
+        setPin: String?
+    ) {
         val download = DownloadItems(
             downloadItems.id,
             downloadItems.fileTitle,
@@ -130,14 +135,14 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
             downloadItems.fileExtensionType,
             downloadItems.fileSize,
             downloadItems.downloadCreatedAt,
-            downloadItems.setPin,
+            setPin ?: downloadItems.setPin,
             category = category.name
         )
         viewModelScope.launch {
             val res = async(IO) {
                 repo?.updateDownloadItem(download)
             }
-            res.await()
+            _folderCreateId.postValue(Event(res.await()))
         }
     }
 
@@ -157,6 +162,10 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
                 }
             }
         }
+    }
+
+    fun makeFolderCreateIdNull() {
+        _folderCreateId.postValue(Event(null))
     }
 
 }

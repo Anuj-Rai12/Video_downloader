@@ -18,7 +18,7 @@ interface DownloadItemDao {
 
 
     @Update
-    fun updateItem(downloadItems: DownloadItems)
+    fun updateItem(downloadItems: DownloadItems): Int
 
     @Query("Select * from Download_Items")
     suspend fun getAllDownload(): List<DownloadItems>

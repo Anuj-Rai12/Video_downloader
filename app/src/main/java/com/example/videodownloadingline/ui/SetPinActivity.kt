@@ -41,8 +41,8 @@ class SetPinActivity : AppCompatActivity() {
         setContentView(binding.root)
         mainViewModel = MainViewModel.getInstance()
         viewModel.folderCreateId.observe(this) {
-            if (it != null) {
-                Log.i(TAG, "onCreate: $it")
+            it.getContentIfNotHandled()?.let { res ->
+                Log.i(TAG, "onCreate: $res")
                 MainDownloadFragment.downloadViewPage?.currentItem = 2
                 onBackPressed()
             }

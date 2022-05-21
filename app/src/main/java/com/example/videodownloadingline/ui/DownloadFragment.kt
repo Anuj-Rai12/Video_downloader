@@ -23,6 +23,7 @@ import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.example.videodownloadingline.model.securefolder.SecureFolderItem
 import com.example.videodownloadingline.utils.*
 import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
+import com.google.android.material.snackbar.Snackbar
 
 
 class DownloadFragment(private val type: String) : Fragment(R.layout.download_fragment_layout),
@@ -42,6 +43,12 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         super.onViewCreated(view, savedInstanceState)
         binding = DownloadFragmentLayoutBinding.bind(view)
         binding.viewTxt.text = getString(R.string.total_vid_view, "View:")
+        viewModel.folderCreateId.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                binding.root.showSandbar("File is Moved", color = Color.GREEN)
+            }
+        }
+
         setUpRecycleView(GridLayoutManager(requireActivity(), 2))
         changeLayoutView()
         soAllFileOrFolder()
@@ -80,6 +87,7 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         super.onPause()
         newFolderDialogBox?.dismiss()
         openBottomSheetDialog?.dismiss()
+        viewModel.makeFolderCreateIdNull()
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -260,11 +268,16 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun <T> onItemClicked(type: T) {
         val response = type as Pair<*, *>
+        val data = response.second as DownloadItems?
+        if (data == null) {
+            requireActivity().toastMsg("Something Went Wrong")
+            return
+        }
         openBottomSheetDialog?.dismiss()
         try {
             when (BottomType.valueOf(response.first.toString())) {
                 BottomType.Delete -> {
-                    (response.second as DownloadItems?)?.let { downloadItems: DownloadItems ->
+                    data.let { downloadItems: DownloadItems ->
                         activity?.let {
                             it.deleteVideo(downloadItems.fileLoc)
                             viewModel.deleteDownload(downloadItems)
@@ -272,19 +285,24 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
                     }
                 }
                 BottomType.MoveTo -> {
-                    checkFolderDirDialog(
-                        listOf("Secure Folder", "Folder"),
-                        response.second as DownloadItems
-                    )
+                    checkFolderDirDialog(listOf("Secure Folder", "Folder"), data)
                 }
                 BottomType.SetPin -> {
+                    if (data.category == Category.PinFolder.name || data.setPin.isNotEmpty()) {
+                        binding.root.showSandbar(
+                            "Folder is Already Secure", Snackbar.LENGTH_LONG,
+                            color = Color.CYAN
+                        )
+                        return
+                    }
                     (parentFragment as MainDownloadFragment).goToSetPin(
-                        downloadItems = response.second as DownloadItems?,
+                        downloadItems = data,
                         category = Category.NormalFolder.name
                     )
                 }
             }
         } catch (e: Exception) {
+            // if is Secure then Got To Secure Folder or Set Pin ?
             activity?.let { act ->
                 (response.second as DownloadItems?)?.let { items ->
                     act.playVideo(items.fileLoc, items.fileExtensionType)
@@ -328,15 +346,17 @@ class DownloadFragment(private val type: String) : Fragment(R.layout.download_fr
         targetPath: String,
         flag: Boolean
     ) {
+        val setPin: String?
         val category = if (flag) {//Normal Folder
+            setPin = null
             Category.NormalFolder
         } else {//Secure Folder
+            setPin = ""
             Category.PinFolder
         }
         Log.i(TAG, "nextProcess: $category and Flag is ?  $flag")
         if (it) {
-            binding.root.showSandbar("File is Moved", color = Color.GREEN)
-            viewModel.updateDownloadItem(response, targetPath, category)
+            viewModel.updateDownloadItem(response, targetPath, category, setPin)
         } else {
             binding.root.showSandbar("File is Not Moved", color = Color.RED)
         }
