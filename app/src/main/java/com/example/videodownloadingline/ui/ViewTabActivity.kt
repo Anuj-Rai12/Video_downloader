@@ -3,6 +3,7 @@ package com.example.videodownloadingline.ui
 
 import android.content.Intent
 import android.graphics.Color
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +11,6 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ShareCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.download_item_adaptor.DownloadItemGridAdaptor
@@ -151,13 +151,13 @@ class ViewTabActivity : AppCompatActivity() {
         when (Category.valueOf(category!!)) {
             Category.PinFolder -> {
                 val url = getFileUrl(File(data.fileLoc), this)
-                url?.let { shareVideo(url) } ?: binding.root.showSandbar(
+                url?.let { shareVideo(url, null) } ?: binding.root.showSandbar(
                     "Cannot share the Video!!",
                     color = Color.RED
                 )
             }
             Category.NormalFolder -> {
-                shareVideo(Uri.parse(data.fileLoc))
+                shareVideo(null, data.fileLoc)
             }
         }
     }
@@ -234,25 +234,28 @@ class ViewTabActivity : AppCompatActivity() {
         Share
     }
 
-    private fun shareVideo(uri: Uri) {
-        ShareCompat.IntentBuilder(this)
-            .setStream(uri)
-            .setType("video/*")
-            .setChooserTitle("Share video...")
-            .setChooserTitle("Share Video")
-            .setSubject("Enjoy the Video")
-            .setText("Download By VideoDownload App 2022")
-            .startChooser()
-
-//        MediaScannerConnection.scanFile(this, arrayOf(pathFile), null) { _, uri ->
-//            val shareIntent = Intent(Intent.ACTION_SEND)
-//            shareIntent.type = "video/*"
-//            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Download By VideoDownload App 2022")
-//            shareIntent.putExtra(Intent.EXTRA_TITLE, "Enjoy the Video")
-//            shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-//            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-//            shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
-//            startActivity(Intent.createChooser(shareIntent, "Share Video"))
-//        }
+    private fun shareVideo(uri: Uri?, filePath: String?) {
+        when (Category.valueOf(category!!)) {
+            Category.PinFolder -> {
+                Intent(Intent.ACTION_SEND).apply {
+                    type = "video/*"
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    putExtra(Intent.EXTRA_TEXT, "Download By VideoDownload App 2022")
+                }.run {
+                    startActivity(Intent.createChooser(this, "share Video"))
+                }
+            }
+            Category.NormalFolder -> {
+                MediaScannerConnection.scanFile(this, arrayOf(filePath), null) { _, url ->
+                    val shareIntent = Intent(Intent.ACTION_SEND)
+                    shareIntent.type = "video/*"
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, url)
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, "Download By VideoDownload App 2022")
+                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
+                    startActivity(Intent.createChooser(shareIntent, "Share Video"))
+                }
+            }
+        }
     }
 }

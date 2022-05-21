@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -48,6 +47,9 @@ class MainActivity : AppCompatActivity() {
                 it.mkdirs()
             }
         }
+        val user="/storage/emulated/0/Download/VideoDownload/User/test one /Video_1653044919916.mp4"
+
+
 
 
         val navHost =
