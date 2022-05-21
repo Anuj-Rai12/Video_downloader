@@ -319,6 +319,10 @@ fun Activity.moveFile(inputPath: String, outputPath: String): Boolean {
     Log.i("moveFile", " inputPath is ---> $inputPath")
     Log.i("moveFile", " outputPath is --> $outputPath")
     Log.i("moveFile", " For input file is --> ${File(inputPath).exists()}")
+   if (inputPath == outputPath) {
+       toastMsg("File is Already Present At In Directory")
+       return false
+   }
     val inputStream: InputStream?
     val outputStream: OutputStream?
     return try {
