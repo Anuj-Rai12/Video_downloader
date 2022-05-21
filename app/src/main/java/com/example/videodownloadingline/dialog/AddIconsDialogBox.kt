@@ -88,13 +88,9 @@ class AddIconsDialogBox {
             }
             text = con.getText(R.string.create_folder_name)
             setOnClickListener {
-                val name = binding.folderNameTxt.text.toString()
+                val name = binding.folderNameTxt.text.toString().trim()
                 if (checkInputField(name)) {
-                    Toast.makeText(
-                        this.context,
-                        "Please Enter correct Information ",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    con.toastMsg("Please Enter correct Information ")
                     return@setOnClickListener
                 }
                 listenerForNewFolder(name)
@@ -286,7 +282,7 @@ class AddIconsDialogBox {
                         viewModel?.getFolderDir(targetPath)
                     }
                 }
-            }else if (res == "Add Folder"){
+            } else if (res == "Add Folder") {
                 listenEmpty(flagIdx)
             }
         }
