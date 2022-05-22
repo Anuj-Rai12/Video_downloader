@@ -6,8 +6,11 @@ import androidx.lifecycle.*
 import com.example.videodownloadingline.db.RoomDataBaseInstance
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
 import com.example.videodownloadingline.repo.HomeSrcFragmentRepository
+import com.example.videodownloadingline.utils.Event
 import com.example.videodownloadingline.utils.RemoteResponse
 import com.example.videodownloadingline.utils.TAG
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -22,6 +25,9 @@ class HomeSrcFragmentViewModel(application: Application) : AndroidViewModel(appl
 
     private var repo: HomeSrcFragmentRepository? = null
 
+    private val _eventForDeleteBookMarkIc = MutableLiveData<Event<Int?>>()
+    val eventForDeleteBookMarkIc: LiveData<Event<Int?>>
+        get() = _eventForDeleteBookMarkIc
 
     init {
         repo = HomeSrcFragmentRepository(RoomDataBaseInstance.getInstance(application))
@@ -30,11 +36,12 @@ class HomeSrcFragmentViewModel(application: Application) : AndroidViewModel(appl
         }
     }
 
-     private suspend fun getResponse(){
+    private suspend fun getResponse() {
         repo?.getBookMarkItem()?.collectLatest {
             _getBookMarkIcon.postValue(it)
         }
     }
+
     fun addVideoItem(homeSrcIcon: HomeSrcIcon) {
         viewModelScope.launch {
             repo?.addBookMarkItem(homeSrcIcon)?.collectLatest {
@@ -49,6 +56,17 @@ class HomeSrcFragmentViewModel(application: Application) : AndroidViewModel(appl
             }
         }
     }
+
+    fun deleteBookMarkIc(homeSrcIcon: HomeSrcIcon) {
+        viewModelScope.launch {
+            val res = async(IO) {
+                repo?.deleteBookMarkIc(homeSrcIcon)
+            }
+            _eventForDeleteBookMarkIc.postValue(Event(res.await()))
+            getResponse()
+        }
+    }
+
 
     override fun onCleared() {
         viewModelScope.cancel()

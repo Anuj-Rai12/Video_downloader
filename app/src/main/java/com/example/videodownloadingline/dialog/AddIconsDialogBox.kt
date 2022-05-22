@@ -139,6 +139,7 @@ class AddIconsDialogBox {
     fun showDeleteVideoDialogBox(
         context: Context,
         flag: Boolean = true,
+        title: String,
         listenerYesBtn: ListenDismiss,
         listenerNoBtn: ListenDismiss
     ) {
@@ -168,7 +169,7 @@ class AddIconsDialogBox {
             textAlignment = View.TEXT_ALIGNMENT_CENTER
             setTypeface(typeface, Typeface.NORMAL)
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
-            text = this.context.getString(R.string.del_dialog_txt)
+            text = title
         }
         binding.delBtn.text = binding.delBtn.context.getString(R.string.total_vid_view, "Yes")
         binding.doNotDelBtn.text =

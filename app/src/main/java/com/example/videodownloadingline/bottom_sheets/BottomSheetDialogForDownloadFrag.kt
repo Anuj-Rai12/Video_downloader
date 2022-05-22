@@ -130,14 +130,18 @@ class BottomSheetDialogForDownloadFrag(
 
     private fun openDialogBox() {
         deleteDialogBox = AddIconsDialogBox()
-        deleteDialogBox?.showDeleteVideoDialogBox(requireActivity(), listenerNoBtn = {
-            deleteDialogBox?.dismiss()
-        }, listenerYesBtn = {
-            onBottomIconClicked?.onItemClicked(
-                Pair(getString(binding.deleteOfVideo), video)
-            )
-            deleteDialogBox?.dismiss()
-        })
+        deleteDialogBox?.showDeleteVideoDialogBox(
+            requireActivity(),
+            title = getString(R.string.del_dialog_txt),
+            listenerNoBtn = {
+                deleteDialogBox?.dismiss()
+            },
+            listenerYesBtn = {
+                onBottomIconClicked?.onItemClicked(
+                    Pair(getString(binding.deleteOfVideo), video)
+                )
+                deleteDialogBox?.dismiss()
+            })
     }
 
     override fun onPause() {

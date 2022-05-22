@@ -3,6 +3,7 @@ package com.example.videodownloadingline.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -39,6 +40,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
     private var isDialogBoxIsVisible: Boolean = false
     private var isNewTab: Boolean = false
     private var permissionManager: PermissionManager? = null
+    private var deleteDialogBox: AddIconsDialogBox? = null
     private val viewModel: HomeSrcFragmentViewModel by viewModels()
     private var mainViewModel: MainViewModel? = null
 
@@ -60,6 +62,13 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         if (isDialogBoxIsVisible) {
             showDialogBox()
         }
+        viewModel.eventForDeleteBookMarkIc.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { res ->
+                Log.i(TAG, "onViewCreated: $res delete id ")
+                binding.root.showSandbar("Book Mark is Deleted Successfully", color = Color.GREEN)
+            }
+        }
+
 
         recycleAdaptor()
         setData()
@@ -197,6 +206,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         if (isDialogBoxIsVisible) {
             iconsDialogBox?.dismiss()
         }
+        deleteDialogBox?.dismiss()
         if (isInWebView && isNewTab) {
             val size = BrowserFragment.viewPager?.currentItem
             size?.let {
@@ -208,7 +218,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
     private fun recycleAdaptor() {
         binding.homeSrcIcon.apply {
             layoutManager = GridLayoutManager(requireActivity(), 4)
-            homeSrcAdaptor = HomeSrcAdaptor { data: HomeSrcIcon, isAddIcon: Boolean ->
+            homeSrcAdaptor = HomeSrcAdaptor(itemClicked = { data: HomeSrcIcon, isAddIcon: Boolean ->
                 if (isAddIcon) {
                     showDialogBox()
                 } else if (data.name?.equals(getString(R.string.whatsapp_name))!!) {
@@ -228,9 +238,23 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                         }
                     }
                 }
-            }
+            }, itemLongClicked = { data, isAddIcon ->
+                if (!isAddIcon) {
+                    deleteItem(data)
+                }
+            })
             adapter = homeSrcAdaptor
         }
+    }
+
+    private fun deleteItem(data: HomeSrcIcon) {
+        deleteDialogBox = AddIconsDialogBox()
+        deleteDialogBox?.showDeleteVideoDialogBox(requireActivity(), title = "Are you sure you want to delete this BookMark.", listenerNoBtn = {
+            deleteDialogBox?.dismiss()
+        }, listenerYesBtn = {
+            deleteDialogBox?.dismiss()
+            viewModel.deleteBookMarkIc(data)
+        })
     }
 
     private fun openWebDialogBox(data: HomeSrcIcon) {

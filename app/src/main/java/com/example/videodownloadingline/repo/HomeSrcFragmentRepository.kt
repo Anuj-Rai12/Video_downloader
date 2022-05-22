@@ -2,7 +2,6 @@ package com.example.videodownloadingline.repo
 
 import com.example.videodownloadingline.db.RoomDataBaseInstance
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
-import com.example.videodownloadingline.utils.BOOK_MARK_IC
 import com.example.videodownloadingline.utils.RemoteResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
@@ -16,9 +15,9 @@ class HomeSrcFragmentRepository(private val roomDataBaseInstance: RoomDataBaseIn
             val info = roomDataBaseInstance.getBookMarkItemDao().getAllBookMark()
             val value = mutableListOf<HomeSrcIcon>()
             value.addAll(info)
-            if (value.isEmpty()){
+            /*if (value.isEmpty()){
                 value.addAll(BOOK_MARK_IC)
-            }
+            }*/
             value.add(
                 HomeSrcIcon(
                     id = value.size + 2,
@@ -44,6 +43,12 @@ class HomeSrcFragmentRepository(private val roomDataBaseInstance: RoomDataBaseIn
         }
         emit(data)
     }.flowOn(Dispatchers.IO)
+
+
+    fun deleteBookMarkIc(homeSrcIcon: HomeSrcIcon): Int {
+        return roomDataBaseInstance.getBookMarkItemDao().delete(homeSrcIcon)
+    }
+
 
 
 }
