@@ -12,7 +12,6 @@ import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
 import com.example.videodownloadingline.model.securefolder.SecureFolderItem
 import com.example.videodownloadingline.utils.BOOK_MARK_IC
-import com.example.videodownloadingline.utils.DOWNLOAD_ITEM
 import com.example.videodownloadingline.utils.ioThread
 
 
@@ -48,7 +47,7 @@ abstract class RoomDataBaseInstance : RoomDatabase() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)
                             ioThread {
-                                getInstance(context).getDownloadItemDao().insertDownloadItem(DOWNLOAD_ITEM)
+                             //   getInstance(context).getDownloadItemDao().insertDownloadItem(DOWNLOAD_ITEM)
                                 getInstance(context).getBookMarkItemDao().insertBookMarkItem(BOOK_MARK_IC)
                             }
                         }
