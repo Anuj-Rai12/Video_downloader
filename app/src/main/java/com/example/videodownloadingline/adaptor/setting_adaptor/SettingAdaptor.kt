@@ -12,20 +12,25 @@ import com.example.videodownloadingline.utils.show
 
 typealias itemClicked = (data: SettingDataHolder) -> Unit
 
-class SettingAdaptorAdaptor(private val context: Context,private val itemClicked: itemClicked) :
+class SettingAdaptorAdaptor(private val context: Context, private val itemClicked: itemClicked) :
     ListAdapter<SettingDataHolder, SettingAdaptorAdaptor.SettingViewHolder>(diffUtil) {
     inner class SettingViewHolder(private val binding: SettingItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun makeData(data: SettingDataHolder, itemClicked: itemClicked, context: Context) {
             binding.textText.text = data.title
-            if (context.getString(R.string.download_with_wi_fi) == data.title ||
-                context.getString(R.string.save_password) == data.title
-            ) {
+            var flag = false
+            if (context.getString(R.string.download_with_wi_fi) == data.title || context.getString(R.string.save_password) == data.title) {
                 binding.checkSwitch.show()
-                binding.checkSwitch.isChecked = data.flag
+            }
+            binding.checkSwitch.setOnCheckedChangeListener { _, _ ->
+                if (context.getString(R.string.save_password) == data.title) {
+                    binding.checkSwitch.isChecked = true
+                    return@setOnCheckedChangeListener
+                }
+                flag = binding.checkSwitch.isChecked
             }
             binding.root.setOnClickListener {
-                itemClicked(data)
+                itemClicked(SettingDataHolder(data.title, flag))
             }
         }
     }
