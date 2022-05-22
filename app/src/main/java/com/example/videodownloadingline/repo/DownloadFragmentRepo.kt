@@ -83,4 +83,30 @@ class DownloadFragmentRepo(private val roomDataBaseInstance: RoomDataBaseInstanc
         }
     }
 
+    fun filterDownloadItem(index: Int) = channelFlow {
+        val dao = roomDataBaseInstance.getDownloadItemDao()
+        when (index) {
+            0 -> {//Sort by date
+                dao.filterDownloadItemDate().collectLatest {
+                    send(RemoteResponse.Success(it))
+                }
+            }
+            1 -> {//Sort by size
+                dao.filterDownloadItemSize().collectLatest {
+                    send(RemoteResponse.Success(it))
+                }
+            }
+            2 -> {//Sort by type
+                dao.filterDownloadItemType().collectLatest {
+                    send(RemoteResponse.Success(it))
+                }
+            }
+            3 -> {//Sort by name
+                dao.filterDownloadItemName().collectLatest {
+                    send(RemoteResponse.Success(it))
+                }
+            }
+        }
+    }
+
 }

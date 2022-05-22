@@ -18,6 +18,7 @@ import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.example.videodownloadingline.model.securefolder.SecureFolderItem
 import com.example.videodownloadingline.utils.goToNextActivity
+import com.example.videodownloadingline.utils.toastMsg
 import com.example.videodownloadingline.view_model.DownloadFragmentViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -83,8 +84,11 @@ class MainDownloadFragment : Fragment(R.layout.download_main_fragment),
             context = requireActivity(),
             getStringArray,
             title = getString(R.string.sorting_name),
-            listenerForNewFolder = { _, _ ->
+            listenerForNewFolder = { data, _ ->
                 newFolderDialogBox?.dismiss()
+                val index = getStringArray.indexOf(data)
+                activity?.toastMsg(data)
+                downloadViewModel.filterDownloadItem(index)
             }
         )
     }

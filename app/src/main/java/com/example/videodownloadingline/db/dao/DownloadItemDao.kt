@@ -35,10 +35,24 @@ interface DownloadItemDao {
     fun searchDownloadFile(src: String, pin: String): Flow<List<DownloadItems>>
 
 
-
     @Query("Select *From Download_Items where fileLoc Like:src and fileThumbLoc Like:fileTitle")
     fun searchDownloadInNormalFolder(src: String, fileTitle: String): Flow<List<DownloadItems>>
 
+
+    @Query("Select *From Download_Items Order by downloadCreatedAt desc")
+    fun filterDownloadItemDate(): Flow<List<DownloadItems>>
+
+
+    @Query("Select *From Download_Items Order by fileSize desc")
+    fun filterDownloadItemSize(): Flow<List<DownloadItems>>
+
+
+    @Query("Select *From Download_Items Order by fileExtensionType desc")
+    fun filterDownloadItemType(): Flow<List<DownloadItems>>
+
+
+    @Query("Select *From Download_Items Order by fileTitle desc")
+    fun filterDownloadItemName(): Flow<List<DownloadItems>>
 //or itemDescription Like:searchQuery or itemCategory Like :searchQuery
 //or salePrice Like :searchQuery order by salePrice desc
 

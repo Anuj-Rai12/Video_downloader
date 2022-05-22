@@ -207,6 +207,15 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
     }
 
 
+    fun filterDownloadItem(idx: Int) {
+        viewModelScope.launch {
+            repo?.filterDownloadItem(index = idx)?.collectLatest {
+                _downloadItem.postValue(it)
+            }
+        }
+    }
+
+
     fun makeFolderCreateIdNull() {
         _folderCreateId.postValue(Event(null))
     }
