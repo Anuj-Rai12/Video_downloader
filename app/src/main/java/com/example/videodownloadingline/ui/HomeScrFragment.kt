@@ -139,9 +139,9 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             if (menu is MenuBuilder) {
                 menu.setOptionalIconsVisible(true)
             }
-            val openPrivateTb = menu.findItem(R.id.private_tab)
-            openPrivateTb.setOnMenuItemClickListener {
-                //mainViewModel?.addMoreTab()
+            val settingTb = menu.findItem(R.id.setting_btn_mnu)
+            settingTb.setOnMenuItemClickListener {
+                activity?.goToNextActivity<SettingActivity>()
                 return@setOnMenuItemClickListener true
             }
         } else {

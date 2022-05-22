@@ -89,7 +89,27 @@
     <string name="folder_is_found">folder_in_db_is_found</string>
     <string name="folder_is_not_found">folder_is_not_found</string>
 
-
     <string name="file_is_found">file_in_db_is_found</string>
     <string name="file_is_not_found">file_is_not_found</string>
+    <!-- Setting Item !-->
+
+    <string-array name="setting_option">
+        <item>Download Location</item>
+        <item>Download with Wi-fi</item>
+        <item>Save password</item>
+        <item>Search engine option</item>
+        <item>Clear cache</item>
+        <item>Clear browsing history</item>
+    </string-array>
+
+    <string name="download_with_wi_fi">Download with Wi-fi</string>
+    <string name="save_password">Save password</string>
+
+    <string-array name="app_privacy">
+        <item>Privacy policy</item>
+        <item>Feedback</item>
+        <item>Share App</item>
+        <item>Rate App</item>
+    </string-array>
+
 </resources>
