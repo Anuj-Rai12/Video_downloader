@@ -69,7 +69,6 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             }
         }
 
-
         recycleAdaptor()
         setData()
         binding.srcTv.setOnClickListener {

@@ -41,6 +41,8 @@ class ViewTabActivity : AppCompatActivity() {
     private var mainViewModel: MainViewModel? = null
     private var tablist: ArrayList<TabItem>? = null
 
+    private var deleteDialogBox: AddIconsDialogBox? = null
+
     private val viewModel: DownloadFragmentViewModel by viewModels()
 
     private val normalFolder by lazy {
@@ -71,9 +73,7 @@ class ViewTabActivity : AppCompatActivity() {
                                     Category.NormalFolder.name
                                 )
                                 putExtra(getString(R.string.set_pin_click), true)
-                            }.run {
-                                startActivity(this)
-                            }
+                            }.run { startActivity(this) }
                         } else {
                             playVideo(pair.first.fileLoc)
                         }
@@ -83,6 +83,14 @@ class ViewTabActivity : AppCompatActivity() {
                         playVideo(pair.first.fileLoc)
                     }
                 }
+            }
+        }
+
+        viewModel.event.observe(this) {
+            it.getContentIfNotHandled()?.let { res ->
+                Log.i(TAG, "onCreate: Files is Deleted  $res")
+                deleteVideo(res)
+                onBackPressed()
             }
         }
 
@@ -127,7 +135,11 @@ class ViewTabActivity : AppCompatActivity() {
 
         newFolderDialogBox?.displaySortingViewRecycle(
             context = this,
-            data = arrayOf(FileOption.PlayVideo.name, FileOption.Share.name),
+            data = arrayOf(
+                FileOption.PlayVideo.name,
+                FileOption.Share.name,
+                FileOption.Delete.name
+            ),
             title = data.fileTitle,
             listenerForNewFolder = { res, _ ->
                 newFolderDialogBox?.dismiss()
@@ -138,10 +150,28 @@ class ViewTabActivity : AppCompatActivity() {
                     FileOption.Share -> {
                         shareFile(data)
                     }
+                    FileOption.Delete -> {
+                        deleteItem(data)
+                    }
                 }
             }
         )
     }
+
+    private fun deleteItem(data: DownloadItems) {
+        deleteDialogBox = AddIconsDialogBox()
+        deleteDialogBox?.showDeleteVideoDialogBox(
+            this,
+            title = getString(R.string.del_dialog_txt),
+            listenerNoBtn = {
+                deleteDialogBox?.dismiss()
+            },
+            listenerYesBtn = {
+                deleteDialogBox?.dismiss()
+                viewModel.searchFileInNormalFolder(data.fileLoc, data.fileTitle, data, true)
+            })
+    }
+
 
     private fun shareFile(data: DownloadItems) {
         if (category == null) {
@@ -231,7 +261,8 @@ class ViewTabActivity : AppCompatActivity() {
 
     enum class FileOption {
         PlayVideo,
-        Share
+        Share,
+        Delete
     }
 
     private fun shareVideo(uri: Uri?, filePath: String?) {

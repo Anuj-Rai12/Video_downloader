@@ -104,14 +104,15 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
         }
     }
 
-    fun deleteDownload(downloadItems: DownloadItems) {
+    fun deleteDownload(downloadItems: DownloadItems, src: String? = null) {
         viewModelScope.launch {
             val async = async(IO) {
                 repo?.deleteDownload(downloadItems)
             }
             async.await()
-            _event.postValue(Event("File is Deleted"))
-            fetch()
+            _event.postValue(Event(src ?: "File is Deleted"))
+            if (src == null)
+                fetch()
         }
     }
 
@@ -180,14 +181,26 @@ class DownloadFragmentViewModel(application: Application) : AndroidViewModel(app
     }
 
 
-    fun searchFileInNormalFolder(src: String, fileTitle: String, res: DownloadItems) {
+    fun searchFileInNormalFolder(
+        src: String,
+        fileTitle: String,
+        res: DownloadItems,
+        flag: Boolean = false
+    ) {
         viewModelScope.launch {
             repo?.searchFileInNormalFolder(src, fileTitle)?.collectLatest { list ->
                 Log.i(TAG, "checkPinToOpenFolder: Valid File in data Base $list")
                 if (list.isNotEmpty()) {
-                    _eventSetPin.postValue(Event(Pair(list.first(), "file_in_db_is_found")))
+                    if (flag) {
+                        deleteDownload(list.first(), src = res.fileLoc)
+                    } else
+                        _eventSetPin.postValue(Event(Pair(list.first(), "file_in_db_is_found")))
                 } else {
-                    _eventSetPin.postValue(Event(Pair(res, "file_is_not_found")))
+                    if (flag) {
+                        _event.postValue(Event(res.fileLoc))
+                    } else {
+                        _eventSetPin.postValue(Event(Pair(res, "file_is_not_found")))
+                    }
                 }
             }
         }
