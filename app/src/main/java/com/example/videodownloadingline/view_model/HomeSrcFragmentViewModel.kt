@@ -31,6 +31,10 @@ class HomeSrcFragmentViewModel(application: Application) : AndroidViewModel(appl
 
     init {
         repo = HomeSrcFragmentRepository(RoomDataBaseInstance.getInstance(application))
+        fetchBookMark()
+    }
+
+    fun fetchBookMark() {
         viewModelScope.launch {
             getResponse()
         }

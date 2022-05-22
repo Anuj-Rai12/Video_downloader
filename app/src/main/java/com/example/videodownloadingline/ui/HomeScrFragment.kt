@@ -37,7 +37,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
     private lateinit var binding: HomeSrcFragmentBinding
     private lateinit var homeSrcAdaptor: HomeSrcAdaptor
     private var iconsDialogBox: AddIconsDialogBox? = null
-    private var isDialogBoxIsVisible: Boolean = false
+    private var isFetchBookMarksDb: Boolean = false
     private var isNewTab: Boolean = false
     private var permissionManager: PermissionManager? = null
     private var deleteDialogBox: AddIconsDialogBox? = null
@@ -48,6 +48,10 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         super.onCreate(savedInstanceState)
         mainViewModel = MainViewModel.getInstance()
         permissionManager = PermissionManager.from(this)
+        savedInstanceState?.let {
+            isFetchBookMarksDb = it.getBoolean(getString(R.string.add_to_home_src))
+        }
+        Log.i(TAG, "onCreate: isDialogBoxIsVisible  value is $isFetchBookMarksDb ")
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -56,12 +60,6 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         binding = HomeSrcFragmentBinding.bind(view)
         activity?.changeStatusBarColor()
         requestPermission()
-        savedInstanceState?.let {
-            isDialogBoxIsVisible = it.getBoolean(getString(R.string.add_to_home_src))
-        }
-        if (isDialogBoxIsVisible) {
-            showDialogBox()
-        }
         viewModel.eventForDeleteBookMarkIc.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { res ->
                 Log.i(TAG, "onViewCreated: $res delete id ")
@@ -187,13 +185,10 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         iconsDialogBox = AddIconsDialogBox()
         iconsDialogBox?.show(context = requireActivity(), listenerForDismiss = {
             iconsDialogBox?.dismiss()
-            isDialogBoxIsVisible = false
         }, listenerIcon = {
             addHomeIcon(it)
-            isDialogBoxIsVisible = false
             iconsDialogBox?.dismiss()
         })
-        isDialogBoxIsVisible = true
     }
 
     private fun addHomeIcon(homeSrcIcon: HomeSrcIcon) {
@@ -202,9 +197,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
 
     override fun onPause() {
         super.onPause()
-        if (isDialogBoxIsVisible) {
-            iconsDialogBox?.dismiss()
-        }
+        iconsDialogBox?.dismiss()
         deleteDialogBox?.dismiss()
         if (isInWebView && isNewTab) {
             val size = BrowserFragment.viewPager?.currentItem
@@ -248,12 +241,16 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
 
     private fun deleteItem(data: HomeSrcIcon) {
         deleteDialogBox = AddIconsDialogBox()
-        deleteDialogBox?.showDeleteVideoDialogBox(requireActivity(), title = "Are you sure you want to delete this BookMark.", listenerNoBtn = {
-            deleteDialogBox?.dismiss()
-        }, listenerYesBtn = {
-            deleteDialogBox?.dismiss()
-            viewModel.deleteBookMarkIc(data)
-        })
+        deleteDialogBox?.showDeleteVideoDialogBox(
+            requireActivity(),
+            title = "Are you sure you want to delete this BookMark.",
+            listenerNoBtn = {
+                deleteDialogBox?.dismiss()
+            },
+            listenerYesBtn = {
+                deleteDialogBox?.dismiss()
+                viewModel.deleteBookMarkIc(data)
+            })
     }
 
     private fun openWebDialogBox(data: HomeSrcIcon) {
@@ -302,6 +299,10 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         setHasOptionsMenu(false)
         binding.srcTv.show()
         permissionManager?.checkPermission {}
+        if (!isFetchBookMarksDb) {
+            viewModel.fetchBookMark()
+            isFetchBookMarksDb = true
+        }
         (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
             ActionBar.DISPLAY_SHOW_TITLE
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
@@ -313,7 +314,7 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(getString(R.string.add_to_home_src), isDialogBoxIsVisible)
+        outState.putBoolean(getString(R.string.add_to_home_src), isFetchBookMarksDb)
     }
 
 }
