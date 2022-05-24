@@ -19,6 +19,6 @@ interface BookMarkItemDao {
     suspend fun deleteAllBookMark()
 
     @Delete
-    suspend fun delete(obj: HomeSrcIcon)
+    fun delete(obj: HomeSrcIcon): Int
 
 }

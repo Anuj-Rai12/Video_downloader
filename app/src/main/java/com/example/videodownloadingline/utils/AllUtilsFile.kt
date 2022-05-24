@@ -3,22 +3,43 @@ package com.example.videodownloadingline.utils
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.media.ThumbnailUtils
 import android.os.Build
+import android.os.CancellationSignal
+import android.os.Environment
+import android.os.Parcelable
+import android.provider.MediaStore
+import android.util.Size
+import android.util.TypedValue
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.homesrcicon.HomeSrcIcon
+import com.example.videodownloadingline.model.securefolder.SecureFolderItem
+import com.example.videodownloadingline.model.tabitem.TabItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import java.io.File
 import java.util.concurrent.Executors
+import java.util.regex.Pattern.compile
+
 
 const val TAG = "VIDEO_DOWNLOADER"
 
@@ -122,10 +143,23 @@ interface OnBottomSheetClick {
     fun <T> onItemClicked(type: T)
 }
 
-fun View.showSandbar(msg: String, length: Int = Snackbar.LENGTH_SHORT, color: Int? = null) {
+fun View.showSandbar(
+    msg: String,
+    length: Int = Snackbar.LENGTH_SHORT,
+    color: Int? = null,
+    text: String? = null,
+    callback: (() -> Unit)? = null
+) {
     val snackBar = Snackbar.make(this, msg, length)
     color?.let {
         snackBar.view.setBackgroundColor(it)
+        snackBar.setTextColor(Color.WHITE)
+    }
+    text?.let {
+        snackBar.setAction(it) {
+            callback?.invoke()
+        }
+        snackBar.setActionTextColor(Color.GREEN)
     }
     snackBar.show()
 }
@@ -135,10 +169,71 @@ fun Activity.toastMsg(msg: String, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, msg, duration).show()
 }
 
-inline fun <reified T> Activity.goToNextActivity() {
+inline fun <reified T> Activity.goToNextActivity(
+    forSetPin: Boolean = false,
+    secureFolderItem: SecureFolderItem? = null,
+    downloadItems: DownloadItems? = null,
+    category: String? = null,
+    isClickToCheck: Boolean = false
+) {
     val intent = Intent(this, T::class.java)
+    if (forSetPin) {
+        val array = if (secureFolderItem != null) {
+            val op = ArrayList<SecureFolderItem>()
+            op.add(secureFolderItem)
+            op
+        } else {
+            val op = ArrayList<DownloadItems>()
+            op.add(downloadItems!!)
+            op
+        }
+        intent.putParcelableArrayListExtra(
+            getString(R.string.set_pin_txt),
+            array
+        )
+        intent.putExtra(getString(R.string.set_pin_cat), category)
+        intent.putExtra(getString(R.string.set_pin_click), isClickToCheck)
+    }
     startActivity(intent)
 }
+
+
+inline fun <reified T> Activity.goToTbActivity(op: List<TabItem>?) {
+    val intent = Intent(this, T::class.java)
+    val arrayList = ArrayList<TabItem>(op?.size ?: 0)
+    if (op != null) {
+        arrayList.addAll(op)
+    }
+    intent.putParcelableArrayListExtra(
+        "TabItem",
+        arrayList
+    )
+    startActivity(intent)
+}
+
+
+fun isValidPassword(password: String): Boolean {
+    val passwordREGEX = compile(
+        "^" +
+                "(?=.*[0-9])" +         //at least 1 digit
+                "(?=.*[a-z])" +         //at least 1 lower case letter
+                "(?=.*[A-Z])" +         //at least 1 upper case letter
+                "(?=.*[a-zA-Z])" +      //any letter
+                "(?=.*[@#$%^&+=])" +    //at least 1 special character
+                "(?=\\S+$)" +           //no white spaces
+                ".{6,}"                //at least 6 characters
+    )
+    return passwordREGEX.matcher(password).matches()
+}
+
+fun msg() = "The Strong Password Must contain Following Properties :- \n\n" +
+        "1.At least 1 digit i.e [0-9]\n" +
+        "2.At least 1 lower case letter i.e [a-z]\n" +
+        "3.At least 1 upper case letter i.e [A-Z]\n" +
+        "4.Any letter i.e [A-Z,a-z]\n" +
+        "5.At least 1 special character i.e [%^*!&*|)(%#$%]\n" +
+        "6.No white spaces\n" +
+        "7.At Least 6 Character\n"
 
 
 fun getIconBgLis() = listOf(
@@ -149,15 +244,18 @@ fun getIconBgLis() = listOf(
 )
 
 @SuppressLint("UseCompatLoadingForDrawables")
-fun Fragment.showDialogBox(
+fun Activity.showDialogBox(
     title: String = getString(R.string.permission_title),
     desc: String = getString(R.string.permission_desc, "Storage"),
     btn: String = getString(R.string.permission_btn),
     flag: Boolean = false,
+    isCancelBtnEnable: Boolean = false,
+    cancelButton: String = "Cancel",
+    callDeny: (() -> Unit)? = null,
     callback: () -> Unit
-) {
-    MaterialAlertDialogBuilder(
-        requireContext(),
+): AlertDialog {
+    val material = MaterialAlertDialogBuilder(
+        this,
         R.style.MyThemeOverlay_MaterialComponents_MaterialAlertDialog
     )
         .setTitle(title)
@@ -165,11 +263,81 @@ fun Fragment.showDialogBox(
         .setCancelable(flag)
         .setBackground(resources.getDrawable(R.drawable.dialog_box_shape, null))
         .setPositiveButton(btn) { dialog, _ ->
-            callback.invoke()
             dialog.dismiss()
-        }.show()
+            callback()
+        }
+
+    if (isCancelBtnEnable) {
+        material.setNegativeButton(cancelButton) { dialog, _ ->
+            if (callDeny != null) {
+                callDeny()
+            }
+            dialog.dismiss()
+        }
+    }
+    val alertDialog = material.create()
+    alertDialog.show()
+    return alertDialog
 }
 
+
+fun finPath(path: String) = Environment.getExternalStorageDirectory().absolutePath + path
+
+@RequiresApi(Build.VERSION_CODES.M)
+fun Activity.setBtnColor(view: AppCompatImageButton, color: Int = R.color.Surfie_Green_color) {
+    view.setColorFilter(
+        getColor(color),
+        PorterDuff.Mode.MULTIPLY
+    )
+}
+
+
+@RequiresApi(Build.VERSION_CODES.M)
+fun Activity.setColorForDrawableTextView(
+    view: AppCompatTextView,
+    color: Int = R.color.Surfie_Green_color
+) {
+    for (drawable in view.compoundDrawables) {
+        if (drawable != null) {
+            view.setTextColor(getColor(color))
+            drawable.colorFilter =
+                PorterDuffColorFilter(
+                    ContextCompat.getColor(view.context, color),
+                    PorterDuff.Mode.SRC_IN
+                )
+        }
+    }
+}
+
+fun getThumbNail(path: String?): Bitmap? {
+    return try {
+        if (path == null)
+            return null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ThumbnailUtils.createVideoThumbnail(
+                File(path),
+                Size(200f.toPx(), 200f.toPx()),
+                CancellationSignal()
+            )
+        } else {
+            ThumbnailUtils.createVideoThumbnail(
+                path,
+                MediaStore.Images.Thumbnails.MINI_KIND
+            )
+        }
+    } catch (e: Exception) {
+        null
+    }
+}
+
+
+fun Float.toPx() =
+    TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        this,
+        Resources.getSystem().displayMetrics
+    )
+        .toInt()
 
 val DOWNLOAD_ITEM = listOf(
     DownloadItems(

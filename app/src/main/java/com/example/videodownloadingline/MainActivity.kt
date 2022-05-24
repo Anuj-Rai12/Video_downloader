@@ -14,7 +14,6 @@ import android.view.KeyEvent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -30,6 +29,7 @@ import com.example.videodownloadingline.view_model.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import np.com.susanthapa.curved_bottom_navigation.CbnMenuItem
+import java.io.File
 import java.util.*
 
 
@@ -42,6 +42,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        getFileDir(getString(R.string.file_path_2), this, false).also {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+        }
+
         val navHost =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navHostFragment = navHost.findNavController()
@@ -83,7 +89,8 @@ class MainActivity : AppCompatActivity() {
         totalTab: Int,
         url: String = "",
         listenForSearch: (txt: String) -> Unit,
-        goTo: () -> Unit
+        goTo: () -> Unit,
+        viewTab: () -> Unit
     ) {
         val toolbarBinding: CustomToolbarLayoutBinding =
             CustomToolbarLayoutBinding.inflate(layoutInflater)
@@ -118,11 +125,16 @@ class MainActivity : AppCompatActivity() {
                         Log.i(TAG, "changeToolbar: $searchText")
                         if (!searchText.isNullOrEmpty() && isValidUrl(searchText)) {
                             listenForSearch(searchText!!)
-                        }
+                        } else
+                            toastMsg("Cannot Incited  Search!!")
                     }
                 }
             }
             true
+        }
+        toolbarBinding.totalTabOp.setOnClickListener {
+            Log.i(TAG, "changeToolbar: item Clicked")
+            viewTab()
         }
         toolbarBinding.totalTabOp.text = String.format(
             Locale.getDefault(),
@@ -134,7 +146,7 @@ class MainActivity : AppCompatActivity() {
     fun setBroadcastReceiver(mainViewModel: MainViewModel?) {
         val downloadReceiver = object : BroadcastReceiver() {
             @SuppressLint("Range")
-            @RequiresApi(Build.VERSION_CODES.M)
+            @RequiresApi(Build.VERSION_CODES.Q)
             override fun onReceive(context: Context?, intent: Intent?) {
                 val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
                 mainViewModel?.let {
@@ -144,18 +156,23 @@ class MainActivity : AppCompatActivity() {
                     Log.i(TAG, "onReceive: this index  for id is -> $index")
                     if (index != -1) {
                         it.getVideoDataByIndex(index)?.let { res ->
+                            Log.i(TAG, "onReceive: Download List --->  $res")
                             val title = res.webViewDownloadUrl.videotitle ?: ""
-                            val file = getFileDir(
-                                title,
-                                this@MainActivity
-                            )
+                            val file = getFileDir(res.thumbnail, this@MainActivity)
+                            val time = this@MainActivity.videoDuration(file) ?: ""
+                            val len = file.length()
+                            val newUrl = File(finPath("/Download/VideoDownload/${res.thumbnail}"))
+                            moveFile(file.absolutePath, newUrl.absolutePath)
                             DownloadItems(
-                                0, title, "",
-                                file.toUri().toString(),
-                                this@MainActivity.videoDuration(file),
+                                0,
+                                title,
+                                res.thumbnail,
+                                newUrl.absolutePath,
+                                time,
                                 res.format,
-                                file.length()
+                                len
                             ).also { value ->
+                                file.delete()
                                 Log.i(TAG, "onReceive: Download Save Item $value")
                                 lifecycleScope.launchWhenCreated {
                                     val saveDownloadItem = async(Dispatchers.IO) {
@@ -175,6 +192,7 @@ class MainActivity : AppCompatActivity() {
                         it.removeVideo(index)
                     }
                 }
+
                 Log.i(TAG, "onReceive: Download Completed")
             }
         }

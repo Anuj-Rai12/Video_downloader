@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
+    <!--<item
         android:id="@+id/new_tab_option"
         android:icon="@drawable/ic_newtab"
         android:title="@string/new_tab_btn"
-        app:showAsAction="withText" />
+        app:showAsAction="withText" />-->
+
+    <!--   <item
+           android:id="@+id/private_tab"
+           android:icon="@drawable/ic_incognito"
+           android:title="@string/prv_inc_btn"
+           app:showAsAction="withText" />
+   -->
 
     <item
-        android:id="@+id/private_tab"
-        android:icon="@drawable/ic_incognito"
-        android:title="@string/prv_inc_btn"
+        android:id="@+id/setting_btn_mnu"
+        android:icon="@drawable/ic_outline_settings"
+        android:title="@string/setting_btn"
         app:showAsAction="withText" />
-
 </menu>

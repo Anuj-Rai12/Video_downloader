@@ -5,13 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloadlink.VideoType
 import com.example.videodownloadingline.model.downloadlink.WebViewDownloadUrl
 import com.example.videodownloadingline.utils.*
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import java.io.File
 
 class MainViewModel : ViewModel() {
     private val _noOfTab = MutableLiveData<Int>()
@@ -24,6 +24,11 @@ class MainViewModel : ViewModel() {
         get() = _daisyChannelVideoDownloadLink
 
 
+    fun removeOldDownloadLink() {
+        _daisyChannelVideoDownloadLink.postValue(Event(null))
+    }
+
+
     private val _downloadId = MutableLiveData<MutableList<Long>>()
     val downloadId: LiveData<MutableList<Long>>
         get() = _downloadId
@@ -33,6 +38,30 @@ class MainViewModel : ViewModel() {
     val downloadVid: LiveData<MutableList<VideoType>>
         get() = _downloadVid
 
+    var currentNumTab: Int? = null
+
+    private val _createNewTab = MutableLiveData<Boolean>()
+    val createNewTab: LiveData<Boolean>
+        get() = _createNewTab
+    var removeTab: Pair<Boolean, Int?> = Pair(false, null)
+
+    private val _folderDir = MutableLiveData<List<DownloadItems>?>()
+    val folderDir: LiveData<List<DownloadItems>?>
+        get() = _folderDir
+
+
+    fun getFolderDir(file: File) {
+        viewModelScope.launch {
+            val res = withContext(IO) {
+                getListOfFile(file)
+            }
+            _folderDir.postValue(res)
+        }
+    }
+
+    fun removeFolder() {
+        _folderDir.postValue(null)
+    }
 
     companion object {
         @Volatile
@@ -55,8 +84,12 @@ class MainViewModel : ViewModel() {
         _noOfTab.postValue(1)
         _downloadId.postValue(mutableListOf())
         _downloadVid.postValue(mutableListOf())
+        _createNewTab.postValue(false)
     }
 
+    fun changeStateForCreateNewTB(flag: Boolean) {
+        _createNewTab.postValue(flag)
+    }
 
     fun daisyChainDownload(data: String?) {
         viewModelScope.launch {
@@ -109,6 +142,20 @@ class MainViewModel : ViewModel() {
         }
     }
 
+
+    fun getM3U8Url(url: String): Boolean {
+        _daisyChannelVideoDownloadLink.postValue(
+            Event(
+                WebViewDownloadUrl(
+                    sdurl = url,
+                    videotype = "video/.m3u8"
+                )
+            )
+        )
+        return false
+    }
+
+
     // ID Manipulation --------------------------
 
     fun addID(id: Long) {
@@ -124,7 +171,7 @@ class MainViewModel : ViewModel() {
             it.removeAt(index)
             _downloadId.postValue(it)
         }
-        if (_downloadId.value.isNullOrEmpty()){
+        if (_downloadId.value.isNullOrEmpty()) {
             _downloadId.postValue(mutableListOf())
         }
     }
@@ -140,7 +187,7 @@ class MainViewModel : ViewModel() {
             it.clear()
             _downloadId.postValue(it)
         }
-        if (_downloadId.value.isNullOrEmpty()){
+        if (_downloadId.value.isNullOrEmpty()) {
             _downloadId.postValue(mutableListOf())
         }
     }
@@ -152,7 +199,7 @@ class MainViewModel : ViewModel() {
             it.removeAt(index)
             _downloadVid.postValue(it)
         }
-        if (_downloadVid.value.isNullOrEmpty()){
+        if (_downloadVid.value.isNullOrEmpty()) {
             _downloadVid.postValue(mutableListOf())
         }
     }
@@ -172,7 +219,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun getVideoDataByIndex(index: Int)=_downloadVid.value?.get(index)
+    fun getVideoDataByIndex(index: Int) = _downloadVid.value?.get(index)
 
     override fun onCleared() {
         viewModelScope.cancel()

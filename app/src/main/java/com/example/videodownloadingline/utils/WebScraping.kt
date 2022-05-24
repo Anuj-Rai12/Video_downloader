@@ -200,7 +200,7 @@ private fun getWebViewDownloadObj(fbValue: WebViewDownloadUrl): WebViewDownloadU
 
 
 @RequiresApi(Build.VERSION_CODES.N)
-fun getVideoFileSize(url: String): Int {
+fun getVideoFileSize(url: String): Long {
     val size = try {
         val link = URL(url)
         val urlConnection: HttpURLConnection = link.openConnection() as HttpURLConnection
@@ -209,7 +209,7 @@ fun getVideoFileSize(url: String): Int {
         urlConnection.inputStream
         val op = urlConnection.contentLengthLong
         Log.i(TAG, "getVideoFileSize: $op")
-        if (op.toInt() <= 0) 10 else DownloadProgressLiveData.getMb(op)
+        if (op.toInt() <= 0) 10 else op
     } catch (e: Exception) {
         Log.i(TAG, "getVideoFileSize: ${e.message}")
         0

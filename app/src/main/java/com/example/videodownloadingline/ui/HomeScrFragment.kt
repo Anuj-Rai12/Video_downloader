@@ -2,8 +2,12 @@ package com.example.videodownloadingline.ui
 
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -15,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.videodownloadingline.BuildConfig
 import com.example.videodownloadingline.MainActivity
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.adaptor.iconadaptor.HomeSrcAdaptor
@@ -32,26 +37,34 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
     private lateinit var binding: HomeSrcFragmentBinding
     private lateinit var homeSrcAdaptor: HomeSrcAdaptor
     private var iconsDialogBox: AddIconsDialogBox? = null
-    private var isDialogBoxIsVisible: Boolean = false
+    private var isFetchBookMarksDb: Boolean = false
     private var isNewTab: Boolean = false
+    private var permissionManager: PermissionManager? = null
+    private var deleteDialogBox: AddIconsDialogBox? = null
     private val viewModel: HomeSrcFragmentViewModel by viewModels()
     private var mainViewModel: MainViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainViewModel = MainViewModel.getInstance()
+        permissionManager = PermissionManager.from(this)
+        savedInstanceState?.let {
+            isFetchBookMarksDb = it.getBoolean(getString(R.string.add_to_home_src))
+        }
+        Log.i(TAG, "onCreate: isDialogBoxIsVisible  value is $isFetchBookMarksDb ")
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = HomeSrcFragmentBinding.bind(view)
         activity?.changeStatusBarColor()
-        savedInstanceState?.let {
-            isDialogBoxIsVisible = it.getBoolean(getString(R.string.add_to_home_src))
-        }
-        if (isDialogBoxIsVisible) {
-            showDialogBox()
+        requestPermission()
+        viewModel.eventForDeleteBookMarkIc.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { res ->
+                Log.i(TAG, "onViewCreated: $res delete id ")
+                binding.root.showSandbar("Book Mark is Deleted Successfully", color = Color.GREEN)
+            }
         }
 
         recycleAdaptor()
@@ -61,31 +74,61 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             setHasOptionsMenu(true)
             currentTab()
         }
+        permissionManager?.checkPermission {}
+    }
+
+    private fun requestPermission() {
+        permissionManager?.request(Permission.Storage)
+            ?.rationale(getString(R.string.permission_desc, "Storage"))
+            ?.checkDetailedPermission { result ->
+                if (!result.all { it.value }) {
+                    Log.i(TAG, "showErrorDialog: ${result.keys} and ${result.values}")
+                    showErrorDialog()
+                }
+            }
+    }
+
+    private fun showErrorDialog() {
+        activity?.showDialogBox(desc = "We need this Permission to Manger the Files and Folder") {     //For Request Permission
+            if (Build.VERSION.SDK_INT < 30) {
+                // Open Setting Page
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                val uri: Uri =
+                    Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
+                intent.data = uri
+                startActivity(intent)
+            }
+        }
     }
 
     private fun currentTab() {
         mainViewModel?.noOfOpenTab?.observe(viewLifecycleOwner) {
-            (requireActivity() as MainActivity).changeToolbar(it!!, listenForSearch = { url ->
-                if (isInWebView) {
-                    (parentFragment as BrowserFragment).setFragment(
-                        WebViewFragments(
-                            "Searching..",
-                            url
-                        )
-                    )?.also { size ->
-                        BrowserFragment.viewPager?.currentItem = size - 1
+            (requireActivity() as MainActivity).changeToolbar(
+                it!!,
+                url = "",
+                listenForSearch = { url ->
+                    if (isInWebView) {
+                        createNewTB(WebViewFragments("Searching..", url), url)?.also { size ->
+                            BrowserFragment.viewPager?.currentItem = size - 1
+                        }
+                    } else {
+                        val action =
+                            HomeScrFragmentDirections.actionHomeScrFragmentToBrowserFragment(
+                                "Searching..",
+                                url
+                            )
+                        findNavController().navigate(action)
                     }
-                } else {
-                    val action =
-                        HomeScrFragmentDirections.actionHomeScrFragmentToBrowserFragment(
-                            "Searching..",
-                            url,
-                        )
-                    findNavController().navigate(action)
-                }
-            }, goTo = {
-                findNavController().popBackStack()
-            })
+                },
+                goTo = {
+                    findNavController().popBackStack()
+                },
+                viewTab = {
+                    if (isInWebView) {
+                        requireActivity().goToTbActivity<ViewTabActivity>((parentFragment as BrowserFragment).getTbList())
+                    }
+                })
         }
     }
 
@@ -96,9 +139,9 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             if (menu is MenuBuilder) {
                 menu.setOptionalIconsVisible(true)
             }
-            val optionOne = menu.findItem(R.id.new_tab_option)
-            optionOne.setOnMenuItemClickListener {
-                //mainViewModel?.addMoreTab()
+            val settingTb = menu.findItem(R.id.setting_btn_mnu)
+            settingTb.setOnMenuItemClickListener {
+                activity?.goToNextActivity<SettingActivity>()
                 return@setOnMenuItemClickListener true
             }
         } else {
@@ -107,14 +150,33 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
                 menu.setOptionalIconsVisible(true)
             }
             val newTab = menu.findItem(R.id.new_tab_option_mnu)
+            val closeTab = menu.findItem(R.id.close_tab_mnu)
 
             newTab?.setOnMenuItemClickListener {
                 mainViewModel?.addMoreTab()
-                val size = (parentFragment as BrowserFragment).setFragment(HomeScrFragment(true))
+                val size = createNewTB(HomeScrFragment(true), null)
                 Log.i(TAG, "onCreateOptionsMenu: $size")
                 BrowserFragment.viewPager?.currentItem = size!! - 1
                 return@setOnMenuItemClickListener true
             }
+
+            closeTab?.setOnMenuItemClickListener {
+                val way = (parentFragment as BrowserFragment)
+                if (way.getTbList().isNullOrEmpty()) {
+                    findNavController().popBackStack()
+                }
+                way.getTbList()?.let {
+                    mainViewModel?.removeTab()
+                    val index = it.last().id - 1
+                    way.removeFragment(index, true)
+                    BrowserFragment.viewPager?.currentItem = index
+                }
+                if (way.getTbList().isNullOrEmpty()) {
+                    findNavController().popBackStack()
+                }
+                return@setOnMenuItemClickListener true
+            }
+
         }
         super.onCreateOptionsMenu(menu, inflater)
     }
@@ -123,13 +185,10 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         iconsDialogBox = AddIconsDialogBox()
         iconsDialogBox?.show(context = requireActivity(), listenerForDismiss = {
             iconsDialogBox?.dismiss()
-            isDialogBoxIsVisible = false
         }, listenerIcon = {
             addHomeIcon(it)
-            isDialogBoxIsVisible = false
             iconsDialogBox?.dismiss()
         })
-        isDialogBoxIsVisible = true
     }
 
     private fun addHomeIcon(homeSrcIcon: HomeSrcIcon) {
@@ -138,9 +197,8 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
 
     override fun onPause() {
         super.onPause()
-        if (isDialogBoxIsVisible) {
-            iconsDialogBox?.dismiss()
-        }
+        iconsDialogBox?.dismiss()
+        deleteDialogBox?.dismiss()
         if (isInWebView && isNewTab) {
             val size = BrowserFragment.viewPager?.currentItem
             size?.let {
@@ -152,30 +210,47 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
     private fun recycleAdaptor() {
         binding.homeSrcIcon.apply {
             layoutManager = GridLayoutManager(requireActivity(), 4)
-            homeSrcAdaptor = HomeSrcAdaptor { data: HomeSrcIcon, isAddIcon: Boolean ->
+            homeSrcAdaptor = HomeSrcAdaptor(itemClicked = { data: HomeSrcIcon, isAddIcon: Boolean ->
                 if (isAddIcon) {
                     showDialogBox()
-                }
-                else if (data.name?.equals(getString(R.string.whatsapp_name))!!) {
+                } else if (data.name?.equals(getString(R.string.whatsapp_name))!!) {
                     requireActivity().goToNextActivity<WhatsappActivity>()
                 } else {
                     if (!isInWebView) {
                         openWebDialogBox(data)
                     } else {
                         isNewTab = true
-                        (parentFragment as BrowserFragment).setFragment(
+                        createNewTB(
                             WebViewFragments(
                                 data.name,
                                 data.url!!
-                            )
+                            ), data.url
                         )?.also { size ->
                             BrowserFragment.viewPager?.currentItem = size - 1
                         }
                     }
                 }
-            }
+            }, itemLongClicked = { data, isAddIcon ->
+                if (!isAddIcon) {
+                    deleteItem(data)
+                }
+            })
             adapter = homeSrcAdaptor
         }
+    }
+
+    private fun deleteItem(data: HomeSrcIcon) {
+        deleteDialogBox = AddIconsDialogBox()
+        deleteDialogBox?.showDeleteVideoDialogBox(
+            requireActivity(),
+            title = "Are you sure you want to delete this BookMark.",
+            listenerNoBtn = {
+                deleteDialogBox?.dismiss()
+            },
+            listenerYesBtn = {
+                deleteDialogBox?.dismiss()
+                viewModel.deleteBookMarkIc(data)
+            })
     }
 
     private fun openWebDialogBox(data: HomeSrcIcon) {
@@ -186,6 +261,14 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
             )
         findNavController().navigate(action)
     }
+
+
+    private fun createNewTB(fragment: Fragment, url: String?): Int? {
+        return (parentFragment as BrowserFragment).setFragment(
+            fragment, url
+        )
+    }
+
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setData() {
@@ -215,16 +298,23 @@ class HomeScrFragment(private val isInWebView: Boolean = false) :
         super.onResume()
         setHasOptionsMenu(false)
         binding.srcTv.show()
+        permissionManager?.checkPermission {}
+        if (!isFetchBookMarksDb) {
+            viewModel.fetchBookMark()
+            isFetchBookMarksDb = true
+        }
         (requireActivity() as MainActivity).supportActionBar!!.displayOptions =
             ActionBar.DISPLAY_SHOW_TITLE
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
         (requireActivity() as MainActivity).supportActionBar!!.title =
             getString(R.string.app_name)
+        Log.i(TAG, "onResume: Home Fragment Create NEW Tab ${mainViewModel?.createNewTab?.value}")
+        mainViewModel?.changeStateForCreateNewTB(false)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(getString(R.string.add_to_home_src), isDialogBoxIsVisible)
+        outState.putBoolean(getString(R.string.add_to_home_src), isFetchBookMarksDb)
     }
 
 }

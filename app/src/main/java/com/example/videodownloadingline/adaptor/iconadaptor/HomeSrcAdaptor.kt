@@ -23,13 +23,21 @@ import com.squareup.picasso.Picasso
 
 
 typealias ItemClicked = (data: HomeSrcIcon, isAddIcon: Boolean) -> Unit
+typealias ItemLongClicked = (data: HomeSrcIcon, isAddIcon: Boolean) -> Unit
 
-class HomeSrcAdaptor(private val itemClicked: ItemClicked) :
+class HomeSrcAdaptor(
+    private val itemClicked: ItemClicked,
+    private val itemLongClicked: ItemLongClicked
+) :
     ListAdapter<HomeSrcIcon, HomeSrcAdaptor.HomeSrcIconViewHolder>(diffUtil) {
     inner class HomeSrcIconViewHolder(private val binding: HomeSrcIconsLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @RequiresApi(Build.VERSION_CODES.M)
-        fun makeData(data: HomeSrcIcon, itemClicked: ItemClicked) {
+        fun makeData(
+            data: HomeSrcIcon,
+            itemClicked: ItemClicked,
+            itemLongClicked: ItemLongClicked
+        ) {
 
             if (data.name != null) {
                 val fab = getFabUrl(Uri.parse(data.url))
@@ -47,11 +55,11 @@ class HomeSrcAdaptor(private val itemClicked: ItemClicked) :
                         .load(fab)
                         .resize(80, 80)
                         .centerCrop()
-                        .transform(RoundedCornersTransformation(20,0))
+                        .transform(RoundedCornersTransformation(20, 0))
                         .into(binding.addHomeSrcBtn, object : Callback {
                             override fun onSuccess() {
                                 binding.addHomeSrcBtn.apply {
-                                    backgroundTintList=getTintColor(this,data.bg)
+                                    backgroundTintList = getTintColor(this, data.bg)
                                 }
                             }
 
@@ -96,12 +104,23 @@ class HomeSrcAdaptor(private val itemClicked: ItemClicked) :
                 }
             }
             binding.root.setOnClickListener {
-                if (data.name.isNullOrEmpty()){
-                    itemClicked(data,true)
-                }else{
-                    itemClicked(data,false)
+                if (data.name.isNullOrEmpty()) {
+                    itemClicked(data, true)
+                } else {
+                    itemClicked(data, false)
                 }
             }
+
+
+            binding.root.setOnLongClickListener {
+                if (data.name.isNullOrEmpty()) {
+                    itemLongClicked(data, true)
+                } else {
+                    itemLongClicked(data, false)
+                }
+                return@setOnLongClickListener true
+            }
+
 
         }
 
@@ -142,7 +161,7 @@ class HomeSrcAdaptor(private val itemClicked: ItemClicked) :
     override fun onBindViewHolder(holder: HomeSrcIconViewHolder, position: Int) {
         val currItem = getItem(position)
         currItem?.let {
-            holder.makeData(it, itemClicked)
+            holder.makeData(it, itemClicked, itemLongClicked)
         }
     }
 

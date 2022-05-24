@@ -16,10 +16,6 @@
         app:showAsAction="withText" />
 
 
-    <item
-        android:id="@+id/setting_btn_mnu"
-        android:icon="@drawable/ic_outline_settings"
-        android:title="@string/setting_btn"
-        app:showAsAction="withText" />
+
 
 </menu>

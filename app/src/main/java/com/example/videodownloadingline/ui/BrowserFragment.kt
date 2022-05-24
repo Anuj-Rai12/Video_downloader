@@ -26,31 +26,43 @@ class BrowserFragment : Fragment(R.layout.activity_web) {
         super.onViewCreated(view, savedInstanceState)
         binding = ActivityWebBinding.bind(view)
         viewPager = binding.mainWebViewViewPager
-        viewPagerAdapter = ViewPagerAdapter(childFragmentManager,lifecycle)
-        setFragment(WebViewFragments(args.name, args.url))
+        binding.mainWebViewViewPager.isUserInputEnabled = false
+        viewPagerAdapter = ViewPagerAdapter(this)//ViewPagerAdapter.getInstance(this)
+        //ViewPagerAdapter(childFragmentManager, viewLifecycleOwner.lifecycle)
+        setFragment(WebViewFragments(args.name, args.url), args.url)
     }
 
-    fun setFragment(fr: Fragment): Int? {
+    fun setFragment(fr: Fragment, url: String?): Int? {
         viewPagerAdapter?.setFragment(fr)
+        if (url != null) {
+            viewPagerAdapter?.addTab(url)
+        }
         binding.mainWebViewViewPager.adapter = viewPagerAdapter
         return viewPagerAdapter?.getSize()
     }
 
+    fun getTbList() = viewPagerAdapter?.getTabList()
+
+
     override fun onResume() {
         super.onResume()
         mainViewModel = MainViewModel.getInstance()
+        //viewPagerAdapter = ViewPagerAdapter(childFragmentManager, lifecycle)
         (activity as MainActivity).hideBottomNav(true)
         (activity as MainActivity).supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_TITLE
         (activity as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
     }
 
-    fun removeFragment(position: Int): Int? {
-        viewPagerAdapter?.removedFragment(position)
+    fun removeFragment(position: Int, isRemove: Boolean = false): Int? {
+        viewPagerAdapter?.removedFragment(position, isRemove)
         return viewPagerAdapter?.getSize()
     }
 
     override fun onPause() {
         super.onPause()
         (activity as MainActivity).hideBottomNav(false)
+//        binding.run {
+//            mainWebViewViewPager.adapter = null
+//        }
     }
 }

@@ -51,7 +51,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
         }
     }
 
-    private fun addWhatsApp(flag:Boolean) {
+    private fun addWhatsApp(flag: Boolean) {
         if (flag) {
             val res =
                 getWhatsappStoryPath(WhatsappActivity.Companion.WhatsappClick.valueOf(type))
@@ -72,7 +72,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
     }
 
     private fun setData(res: ArrayList<File>) {
-        if (res.isNullOrEmpty())
+        if (res.isEmpty())
             return
 
         res.forEachIndexed { index, file ->
@@ -81,7 +81,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
                 "",
                 "",
                 file.toUri().toString(),
-                getFileDuration(file),
+                getFileDuration(file) ?: "",
                 getMimeType(file.toUri(), requireContext()) ?: "",
                 fileSize = file.length()
             ).also { res ->
@@ -113,7 +113,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
         binding.mainRecycle.apply {
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(requireContext(), 2)
-            adaptorGird = DownloadItemGridAdaptor(type) { data, bm ->
+            adaptorGird = DownloadItemGridAdaptor(type, context = requireContext()) { data, bm ->
                 saveDialog(data, bm)
             }
             adapter = adaptorGird
@@ -124,7 +124,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
     @RequiresApi(Build.VERSION_CODES.R)
     private fun saveDialog(data: DownloadItems, bm: Bitmap?) {
         bm?.let {
-            showDialogBox(
+            activity?.showDialogBox(
                 title = "Download!!",
                 desc = "Are you sure you want to download it!!",
                 flag = true
@@ -140,7 +140,7 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
                     WhatsappActivity.Companion.WhatsappClick.IsVideo -> {
                         val url = requireActivity().putVideo(
                             data.fileLoc,
-                            "Video_$title.mp4",
+                            "WhatsApp_Video_$title.mp4",
                             data.fileExtensionType
                         )
                         val item = getDownloadData(data, title, url = url)
@@ -166,20 +166,25 @@ class WhatsAppFragment(private val type: String) : Fragment(R.layout.fragments_w
 
     override fun onResume() {
         super.onResume()
+        val ins = permissionManager?.getDialogInstance()
+        Log.i(TAG, "onResume: Dialog $ins")
+        ins?.dismiss()
         permissionManager?.checkPermission {
             addWhatsApp(it)
         }
     }
 
     private fun showErrorDialog() {
-        showDialogBox {     //For Request Permission
-            // Open Setting Page
-            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            val uri: Uri =
-                Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
-            intent.data = uri
-            startActivity(intent)
+        activity?.showDialogBox {     //For Request Permission
+            if (Build.VERSION.SDK_INT < 30) {
+                // Open Setting Page
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                val uri: Uri =
+                    Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
+                intent.data = uri
+                startActivity(intent)
+            }
         }
     }
 }

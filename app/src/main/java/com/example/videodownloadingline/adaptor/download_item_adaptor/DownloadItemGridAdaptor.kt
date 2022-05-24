@@ -1,15 +1,9 @@
 package com.example.videodownloadingline.adaptor.download_item_adaptor
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.media.ThumbnailUtils
-import android.os.Build
-import android.os.CancellationSignal
-import android.provider.MediaStore
-import android.util.Size
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -20,18 +14,20 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.DownloadFileItemGridLayoutBinding
+import com.example.videodownloadingline.model.downloaditem.Category
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
 import com.example.videodownloadingline.ui.whatsapp.WhatsappActivity
 import com.example.videodownloadingline.utils.DownloadProgressLiveData
+import com.example.videodownloadingline.utils.getThumbNail
 import com.example.videodownloadingline.utils.hide
-import java.io.File
 
 
 typealias ItemClickedListener = (data: DownloadItems, bitmap: Bitmap?) -> Unit
 
 class DownloadItemGridAdaptor(
     private val type: String,
+    private val context: Context,
     private val itemClicked: ItemClickedListener
 ) :
     ListAdapter<DownloadItems, DownloadItemGridAdaptor.DownloadItemGridViewHolder>(diffUtil) {
@@ -42,12 +38,32 @@ class DownloadItemGridAdaptor(
     inner class DownloadItemGridViewHolder(private val binding: DownloadFileItemGridLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun makeData(data: DownloadItems, itemClicked: ItemClickedListener) {
+            binding.menuBtn.hide()
             binding.root.setOnClickListener {
                 itemClicked(data, null)
             }
             when (TypeOfDownload.valueOf(type)) {
-                TypeOfDownload.IsFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
-                TypeOfDownload.IsFiles -> binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
+                TypeOfDownload.IsFolder -> {
+                    binding.fileThumbNail.setImageResource(R.drawable.ic_folder)
+                }
+                TypeOfDownload.IsFiles -> {
+                    when (Category.valueOf(data.category)) {
+                        Category.PinFolder -> {
+                            binding.fileThumbNail.setImageResource(R.drawable.ic_video_pin)
+                        }
+                        Category.NormalFolder -> {
+                            val bm = getThumbNail(data.fileLoc)
+                            bm?.let {
+                                binding.fileThumbNail.apply {
+                                    setPadding(0, 0, 0, 0)
+                                    scaleType = ImageView.ScaleType.FIT_XY
+                                    setImageBitmap(it)
+                                }
+                                return@let
+                            } ?: binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
+                        }
+                    }
+                }
                 TypeOfDownload.SecureFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_video_pin)
             }
             binding.titleTxt.apply {
@@ -81,18 +97,7 @@ class DownloadItemGridAdaptor(
                     binding.fileThumbNail.setImageURI(data.fileLoc.toUri())
                 }
                 WhatsappActivity.Companion.WhatsappClick.IsVideo -> {
-                    val bm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        ThumbnailUtils.createVideoThumbnail(
-                            File(data.fileLoc.toUri().path!!),
-                            Size(200f.toPx(), 200f.toPx()),
-                            CancellationSignal()
-                        )
-                    } else {
-                        ThumbnailUtils.createVideoThumbnail(
-                            data.fileLoc.toUri().path!!,
-                            MediaStore.Images.Thumbnails.MINI_KIND
-                        )
-                    }
+                    val bm = getThumbNail(data.fileLoc.toUri().path!!)
                     binding.fileThumbNail.setImageBitmap(bm)
                 }
             }
@@ -104,14 +109,6 @@ class DownloadItemGridAdaptor(
                 )
             }
         }
-
-        private fun Float.toPx() =
-            TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                this,
-                Resources.getSystem().displayMetrics
-            )
-                .toInt()
     }
 
     companion object {
@@ -128,15 +125,8 @@ class DownloadItemGridAdaptor(
         }
 
         fun getSizeKbOrMb(len: Long): Pair<String, Int> {
-            var size = DownloadProgressLiveData.getMb(len)
-            var str = "${size}MB"
-            if (size <= 0) {
-                size = DownloadProgressLiveData.getKb(len)
-                str = "${size}KB"
-            }
-            return Pair(str, size)
+            return DownloadProgressLiveData.getMb(len)
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DownloadItemGridViewHolder {

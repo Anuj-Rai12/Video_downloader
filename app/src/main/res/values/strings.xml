@@ -19,7 +19,7 @@
     <string name="cancel_txt">Cancel</string>
     <!-- Video Sample File -->
     <string name="sample_txt">Lorem ipsum dolor sit amet, consectetur ad</string>
-    <string name="value_sample_txt">%s MB/%s MB</string>
+    <string name="value_sample_txt">%s /%s </string>
     <string name="pause_txt">Pause</string>
     <string name="vid_file">Video File</string>
     <string name="close_file">Close</string>
@@ -29,7 +29,7 @@
     <string name="total_vid">%d videos</string>
     <string name="total_vid_view">%s</string>
     <string name="grid_download_info">%s\n\n%s\t%s</string>
-    <string name="linear_download_info">%dMB\t%s</string>
+    <string name="linear_download_info">%s\t%s</string>
     <string name="Untitled_folder_name">Untitled Folder</string>
     <string name="new_folder_name">New Folder</string>
     <string name="create_folder_name">Create</string>
@@ -48,7 +48,7 @@
     <!--Download Lock Screen -->
     <string name="lock_src_title">Set a Lock Pin</string>
     <string name="lock_src_desc">For security ,set a PIN</string>
-    <string name="lock_src_suggestion">PIN must be 6 digits long</string>
+    <string name="lock_src_suggestion">PIN must be at least 6 digits long</string>
     <string name="nxt_btn">Next</string>
     <string name="clr_btn">Clear</string>
     <string name="with_pin_btn">With Pin</string>
@@ -75,7 +75,41 @@
     </string-array>
     <!-- Dialog For Permission -->
     <string name="permission_title">Permission Needed!!</string>
+    <string name="download_msg_desc">Play Video to get Download link</string>
+    <string name="download_msg_title">Attention!!</string>
     <string name="permission_desc">Kindly Give us %s permission,otherwise application may not work Properly.</string>
     <string name="permission_btn">Ok got,it</string>
+    <string name="file_path_2">/VideoDownload/User</string>
+    <string name="file_path_1">/VideoDownload</string>
+    <string name="m3u8_format">video/.m3u8</string>
+    <string name="set_pin_txt">set_pin_for_folder_or_file</string>
+    <string name="set_pin_cat">set_pin_category</string>
+    <string name="set_pin_click">set_pin_isClick</string>
+
+    <string name="folder_is_found">folder_in_db_is_found</string>
+    <string name="folder_is_not_found">folder_is_not_found</string>
+
+    <string name="file_is_found">file_in_db_is_found</string>
+    <string name="file_is_not_found">file_is_not_found</string>
+    <!-- Setting Item !-->
+
+    <string-array name="setting_option">
+        <item>Download Location</item>
+        <item>Download with Wi-fi</item>
+        <item>Save password</item>
+        <item>Search engine option</item>
+        <item>Clear cache</item>
+        <item>Clear browsing history</item>
+    </string-array>
+
+    <string name="download_with_wi_fi">Download with Wi-fi</string>
+    <string name="save_password">Save password</string>
+
+    <string-array name="app_privacy">
+        <item>Privacy policy</item>
+        <item>Feedback</item>
+        <item>Share App</item>
+        <item>Rate App</item>
+    </string-array>
 
 </resources>

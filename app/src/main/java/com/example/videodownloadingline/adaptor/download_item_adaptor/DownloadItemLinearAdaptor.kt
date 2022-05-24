@@ -1,33 +1,58 @@
 package com.example.videodownloadingline.adaptor.download_item_adaptor
 
-import android.view.ViewGroup
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.DownloadFileItemLinearLayoutBinding
+import com.example.videodownloadingline.model.downloaditem.Category
 import com.example.videodownloadingline.model.downloaditem.DownloadItems
 import com.example.videodownloadingline.model.downloaditem.TypeOfDownload
+import com.example.videodownloadingline.utils.getThumbNail
+import com.example.videodownloadingline.utils.hide
 
 
 typealias ItemForLinearLayoutListener = (data: DownloadItems) -> Unit
 
 class DownloadItemLinearAdaptor(
     private val type: String,
+    private val context: Context,
     private val itemClicked: ItemForLinearLayoutListener
 ) :
     ListAdapter<DownloadItems, DownloadItemLinearAdaptor.DownloadItemLinearViewHolder>(diffUtil) {
     inner class DownloadItemLinearViewHolder(private val binding: DownloadFileItemLinearLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun makeData(data: DownloadItems, itemClicked: ItemForLinearLayoutListener) {
             binding.root.setOnClickListener {
                 itemClicked(data)
             }
-            when(TypeOfDownload.valueOf(type)){
-                TypeOfDownload.IsFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
-                TypeOfDownload.IsFiles -> binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
+            binding.menuIcBtn.hide()
+            when (TypeOfDownload.valueOf(type)) {
+                TypeOfDownload.IsFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_folder)
+                TypeOfDownload.IsFiles -> {
+                    when(Category.valueOf(data.category)){
+                        Category.PinFolder -> {
+                            binding.fileThumbNail.setImageResource(R.drawable.ic_video_pin)
+                        }
+                        Category.NormalFolder -> {
+                            val bm = getThumbNail(data.fileLoc)
+                            bm?.let {
+                                binding.fileThumbNail.apply {
+                                    setPadding(0, 0, 0, 0)
+                                    scaleType = ImageView.ScaleType.FIT_XY
+                                    setImageBitmap(it)
+                                }
+                                return@let
+                            } ?: binding.fileThumbNail.setImageResource(R.drawable.ic_viedoapplogo)
+                        }
+                    }
+                }
                 TypeOfDownload.SecureFolder -> binding.fileThumbNail.setImageResource(R.drawable.ic_video_pin)
             }
             binding.menuIcBtn.setOnClickListener {
@@ -38,7 +63,7 @@ class DownloadItemLinearAdaptor(
             binding.dataTxtInfo.apply {
                 text = context.getString(
                     R.string.linear_download_info,
-                    data.fileSize,
+                    DownloadItemGridAdaptor.getSizeKbOrMb(data.fileSize).first,
                     data.createdCurrentTimeData
                 )
             }

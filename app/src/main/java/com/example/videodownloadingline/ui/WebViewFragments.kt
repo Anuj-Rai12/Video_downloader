@@ -7,6 +7,8 @@ import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -15,6 +17,7 @@ import android.webkit.*
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -50,6 +53,8 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
     private var url = mainUrl
     private var openBottomSheetDialog: BottomSheetDialogForDownloadFrag? = null
     private var downloadManager: DownloadManager? = null
+    private var isShowDialogOnce: Boolean = true
+    private var showVideoPlayDialog: AlertDialog? = null
 
     inner class MyJavaScriptInterface {
         @JavascriptInterface
@@ -109,17 +114,43 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             menu.setOptionalIconsVisible(true)
         }
         val newTab = menu.findItem(R.id.new_tab_option_mnu)
+        val closeTab = menu.findItem(R.id.close_tab_mnu)
 
         newTab?.setOnMenuItemClickListener {
-            mainViewModel?.addMoreTab()
-            val size = (parentFragment as BrowserFragment).setFragment(
-                HomeScrFragment(true)
-            )
-            Log.i(TAG, "onCreateOptionsMenu: $size")
-            BrowserFragment.viewPager?.currentItem = size!! - 1
+            createNewTB(HomeScrFragment(true), null)
             return@setOnMenuItemClickListener true
         }
+        closeTab?.setOnMenuItemClickListener {
+            val way = (parentFragment as BrowserFragment)
+            if (way.getTbList().isNullOrEmpty()) {
+                findNavController().popBackStack()
+            }
+            way.getTbList()?.let {
+                mainViewModel?.removeTab()
+                val index = it.last().id - 1
+                way.removeFragment(index, true)
+                BrowserFragment.viewPager?.currentItem = index
+            }
+            if (way.getTbList().isNullOrEmpty()) {
+                findNavController().popBackStack()
+            }
+            return@setOnMenuItemClickListener true
+        }
+
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun createNewTB(fragment: Fragment, url: String?) {
+        val size = (parentFragment as BrowserFragment?)?.setFragment(
+            fragment, url
+        )
+        Log.i(TAG, "onCreateOptionsMenu: $size")
+        size?.let {
+            mainViewModel?.addMoreTab()
+            BrowserFragment.viewPager?.currentItem = size - 1
+            return
+        }
+        Log.i(TAG, "createNewTB: error while creating")
     }
 
 
@@ -140,8 +171,13 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
     private fun getAllTab(url: String) {
         mainViewModel?.noOfOpenTab?.observe(this) {
             val item = it ?: 0
-            (requireActivity() as MainActivity).changeToolbar(item, url, { _ -> }, {
+            (requireActivity() as MainActivity).changeToolbar(item, url, { url ->
+                mainViewModel?.removeOldDownloadLink()
+                setWebSiteData(url, false)
+            }, {
                 findNavController().popBackStack()
+            }, viewTab = {
+                requireActivity().goToTbActivity<ViewTabActivity>((parentFragment as BrowserFragment).getTbList())
             })
         }
     }
@@ -163,9 +199,14 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
 
         binding.downloadFloatingBtn.setOnClickListener {
             if (info != null) {
-                if (!info!!.contains("http")) {
+                if (info!!.startsWith("blob:")) {
+                    info = info!!.substring(5)
+                    //Log.i(TAG, "setData: $info for testing value")
+                }
+                if (info!!.contains("http", true) && !info!!.contains("https", true)) {
                     info = "https:$info"
                 }
+                Log.i(TAG, "setData: check Video quality $info")
                 requireActivity().toastMsg("Please Wait while checking Video Quality..")
             } else {
                 requireActivity().toastMsg("Could not find download url")
@@ -173,10 +214,26 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             }
             if (!click) {
                 click = true
-                urlResolution(info!!) { height, width, type, size ->
-                    VideoType(height, width, size, type, webViewDownloadUrl, info!!).also {
-                        click = false
-                        openBottomSheet(listOf(it))
+                if (info!!.endsWith(".m3u8") || webViewDownloadUrl.videotype == "video/.m3u8") {
+                    findWidthAndHeight(info!!).also {
+                        VideoType(
+                            it.second.last(),
+                            it.second.first(),
+                            it.first,
+                            "video/.m3u8",
+                            webViewDownloadUrl,
+                            info!!
+                        ).also { video ->
+                            click = false
+                            openBottomSheet(listOf(video))
+                        }
+                    }
+                } else {
+                    urlResolution(info!!) { height, width, type, size ->
+                        VideoType(height, width, size, type, webViewDownloadUrl, info!!).also {
+                            click = false
+                            openBottomSheet(listOf(it))
+                        }
                     }
                 }
             }
@@ -185,41 +242,53 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
 
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun urlResolution(url: String, getRes: (Int, Int, String, Int) -> Unit) {
-        val trackGroupsFuture: ListenableFuture<TrackGroupArray> =
-            MetadataRetriever.retrieveMetadata(
-                requireActivity(), MediaItem.fromUri(url)
-            )
-        Futures.addCallback(
-            trackGroupsFuture,
-            object : FutureCallback<TrackGroupArray?> {
-                override fun onSuccess(trackGroups: TrackGroupArray?) {
-                    trackGroups?.let {
-                        lifecycleScope.launchWhenCreated {
-                            val size = async(IO) {
-                                getVideoFileSize(url)
+    private fun urlResolution(url: String, getRes: (Int, Int, String, Long) -> Unit) {
+        try {
+            val trackGroupsFuture: ListenableFuture<TrackGroupArray> =
+                MetadataRetriever.retrieveMetadata(
+                    requireActivity(), MediaItem.fromUri(url)
+                )
+            Futures.addCallback(
+                trackGroupsFuture,
+                object : FutureCallback<TrackGroupArray?> {
+                    override fun onSuccess(trackGroups: TrackGroupArray?) {
+                        trackGroups?.let {
+                            lifecycleScope.launchWhenCreated {
+                                val size = async(IO) {
+                                    getVideoFileSize(url)
+                                }
+                                val gHW = async {
+                                    getHeightAndWidth(it)
+                                }
+                                val gHWRes = gHW.await()
+                                getRes(
+                                    gHWRes.first.first,
+                                    gHWRes.first.second,
+                                    gHWRes.second,
+                                    size.await()
+                                )
                             }
-                            val gHW = async {
-                                getHeightAndWidth(it)
-                            }
-                            val gHWRes = gHW.await()
-                            getRes(
-                                gHWRes.first.first,
-                                gHWRes.first.second,
-                                gHWRes.second,
-                                size.await()
-                            )
                         }
+
                     }
 
-                }
+                    override fun onFailure(t: Throwable) {
+                        Log.i(TAG, "onFailure: ${t.message}")
+                    }
+                },
+                Runnable::run
+            )
+        } catch (e: Exception) {
+            findWidthAndHeight(url).also {
+                getRes(
+                    it.second.last(),
+                    it.second.first(),
+                    "video/.m3u8",
+                    it.first
+                )
 
-                override fun onFailure(t: Throwable) {
-                    Log.i(TAG, "onFailure: ${t.message}")
-                }
-            },
-            Runnable::run
-        )
+            }
+        }
     }
 
     private fun getHeightAndWidth(trackGroups: TrackGroupArray): Pair<Pair<Int, Int>, String> {
@@ -272,10 +341,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
 
     private fun openBottomSheet(list: List<VideoType>) {
         openBottomSheetDialog =
-            BottomSheetDialogForDownloadFrag(
-                "",
-                BottomSheetDialogForDownloadFrag.Companion.Bottom.WEB_VIEW_FRAGMENT
-            )
+            BottomSheetDialogForDownloadFrag(enum = BottomSheetDialogForDownloadFrag.Companion.Bottom.WEB_VIEW_FRAGMENT)
         BottomSheetDialogForDownloadFrag.list = list
         openBottomSheetDialog?.onBottomIconClicked = this
         openBottomSheetDialog?.show(childFragmentManager, "Open Bottom Sheet For Choose Download")
@@ -283,6 +349,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun setWebSiteData(url: String, flag: Boolean) {
+        var onlyOnce = true
         val extraHeaders: MutableMap<String, String> = HashMap()
         if (flag) extraHeaders["Referer"] = url
 
@@ -305,14 +372,21 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                 ): WebResourceResponse? {
                     when {
                         request!!.url.toString().contains(".m3u8") -> {
-                            Log.d(TAG, request.url.toString())
+                            if (onlyOnce) {
+                                onlyOnce = mainViewModel?.getM3U8Url(request.url.toString())!!
+                            }
                         }
                         request.url.toString().contains(".mp4") -> {
-                            Log.d(TAG, request.url.toString())
+                            Log.i(TAG, "shouldInterceptRequest: the Url is -> ${request.url}")
+                            Log.i(
+                                TAG,
+                                "shouldInterceptRequest: the Url is -> ${request.requestHeaders}"
+                            )
                         }
-                        else -> {
-                            Log.d(TAG, request.url.toString())
+                        request.requestHeaders.containsValue("video/") -> {
+                            Log.i(TAG, "shouldInterceptRequest: ${request.url}")
                         }
+
                     }
                     return super.shouldInterceptRequest(view, request)
                 }
@@ -342,7 +416,17 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                     request: WebResourceRequest?
                 ): Boolean {
                     return request?.let { req ->
-                        val domain = getHostDomainName(req.url.host!!)
+                        val domain: String?
+                        try {
+                            domain = getHostDomainName(req.url.host!!)
+                        } catch (e: Exception) {
+                            Log.i(
+                                TAG,
+                                "shouldOverrideUrlLoading: domain Exception ${e.localizedMessage}"
+                            )
+                            return@let false
+                        }
+
                         if (req.url.toString() == mainUrl || domain == getHostDomainName(URL(mainUrl).host)) {
                             return@let false
                         }
@@ -352,6 +436,7 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                         ) {
                             false
                         } else {
+<<<<<<< HEAD
                             mainViewModel?.addMoreTab()
                             val size = (parentFragment as BrowserFragment).setFragment(
                                 WebViewFragments(
@@ -363,6 +448,12 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                             BrowserFragment.viewPager?.currentItem = size!! - 1
                             /*val intent = Intent(Intent.ACTION_VIEW, req.url)
                             startActivity(intent)*/
+=======
+                            createNewTB(
+                                WebViewFragments("Loading...", req.url.toString()),
+                                req.url.toString()
+                            )
+>>>>>>> setting_branch
                             true
                         }
                     } ?: false
@@ -400,6 +491,16 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             binding.tapToDownloadIcon.show()
             delay(2000)
             binding.tapToDownloadIcon.hide()
+            if (isShowDialogOnce) {
+                isShowDialogOnce = false
+                parentFragment?.let {
+                    showVideoPlayDialog = activity?.showDialogBox(
+                        title = getString(R.string.download_msg_title),
+                        desc = getString(R.string.download_msg_desc),
+                        flag = true
+                    ) {}
+                }
+            }
         }
     }
 
@@ -410,6 +511,38 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
             ActionBar.DISPLAY_SHOW_TITLE
         (requireActivity() as MainActivity).supportActionBar!!.setDisplayShowCustomEnabled(false)
         (requireActivity() as MainActivity).supportActionBar!!.title = title
+
+        mainViewModel?.currentNumTab?.let {
+            Log.i(TAG, "onResume: Current Tab --> $it")
+            BrowserFragment.viewPager?.currentItem = it
+            mainViewModel?.currentNumTab = null
+        }
+
+        if (mainViewModel?.removeTab?.first == true) {
+            mainViewModel?.removeTab?.second?.let {
+                (parentFragment as BrowserFragment).removeFragment(it, true)
+            }
+            mainViewModel?.removeTab = Pair(false, null)
+        }
+
+        var parent = parentFragment
+        val uiHandler = Handler(Looper.getMainLooper())
+        uiHandler.post {
+            parent?.let {
+                val flag = mainViewModel?.createNewTab?.value
+                Log.i(TAG, "onViewCreated: Main View Model ---> $flag")
+                if (flag == true) {
+                    mainViewModel?.addMoreTab()
+                    val size = (it as BrowserFragment).setFragment(HomeScrFragment(true), null)
+                    Log.i(TAG, "onCreateOptionsMenu: $size")
+                    BrowserFragment.viewPager?.currentItem = size!! - 1
+                    parent = null
+                    mainViewModel?.changeStateForCreateNewTB(false)
+                }
+            }
+        }
+
+
         if (isWebLoaded) {
             url = binding.mainWebView.url ?: url
             getAllTab(url)
@@ -419,18 +552,26 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
     override fun onPause() {
         super.onPause()
         openBottomSheetDialog?.dismiss()
+        showVideoPlayDialog?.dismiss()
+        mainViewModel?.removeOldDownloadLink()
     }
 
     override fun <T> onItemClicked(type: T) {
         (type as VideoType).also { response ->
             response.webViewDownloadUrl.videotitle =
                 response.webViewDownloadUrl.videotitle ?: createdCurrentTimeData
+            response.thumbnail = if (response.format == "video/.m3u8")
+                "Video_" + System.currentTimeMillis().toString() + ".m3u8"
+            else
+                "Video_" + System.currentTimeMillis().toString() + ".mp4"
+
             Log.i(TAG, "onItemClicked: ${response.webViewDownloadUrl.videotitle}")
             val id = downloadManager?.enqueue(
                 requestDownload(
                     requireContext(),
                     DownloadManager.Request(Uri.parse(response.url)),
-                    title = response.webViewDownloadUrl.videotitle!!
+                    title = response.thumbnail,
+                    response.url
                 )
             )
             Log.i(TAG, "onItemClicked: $id and $response")

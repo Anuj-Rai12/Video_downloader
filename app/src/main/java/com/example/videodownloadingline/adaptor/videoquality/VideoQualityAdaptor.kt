@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.videodownloadingline.R
 import com.example.videodownloadingline.databinding.ItemResolutionLayoutBinding
 import com.example.videodownloadingline.model.downloadlink.VideoType
+import com.example.videodownloadingline.utils.DownloadProgressLiveData
 
 typealias vidSelectorListener = (flag: Boolean, data: VideoType) -> Unit
 
@@ -24,7 +25,10 @@ class VideoQualityAdaptor(private val itemClicked: vidSelectorListener) :
         fun makeData(data: VideoType, itemClicked: vidSelectorListener) {
             binding.itemResId.text = "\t${data.height}p"
             binding.txtVidSize.text =
-                binding.txtVidSize.context.getString(R.string.num_of_tab, "${data.size}MB")
+                binding.txtVidSize.context.getString(
+                    R.string.num_of_tab,
+                    DownloadProgressLiveData.getMb(data.size).first
+                )
             binding.itemResId.setOnCheckedChangeListener { _, isChecked ->
                 itemClicked(isChecked, data)
             }

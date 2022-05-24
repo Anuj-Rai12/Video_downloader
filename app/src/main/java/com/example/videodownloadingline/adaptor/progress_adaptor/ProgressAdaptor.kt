@@ -1,7 +1,8 @@
 package com.example.videodownloadingline.adaptor.progress_adaptor
 
-import android.view.ViewGroup
 import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -25,19 +26,37 @@ class ProgressAdaptor(private val itemClicked: itemClicked) :
             }
             binding.titleDownload.text = data.title
 
+            binding.btnPauseOrPlay.setOnClickListener { view ->
+                val image = view as ImageView
+                val id: Int? = (image.tag as String?)?.toInt()
+                id?.let {
+                    when (it) {
+                        1 -> {
+                            binding.btnPauseOrPlay.setImageResource(R.drawable.ic_play)
+                            binding.btnPauseOrPlay.tag = "2"
+                        }
+                        2 -> {
+                            binding.btnPauseOrPlay.setImageResource(R.drawable.ic_pause)
+                            binding.btnPauseOrPlay.tag = "1"
+                        }
+                    }
+                }
+            }
+
+
             if (data.totalSizeBytes.toInt() <= 0) {
                 binding.progressBar.isIndeterminate = true
                 binding.totalSize.text = binding.totalSize.context.getString(
                     R.string.total_vid_view,
-                    "${getMb(data.bytesDownloadedSoFar)}MB",
+                    getMb(data.bytesDownloadedSoFar).first,
                 )
             } else {
                 binding.progressBar.progress =
                     (data.bytesDownloadedSoFar * 100.0 / data.totalSizeBytes).toInt()
                 binding.totalSize.text = binding.totalSize.context.getString(
                     R.string.value_sample_txt,
-                    getMb(data.bytesDownloadedSoFar).toString(),
-                    getMb(data.totalSizeBytes).toString()
+                    getMb(data.bytesDownloadedSoFar).first,
+                    "${getMb(data.totalSizeBytes).first} ${binding.progressBar.progress}%"
                 )
             }
             binding.totalSize.append("\n\n${DownloadProgressLiveData.getStatus(data.status)}\n")

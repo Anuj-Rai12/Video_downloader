@@ -83,5 +83,6 @@ class ProgressFragment : Fragment(R.layout.progress_fragment_layout) {
     companion object {
         const val testingTitle = "May 1, 2022 12:53:54 PM"
         const val testingUrl = "https://download.samplelib.com/mp4/sample-5s.mp4"
+        const val DeleteUrl="content://media/external/downloads/3668"
     }
 }
