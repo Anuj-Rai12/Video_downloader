@@ -436,24 +436,12 @@ class WebViewFragments(private val title: String, private val mainUrl: String) :
                         ) {
                             false
                         } else {
-<<<<<<< HEAD
-                            mainViewModel?.addMoreTab()
-                            val size = (parentFragment as BrowserFragment).setFragment(
-                                WebViewFragments(
-                                    "Loading...",
-                                    req.url.toString()
-                                )
-                            )
-                            Log.i(TAG, "shouldOverrideUrlLoading: $size")
-                            BrowserFragment.viewPager?.currentItem = size!! - 1
                             /*val intent = Intent(Intent.ACTION_VIEW, req.url)
                             startActivity(intent)*/
-=======
                             createNewTB(
                                 WebViewFragments("Loading...", req.url.toString()),
                                 req.url.toString()
                             )
->>>>>>> setting_branch
                             true
                         }
                     } ?: false
